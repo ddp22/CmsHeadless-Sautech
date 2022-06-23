@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CmsHeadless.Migrations
 {
     [DbContext(typeof(CmsHeadlessContext))]
-    [Migration("20220616111032_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20220623143449_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

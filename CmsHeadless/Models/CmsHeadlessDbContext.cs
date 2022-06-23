@@ -20,5 +20,5 @@ namespace CmsHeadless.Models
         public DbSet<Content> Content { get; set; }
         public DbSet<Tag> Tag { get; set; }
     }
-
+    
 }

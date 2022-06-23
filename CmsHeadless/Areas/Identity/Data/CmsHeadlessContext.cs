@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CmsHeadless.Data;
 
-public class CmsHeadlessContext : IdentityDbContext<IdentityUser>
+public class CmsHeadlessContext :IdentityDbContext
 {
+
+
+
     public CmsHeadlessContext(DbContextOptions<CmsHeadlessContext> options)
         : base(options)
     {

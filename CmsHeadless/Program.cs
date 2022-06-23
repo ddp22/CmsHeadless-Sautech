@@ -10,8 +10,7 @@ var connectionString = builder.Configuration.GetConnectionString("CmsHeadlessCon
 
 builder.Services.AddDbContext<CmsHeadlessContext>(options =>options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<CmsHeadlessContext>();
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<CmsHeadlessContext>();
 
 builder.Services.AddDbContext<CmsHeadlessDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("CmsHeadlessContextConnection")));
 

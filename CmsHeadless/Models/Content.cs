@@ -20,7 +20,7 @@ namespace CmsHeadless.Models
 
         [DataType(DataType.MultilineText)]
         public string? Text { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime LastEdit { get; set; }
@@ -28,6 +28,7 @@ namespace CmsHeadless.Models
         public virtual ICollection<ContentAttributes> ContentAttributes { get; set; } = null!;
         public virtual ICollection<ContentCategory> ContentCategory { get; set; } = null!;
         public virtual ICollection<ContentTag> ContentTag { get; set; } = null!;
+
     }
 
 
