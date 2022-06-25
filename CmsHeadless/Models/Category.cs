@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 namespace CmsHeadless.Models
 {
     public class Category
@@ -16,5 +15,6 @@ namespace CmsHeadless.Models
         [DataType(DataType.Date)]
         public DateTime CreationDate { get; set; }
         public ICollection<ContentCategory> ContentCategory { get; set; } = null!;
+
     }
 }

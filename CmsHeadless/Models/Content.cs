@@ -20,6 +20,8 @@ namespace CmsHeadless.Models
 
         [DataType(DataType.MultilineText)]
         public string? Text { get; set; }
+
+        [Required]
         public string UserId { get; set; }
 
         [DataType(DataType.Date)]

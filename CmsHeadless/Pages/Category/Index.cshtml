@@ -1,0 +1,39 @@
+﻿@page
+@model CmsHeadless.Pages.Category.IndexModel
+
+@{
+}
+
+
+<h1>Form</h1>
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="CategoryNew.ContentCategory" class="control-label"></label>
+        <input asp-for="CategoryNew.ContentCategory" class="form-control" />
+        <span asp-validation-for="CategoryNew.ContentCategory" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CategoryNew.Description" class="control-label"></label>
+        <input asp-for="CategoryNew.Description" class="form-control" />
+        <span asp-validation-for="CategoryNew.Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CategoryNew.CreationDate" class="control-label"></label>
+        <input asp-for="CategoryNew.CreationDate" class="form-control" />
+        <span asp-validation-for="CategoryNew.CreationDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CategoryNew.Media" class="control-label"></label>
+        <input asp-for="CategoryNew.Media" class="form-control" />
+        <span asp-validation-for="CategoryNew.Media" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CategoryNew.Name" class="control-label"></label>
+        <input asp-for="CategoryNew.Name" class="form-control" />
+        <span asp-validation-for="CategoryNew.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>

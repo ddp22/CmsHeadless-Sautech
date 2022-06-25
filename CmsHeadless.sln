@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CmsHeadless", "CmsHeadless\CmsHeadless.csproj", "{A47B9332-0431-4FF9-BAA9-44A8E8182C3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CmsHeadless", "CmsHeadless\CmsHeadless.csproj", "{A47B9332-0431-4FF9-BAA9-44A8E8182C3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
