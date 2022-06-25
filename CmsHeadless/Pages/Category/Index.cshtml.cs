@@ -13,11 +13,12 @@ namespace CmsHeadless.Pages.Category
     {
         //private readonly Models.CmsHeadlessDbContext _context;
 
-        private readonly CmsHeadlessContext _context;
+        private readonly CmsHeadlessDbContext _context;
 
+        [BindProperty]
         public Models.Category CategoryNew { get; set; }
 
-        public IndexModel(CmsHeadlessContext context)
+        public IndexModel(CmsHeadlessDbContext context)
         {
             _context = context;
         }
@@ -29,24 +30,13 @@ namespace CmsHeadless.Pages.Category
             {
                 return Page();
             }
-
+            
             var entry = _context.Add(new Models.Category());
-            /*entry.CurrentValues.SetValues(CategoryNew);
-            await _context.SaveChangesAsync();*/
+            entry.CurrentValues.SetValues(CategoryNew);
+            await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
         }
 
 
-        /*public class IndexModel : PageModel
-        {
-            public void OnGet()
-            {
-            }
-
-            public void OnPost()
-            {
-
-            }
-        }*/
     }
 }
