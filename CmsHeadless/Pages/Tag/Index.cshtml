@@ -1,0 +1,27 @@
+﻿@page
+@model CmsHeadless.Pages.Tag.IndexModel
+@{
+}
+
+<h1>Form Tag</h1>
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="TagNew.ContentTag" class="control-label"></label>
+        <input asp-for="TagNew.ContentTag" class="form-control" />
+        <span asp-validation-for="TagNew.ContentTag" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TagNew.Name" class="control-label"></label>
+        <input asp-for="TagNew.Name" class="form-control" />
+        <span asp-validation-for="TagNew.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TagNew.Url" class="control-label"></label>
+        <input asp-for="TagNew.Url" class="form-control" />
+        <span asp-validation-for="TagNew.Url" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>

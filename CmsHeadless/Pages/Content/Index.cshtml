@@ -1,0 +1,64 @@
+﻿@page
+@model CmsHeadless.Pages.Content.IndexModel
+@{
+}
+
+<h1>Form Content</h1>
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="ContentNew.ContentAttributes" class="control-label"></label>
+        <input asp-for="ContentNew.ContentAttributes" class="form-control" />
+        <span asp-validation-for="ContentNew.ContentAttributes" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ContentNew.ContentCategory" class="control-label"></label>
+        <input asp-for="ContentNew.ContentCategory" class="form-control" />
+        <span asp-validation-for="ContentNew.ContentCategory" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ContentNew.ContentTag" class="control-label"></label>
+        <input asp-for="ContentNew.ContentTag" class="form-control" />
+        <span asp-validation-for="ContentNew.ContentTag" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ContentNew.Title" class="control-label"></label>
+        <input asp-for="ContentNew.Title" class="form-control" />
+        <span asp-validation-for="ContentNew.Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ContentNew.Media" class="control-label"></label>
+        <input asp-for="ContentNew.Media" class="form-control" />
+        <span asp-validation-for="ContentNew.Media" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ContentNew.Description" class="control-label"></label>
+        <input asp-for="ContentNew.Description" class="form-control" />
+        <span asp-validation-for="ContentNew.Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ContentNew.InsertionDate" class="control-label"></label>
+        <input asp-for="ContentNew.InsertionDate" class="form-control" />
+        <span asp-validation-for="ContentNew.InsertionDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ContentNew.Text" class="control-label"></label>
+        <input asp-for="ContentNew.Text" class="form-control" />
+        <span asp-validation-for="ContentNew.Text" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ContentNew.UserId" class="control-label"></label>
+        <input asp-for="ContentNew.UserId" class="form-control" />
+        <span asp-validation-for="ContentNew.UserId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ContentNew.LastEdit" class="control-label"></label>
+        <input asp-for="ContentNew.LastEdit" class="form-control" />
+        <span asp-validation-for="ContentNew.LastEdit" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>

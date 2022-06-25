@@ -4,25 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CmsHeadless.Models;
 
-
-namespace CmsHeadless.Pages.Category
+namespace CmsHeadless.Pages.Attributes
 {
-
     [Authorize]
     public class IndexModel : PageModel
     {
-        //private readonly Models.CmsHeadlessDbContext _context;
-
         private readonly CmsHeadlessDbContext _context;
 
         [BindProperty]
-        public Models.Category CategoryNew { get; set; }
+        public Models.Attributes AttributesNew { get; set; }
 
         public IndexModel(CmsHeadlessDbContext context)
         {
             _context = context;
         }
-
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -30,16 +25,14 @@ namespace CmsHeadless.Pages.Category
             {
                 return Page();
             }
-            
-            var entry = _context.Add(new Models.Category());
-            entry.CurrentValues.SetValues(CategoryNew);
+
+            var entry = _context.Add(new Models.Attributes());
+            entry.CurrentValues.SetValues(AttributesNew);
             await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
         }
-
         public void OnGet()
         {
         }
-
     }
 }
