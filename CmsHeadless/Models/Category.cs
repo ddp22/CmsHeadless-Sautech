@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace CmsHeadless.Models
 {
     public class Category
@@ -6,7 +8,9 @@ namespace CmsHeadless.Models
         [Key]
         public int CategoryId { get; set; }
         [MaxLength(30)]
-        public string? Name { get; set; }
+        [Index(IsUnique = true)]
+        [Required]
+        public string Name { get; set; } = null!;
         [MaxLength(200)]
         public string? Description { get; set; }
         public int? CategoryParentId { get; set; }

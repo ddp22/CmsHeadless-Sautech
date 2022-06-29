@@ -1,40 +1,114 @@
 ﻿@page
-@model CmsHeadless.Pages.Category.IndexModel
+@model CmsHeadless.Pages.Category.IndexModel;
 
 @{
 }
 
 
 <h1>Form Category</h1>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="CategoryNew.ContentCategory" class="control-label"></label>
-        <input asp-for="CategoryNew.ContentCategory" class="form-control" />
-        <span asp-validation-for="CategoryNew.ContentCategory" class="text-danger"></span>
+     <div class="form-group">
+        <label asp-for="_formCategoryModel.Name" class="control-label"></label>
+        <input asp-for="_formCategoryModel.Name" class="form-control" required/>
+        <span asp-validation-for="_formCategoryModel.Name" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="CategoryNew.Description" class="control-label"></label>
-        <input asp-for="CategoryNew.Description" class="form-control" />
-        <span asp-validation-for="CategoryNew.Description" class="text-danger"></span>
+        <label asp-for="_formCategoryModel.Description" class="control-label"></label>
+        <input asp-for="_formCategoryModel.Description" class="form-control" />
+        <span asp-validation-for="_formCategoryModel.Description" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="CategoryNew.CreationDate" class="control-label"></label>
-        <input asp-for="CategoryNew.CreationDate" class="form-control" />
-        <span asp-validation-for="CategoryNew.CreationDate" class="text-danger"></span>
+        <label asp-for="_formCategoryModel.CreationDate" class="control-label"></label>
+        <input asp-for="_formCategoryModel.CreationDate" class="form-control" />
+        <span asp-validation-for="_formCategoryModel.CreationDate" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="CategoryNew.Media" class="control-label"></label>
-        <input asp-for="CategoryNew.Media" class="form-control" />
-        <span asp-validation-for="CategoryNew.Media" class="text-danger"></span>
+    <div class="col-md-6">  
+        <div class="form-group">  
+            <label asp-for="_formCategoryModel.Media" class="control-label">Choose file</label>  
+            <input asp-for="_formCategoryModel.Media" class="custom-file-input">  
+            <span asp-validation-for="_formCategoryModel.Media" class="text-danger"></span>  
+        </div>  
     </div>
-    <div class="form-group">
-        <label asp-for="CategoryNew.Name" class="control-label"></label>
-        <input asp-for="CategoryNew.Name" class="form-control" />
-        <span asp-validation-for="CategoryNew.Name" class="text-danger"></span>
+     <div class="form-group">
+        <label asp-for="_formCategoryModel.CategoryParentId" class="control-label"></label>
+        <select asp-for="_formCategoryModel.CategoryParentId" class="form-control">
+            @{
+                foreach(var i in Model.CategoryAvailable)
+                {
+                         <option value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
+                }
+            }
+        </select>
+        <span asp-validation-for="_formCategoryModel.CategoryParentId" class="text-danger"></span>
     </div>
+
+   
     <div class="form-group">
         <input type="submit" value="Create" class="btn btn-primary" />
     </div>
 </form>
 
+
+
+<table class="table table-sm table-dark" id="categoryList">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Description</th>
+      <th scope="col">Creation Date</th>
+      <th scope="col">Image</th>
+    </tr>
+  </thead>
+  <tbody>
+        @{
+            int k=1+(Model.CategoryList.PageIndex-1)*IndexModel.numberPage ;
+            @foreach (var item in Model.CategoryList)
+            {
+            
+                <tr>
+                    <th scope="row">
+                        @k
+                    </th>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreationDate)
+                    </td>
+                    <td>
+                        <img style="max-height:100px" src="~/img/category/@Html.DisplayFor(modelItem => item.Media)" alt="image not available"/>
+                    </td>
+                </tr>
+                k++;
+            }
+        }
+      
+  </tbody>
+</table>
+
+@{
+    
+    var prevDisabled = !Model.CategoryList.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.CategoryList.HasNextPage ? "disabled" : "";
+}
+
+    <a asp-action="Index"
+   asp-route-pageIndex="@(Model.CategoryList.PageIndex - 1)"
+   class="btn btn-default @prevDisabled">
+            Previous
+    </a>
+    <a asp-action="Index"
+   asp-route-pageIndex="@(Model.CategoryList.PageIndex + 1)"
+   class="btn btn-default @nextDisabled">
+            Next
+    </a>
+
+@if(ModelState.ErrorCount > 0)
+{
+    @Html.ValidationSummary(false, "Please fix the following error and then submit the form")  
+}
