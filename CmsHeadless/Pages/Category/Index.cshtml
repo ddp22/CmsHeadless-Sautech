@@ -6,6 +6,16 @@
 
 
 <h1>Form Category</h1>
+@{
+    if(IndexModel.lastCreate>0 && ModelState.ErrorCount == 0)
+    {
+    <p>Categoria inserita con successo</p>
+    }
+    if(IndexModel.lastDelete>0 && ModelState.ErrorCount == 0)
+    {
+    <p>Categoria eliminata con successo</p>
+    }
+}
 <form method="post" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
      <div class="form-group">
@@ -13,6 +23,7 @@
         <input asp-for="_formCategoryModel.Name" class="form-control" required/>
         <span asp-validation-for="_formCategoryModel.Name" class="text-danger"></span>
     </div>
+    
     <div class="form-group">
         <label asp-for="_formCategoryModel.Description" class="control-label"></label>
         <input asp-for="_formCategoryModel.Description" class="form-control" />
@@ -36,7 +47,7 @@
             @{
                 foreach(var i in Model.CategoryAvailable)
                 {
-                         <option value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
+                                 <option value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
                 }
             }
         </select>
@@ -45,7 +56,7 @@
 
    
     <div class="form-group">
-        <input type="submit" value="Create" class="btn btn-primary" />
+        <input type="submit" value="Create" asp-page-handler="Create" class="btn btn-primary" />
     </div>
 </form>
 
@@ -59,35 +70,49 @@
       <th scope="col">Description</th>
       <th scope="col">Creation Date</th>
       <th scope="col">Image</th>
+      <th scope="col">Modifies</th>
     </tr>
   </thead>
   <tbody>
         @{
+            if(Model.CategoryList!=null){
             int k=1+(Model.CategoryList.PageIndex-1)*IndexModel.numberPage ;
-            @foreach (var item in Model.CategoryList)
-            {
-            
-                <tr>
-                    <th scope="row">
-                        @k
-                    </th>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CreationDate)
-                    </td>
-                    <td>
-                        <img style="max-height:100px" src="~/img/category/@Html.DisplayFor(modelItem => item.Media)" alt="image not available"/>
-                    </td>
-                </tr>
-                k++;
+                    @foreach (var item in Model.CategoryList)
+                {
+                        <tr>
+                            <th scope="row">
+                                @k
+                            </th>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreationDate)
+                            </td>
+                            <td>
+                                <img style="max-height:100px" src="~/img/category/@Html.DisplayFor(modelItem => item.Media)" alt="image not available"/>
+                            </td>
+                            <td>
+                                    <a asp-page="./EditCategory" asp-route-id="@item.CategoryId">Edit</a> |
+                                                         
+                                    <form method="post">
+                                        <input type="submit" value="Delete" asp-route-categoryId="@item.CategoryId" asp-page-handler="Delete"/>
+                                    </form>
+                            </td>
+                        </tr>
+                    k++;
+                }
             }
-        }
-      
+            else
+            {
+                <h1>C'è stato un problema relativo al database. Ricaricare la pagina</h1>
+                return;
+            }
+       }
+
   </tbody>
 </table>
 
@@ -110,5 +135,6 @@
 
 @if(ModelState.ErrorCount > 0)
 {
-    @Html.ValidationSummary(false, "Please fix the following error and then submit the form")  
+    @Html.ValidationSummary(false, "", new { @class = "text-danger font-weight-bold" })
 }
+

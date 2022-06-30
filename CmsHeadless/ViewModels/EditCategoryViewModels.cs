@@ -4,7 +4,7 @@ using CmsHeadless.Models;
 
 namespace CmsHeadless.ViewModels
 {
-    public class CategoryViewModel
+    public class EditCategoryViewModel
     {
         [Required]
         public string Name { get; set; } = null!;
