@@ -20,3 +20,62 @@ body {
 .nav-link {
     font-weight:800;
 }
+
+.textForm, .dateForm, .selectForm {
+    border-radius: 10px;
+}
+
+.textForm:hover, .dateForm:hover, .selectForm:hover {
+    box-shadow: 3px 3px 5px 2px #777777;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.titleForm {
+    text-align: center;
+}
+
+.custom-form-border {
+    border: 1px solid lightgrey;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.custom-form {
+    padding:20px;
+}
+
+.dropDownMenuCategory, .dropDownMenuContent {
+    background-color: white;
+    color: black;
+    font-size: large;
+    margin-right: 1.5rem;
+}
+
+    .dropDownMenuCategory:hover, .dropDownMenuContent:hover {
+        background-color: lightgrey;
+        color: black;
+    }
+
+.dropDownMenuItemCategory, .dropDownMenuItemContent {
+    color: black !important;
+}
+/*
+.fileForm {
+    border: 1px solid lightgrey;
+    height: 40px;
+    border-radius: 10px;
+}
+
+label + .fileForm {
+    cursor: pointer; 
+}
+
+label + .fileForm {
+    display: inline-block;
+    height: 40px;
+    border-radius: 10px;
+}*/
+

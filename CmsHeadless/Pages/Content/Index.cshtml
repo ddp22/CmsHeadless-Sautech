@@ -3,62 +3,194 @@
 @{
 }
 
-<h1>Form Content</h1>
-<form method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="col-12 col-xl-4 custom-form-border">
+    <form method="post"  class="custom-form" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="_formContentModel.Title" class="control-label"></label>
+            <input asp-for="_formContentModel.Title" class="form-control" required/>
+            <span asp-validation-for="_formContentModel.Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="_formContentModel.Media" class="control-label"></label>
+            <input asp-for="_formContentModel.Media" class="form-control" />
+            <span asp-validation-for="_formContentModel.Media" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="_formContentModel.Description" class="control-label"></label>
+            <input asp-for="_formContentModel.Description" class="form-control" />
+            <span asp-validation-for="_formContentModel.Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="_formContentModel.Text" class="control-label"></label>
+            <input asp-for="_formContentModel.Text" class="form-control" />
+            <span asp-validation-for="_formContentModel.Text" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="_formContentModel.PubblicationDate" class="control-label"></label>
+            <input asp-for="_formContentModel.PubblicationDate" class="form-control" />
+            <span asp-validation-for="_formContentModel.PubblicationDate" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="ContentNew.ContentAttributes" class="control-label"></label>
-        <input asp-for="ContentNew.ContentAttributes" class="form-control" />
-        <span asp-validation-for="ContentNew.ContentAttributes" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ContentNew.ContentCategory" class="control-label"></label>
-        <input asp-for="ContentNew.ContentCategory" class="form-control" />
-        <span asp-validation-for="ContentNew.ContentCategory" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ContentNew.ContentTag" class="control-label"></label>
-        <input asp-for="ContentNew.ContentTag" class="form-control" />
-        <span asp-validation-for="ContentNew.ContentTag" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="_formContentModel.ContentAttributes" class="control-label"></label>
+            <select asp-for="_formContentModel.ContentAttributes" class="form-select" multiple>
+                @{
+                    foreach(var i in Model.AttributesAvailable)
+                    {
+                        <option value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>
+                    }
+                }
+            </select>
+            <span asp-validation-for="_formContentModel.ContentAttributes" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="_formContentModel.ContentCategory" class="control-label"></label>
+            <select asp-for="_formContentModel.ContentCategory" class="form-select" multiple>
+                @{
+                    foreach(var i in Model.CategoryAvailable)
+                    {
+                        <option value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
+                    }
+                }
+            </select>
+            <span asp-validation-for="_formContentModel.ContentCategory" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="_formContentModel.ContentTag" class="control-label"></label>
+            <select asp-for="_formContentModel.ContentTag" class="form-select" multiple>
+                @{
+                    foreach(var i in Model.TagAvailable)
+                    {
+                        <option value="@i.TagId" id="@i.TagId">@i.Name</option>
+                    }
+                }
+            </select>
+            <span asp-validation-for="_formContentModel.ContentTag" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="ContentNew.Title" class="control-label"></label>
-        <input asp-for="ContentNew.Title" class="form-control" />
-        <span asp-validation-for="ContentNew.Title" class="text-danger"></span>
+        <div class="form-group">
+            <input asp-page-handler="Create" type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+@{
+    if(IndexModel.lastCreate>0 && ModelState.ErrorCount == 0)
+    {
+        <div class="alert alert-success" role="alert">
+            <p>Categoria inserita con successo</p>
+        </div>
+    }
+}
+@if(ModelState.ErrorCount > 0)
+{
+    <div class="alert alert-danger" role="alert">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger font-weight-bold" })
     </div>
-    <div class="form-group">
-        <label asp-for="ContentNew.Media" class="control-label"></label>
-        <input asp-for="ContentNew.Media" class="form-control" />
-        <span asp-validation-for="ContentNew.Media" class="text-danger"></span>
+}
+
+
+        <h1>Lista content</h1>
+<table class="table table-striped table-bordered" id="contentList">
+  <thead >
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Title</th>
+      <th scope="col">Description</th>
+      <th scope="col">Insertion Date</th>
+      <th scope="col">Image</th>
+      <th scope="col">Text</th>
+      <th scope="col">User</th>
+      <th scope="col">Last Edit</th>
+      <th scope="col">Pubblication Date</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+        @{
+            if(Model.ContentList!=null){
+            int k=1+(Model.ContentList.PageIndex-1)*IndexModel.numberPage ;
+                    @foreach (var item in Model.ContentList)
+                {
+                        <tr>
+                            <th scope="row">
+                                @k
+                            </th>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InsertionDate)
+                            </td>
+                            <td>
+                                <img style="max-height:100px" src="~/img/content/@Html.DisplayFor(modelItem => item.Media)" alt="image not available"/>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Text)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LastEdit)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PubblicationDate)
+                            </td>
+                            <td>
+                                    <a asp-page="./EditContent" asp-route-id="@item.ContentId">Edit</a> |
+                                                         
+                                    <a asp-page="index" asp-page-handler="Delete" asp-route-contentId="@item.ContentId">Delete</a>
+                            </td>
+                        </tr>
+                    k++;
+                }
+            }
+            else
+            {
+                <h1>C'è stato un problema relativo al database. Ricaricare la pagina</h1>
+                return;
+            }
+       }
+
+  </tbody>
+</table>
+
+@if(IndexModel.lastDelete>0 && ModelState.ErrorCount == 0)
+{
+    <div class="alert alert-success" role="alert">
+        <p>Categoria eliminata con successo</p>
     </div>
-    <div class="form-group">
-        <label asp-for="ContentNew.Description" class="control-label"></label>
-        <input asp-for="ContentNew.Description" class="form-control" />
-        <span asp-validation-for="ContentNew.Description" class="text-danger"></span>
+}
+else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>Errore nell'eliminazione'</p>
     </div>
-    <div class="form-group">
-        <label asp-for="ContentNew.InsertionDate" class="control-label"></label>
-        <input asp-for="ContentNew.InsertionDate" class="form-control" />
-        <span asp-validation-for="ContentNew.InsertionDate" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ContentNew.Text" class="control-label"></label>
-        <input asp-for="ContentNew.Text" class="form-control" />
-        <span asp-validation-for="ContentNew.Text" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ContentNew.UserId" class="control-label"></label>
-        <input asp-for="ContentNew.UserId" class="form-control" />
-        <span asp-validation-for="ContentNew.UserId" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ContentNew.LastEdit" class="control-label"></label>
-        <input asp-for="ContentNew.LastEdit" class="form-control" />
-        <span asp-validation-for="ContentNew.LastEdit" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Create" class="btn btn-primary" />
-    </div>
-</form>
+}
+
+@{
+    
+    var prevDisabled = !Model.ContentList.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.ContentList.HasNextPage ? "disabled" : "";
+}
+
+    <a asp-action="Index"
+   asp-route-pageIndex="@(Model.ContentList.PageIndex - 1)"
+   class="btn btn-default @prevDisabled">
+            Previous
+    </a>
+    <a asp-action="Index"
+   asp-route-pageIndex="@(Model.ContentList.PageIndex + 1)"
+   class="btn btn-default @nextDisabled">
+            Next
+    </a>
+
+
+@{
+    IndexModel.lastCreate = 0;
+    IndexModel.lastDelete = 0;
+}

@@ -8,7 +8,6 @@ namespace CmsHeadless.Models
         [Key]
         public int CategoryId { get; set; }
         [MaxLength(30)]
-        [Index(IsUnique = true)]
         [Required]
         public string Name { get; set; } = null!;
         [MaxLength(200)]

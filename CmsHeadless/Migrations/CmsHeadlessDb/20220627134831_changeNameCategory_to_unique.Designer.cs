@@ -76,9 +76,6 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasKey("CategoryId");
 
-                    b.HasAlternateKey("Name")
-                        .HasName("AlternateKey_LicensePlate");
-
                     b.ToTable("Category");
                 });
 

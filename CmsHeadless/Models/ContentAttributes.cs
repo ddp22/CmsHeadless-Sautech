@@ -9,7 +9,7 @@ namespace CmsHeadless.Models
         public int ContentId { get; set; }
         public Content Content { get; set; } = null!;
 
-        public int AttributeId { get; set; }
+        public int AttributesId { get; set; }
         public Attributes Attributes { get; set; } = null!;
     }
 }

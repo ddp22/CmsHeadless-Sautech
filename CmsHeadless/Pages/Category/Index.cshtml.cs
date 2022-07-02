@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CmsHeadless.Models;
-using CmsHeadless.ViewModels;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using CmsHeadless.ViewModels.Category;
 
 namespace CmsHeadless.Pages.Category
 {
@@ -31,12 +31,13 @@ namespace CmsHeadless.Pages.Category
             _context = context;
             Configuration = configuration;
             CategoryAvailable = new List<Models.Category>();
+            _formCategoryModel=new CategoryViewModel();
         }
 
 
         public CategoryList<Models.Category> CategoryList { get; set; }
         public async Task<IActionResult> OnGetAsync(int? pageIndex) {
-
+            
             IQueryable<Models.Category> selectCategoryQuery = from Category in _context.Category select Category;
             CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
 
@@ -47,7 +48,6 @@ namespace CmsHeadless.Pages.Category
             var pageSize = Configuration.GetValue("PageSize", numberPage);
             CategoryList = await CategoryList<Models.Category>.CreateAsync(
                 selectCategoryQuery.AsNoTracking(), pageIndex ?? 1, pageSize);
-
             return Page();
         }
 
@@ -64,7 +64,7 @@ namespace CmsHeadless.Pages.Category
             int is_exsist  = _context.Category.Where(c => c.Name == _formCategoryModel.Name).Count();
 
             if (is_exsist>0) {
-                ModelState.AddModelError("Make", "Categoria già inserita");
+                ModelState.AddModelError("Make", "Non è stato possibile inserire la categoria perchè già esiste");
                 selectCategoryQuery = from Category in _context.Category select Category;
                 CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
                 if (pageIndex == null)
@@ -140,7 +140,7 @@ namespace CmsHeadless.Pages.Category
 
 
 
-        public async Task<IActionResult> OnPostDeleteAsync(int? pageIndex, int? categoryId) {
+        public async Task<IActionResult> OnGetDeleteAsync(int? pageIndex, int? categoryId) {
             lastDelete = 0;
             lastCreate = 0;
             if (categoryId == null)
@@ -159,7 +159,7 @@ namespace CmsHeadless.Pages.Category
             lastDelete=await _context.SaveChangesAsync();
             if (lastDelete <= 0)
             {
-                ModelState.AddModelError("Make", "Errore nell'inserimento");
+                ModelState.AddModelError("Make", "Errore nell'eliminazione");
                 return Page();
             }
             selectCategoryQuery = from Category in _context.Category select Category;

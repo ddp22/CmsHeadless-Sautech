@@ -3,68 +3,74 @@
 @{
 }
 
-<h1>Form Edit Category</h1>
-@{
-    if(EditCategoryModel.lastEdit>0 && ModelState.ErrorCount == 0)
-    {
-        <p>Categoria modificata con successo</p>
-    }
+<div class="col-12 col-xl-4 custom-form-border">
+    <form method="post" class="custom-form" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+         <div class="form-group">
+            <label asp-for="_formEditCategoryModel.Name" class="control-label"></label>
+            <input asp-for="_formEditCategoryModel.Name" class="form-control textForm" value="@Model.category.Name" required placeholder="Enter Name..."/>
+            <span asp-validation-for="_formEditCategoryModel.Name" class="text-danger"></span>
+        </div>
     
-}
-@if(ModelState.ErrorCount > 0)
-    {
-        @Html.ValidationSummary(false, "", new { @class = "text-danger font-weight-bold" });
-    }
-<form method="post" enctype="multipart/form-data">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-     <div class="form-group">
-        <label asp-for="_formEditCategoryModel.Name" class="control-label"></label>
-        <input asp-for="_formEditCategoryModel.Name" class="form-control" value="@Model.category.Name" required/>
-        <span asp-validation-for="_formEditCategoryModel.Name" class="text-danger"></span>
-    </div>
-    
-    <div class="form-group">
-        <label asp-for="_formEditCategoryModel.Description" class="control-label"></label>
-        <input asp-for="_formEditCategoryModel.Description" class="form-control" value="@Model.category.Description"/>
-        <span asp-validation-for="_formEditCategoryModel.Description" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="_formEditCategoryModel.CreationDate" class="control-label"></label>
-        <input asp-for="_formEditCategoryModel.CreationDate" class="form-control" required value="@Model.CreationDate"/>
-        <span asp-validation-for="_formEditCategoryModel.CreationDate" class="text-danger"></span>
-    </div>
-    <div class="col-md-6">  
-        <div class="form-group">  
-            <label asp-for="_formEditCategoryModel.Media" class="control-label">Choose file</label>  
-            <input asp-for="_formEditCategoryModel.Media" class="custom-file-input" value="@Model.category.Media">  
-            <span asp-validation-for="_formEditCategoryModel.Media" class="text-danger"></span>  
-        </div>  
-    </div>
-     <div class="form-group">
-        <label asp-for="_formEditCategoryModel.CategoryParentId" class="control-label"></label>
-        <select asp-for="_formEditCategoryModel.CategoryParentId" class="form-control">
-            @{
-                foreach(var i in Model.CategoryAvailable)
-                {
-                    if (@i.CategoryId == @Model.category.CategoryId)
+        <div class="form-group">
+            <label asp-for="_formEditCategoryModel.Description" class="control-label"></label>
+            <input asp-for="_formEditCategoryModel.Description" class="form-control textForm" value="@Model.category.Description" required placeholder="Enter Description..."/>
+            <span asp-validation-for="_formEditCategoryModel.Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="_formEditCategoryModel.CreationDate" class="control-label"></label>
+            <input asp-for="_formEditCategoryModel.CreationDate" class="form-control dateForm" value="@Model.CreationDate" required/>
+            <span asp-validation-for="_formEditCategoryModel.CreationDate" class="text-danger"></span>
+        </div>
+        <div class="col-12 col-md-12 col-xl-12">
+            <div class="orm-group mb-3">
+                 <label asp-for="_formEditCategoryModel.Media" class="control-label">Choose file</label>
+                 <input asp-for="_formEditCategoryModel.Media" type="file" class="form-control" aria-label="file example" value="@Model.category.Media">
+                 <span asp-validation-for="_formEditCategoryModel.Media" class="text-danger"></span>
+            </div>
+        </div>
+         <div class="form-group">
+            <label asp-for="_formEditCategoryModel.CategoryParentId" class="control-label"></label>
+            <select asp-for="_formEditCategoryModel.CategoryParentId" class="form-control selectForm">
+                @{
+                    foreach(var i in Model.CategoryAvailable)
                     {
-                        <option selected value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
-                    }
-                    else
-                    {
-                        <option selected value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
-                    }
+                        if (@i.CategoryId == @Model.category.CategoryId)
+                        {
+                            <option selected value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
+                        }
+                        else
+                        {
+                            <option selected value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
+                        }
                     
                     
+                    }
                 }
-            }
-        </select>
-        <span asp-validation-for="_formEditCategoryModel.CategoryParentId" class="text-danger"></span>
-    </div>
+            </select>
+            <span asp-validation-for="_formEditCategoryModel.CategoryParentId" class="text-danger"></span>
+        </div>
+
+
+
+
 
    
-    <div class="form-group">
-        <input type="submit" value="Edit" asp-route-categoryId="@EditCategoryModel.EditCategoryId" asp-page-handler="Edit" class="btn btn-primary" />
-    </div>
-</form>
+        <div class="form-group">
+            <input type="submit" value="Edit" asp-route-categoryId="@EditCategoryModel.EditCategoryId" asp-page-handler="Edit" class="btn btn-primary" />
+        </div>
+        @if(EditCategoryModel.lastEdit>0 && ModelState.ErrorCount == 0)
+            {
+                <div class="alert alert-success" role="alert">
+                    <p>Categoria inserita con successo</p>
+                </div>
+            }
+        @if(ModelState.ErrorCount > 0)
+        {
+            <div class="alert alert-danger" role="alert">
+                @Html.ValidationSummary(false, "", new { @class = "text-danger font-weight-bold" })
+            </div>
+        }
+    </form>
+</div>
 <a href="../Category/">Return to category pages</a>

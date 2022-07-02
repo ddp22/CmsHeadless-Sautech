@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CmsHeadless.Migrations.CmsHeadlessDb
 {
     [DbContext(typeof(CmsHeadlessDbContext))]
-    [Migration("20220627142639_changeNameCategory_to_required")]
-    partial class changeNameCategory_to_required
+    [Migration("20220701153407_Add_LastEdit_To_NUll")]
+    partial class Add_LastEdit_To_NUll
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -94,12 +94,15 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.Property<DateTime>("InsertionDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("LastEdit")
+                    b.Property<DateTime?>("LastEdit")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Media")
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateTime?>("PubblicationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");

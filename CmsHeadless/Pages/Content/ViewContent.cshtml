@@ -1,0 +1,106 @@
+﻿@page
+@model CmsHeadless.Pages.Content.ViewContentModel;
+
+@{
+}
+        <h1>Lista content</h1>
+<table class="table table-striped table-bordered" id="contentList">
+  <thead >
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Title</th>
+      <th scope="col">Description</th>
+      <th scope="col">Insertion Date</th>
+      <th scope="col">Image</th>
+      <th scope="col">Text</th>
+      <th scope="col">User</th>
+      <th scope="col">Last Edit</th>
+      <th scope="col">Pubblication Date</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+        @{
+            if(Model.ContentList!=null){
+            int k=1+(Model.ContentList.PageIndex-1)*IndexModel.numberPage ;
+                    @foreach (var item in Model.ContentList)
+                {
+                        <tr>
+                            <th scope="row">
+                                @k
+                            </th>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InsertionDate)
+                            </td>
+                            <td>
+                                <img style="max-height:100px" src="~/img/content/@Html.DisplayFor(modelItem => item.Media)" alt="image not available"/>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Text)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LastEdit)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PubblicationDate)
+                            </td>
+                            <td>
+                                    <a asp-page="./EditContent" asp-route-id="@item.ContentId">Edit</a> |
+                                                         
+                                    <a asp-page="./ViewContent" asp-page-handler="Delete" asp-route-contentId="@item.ContentId">Delete</a>
+                            </td>
+                        </tr>
+                    k++;
+                }
+            }
+            else
+            {
+                <h1>C'è stato un problema relativo al database. Ricaricare la pagina</h1>
+                return;
+            }
+       }
+
+  </tbody>
+</table>
+
+@if(IndexModel.lastDelete>0 && ModelState.ErrorCount == 0)
+{
+    <div class="alert alert-success" role="alert">
+        <p>Content eliminato con successo</p>
+    </div>
+}
+else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>Errore nell'eliminazione'</p>
+    </div>
+}
+
+@{
+    
+    var prevDisabled = !Model.ContentList.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.ContentList.HasNextPage ? "disabled" : "";
+}
+
+    <a asp-action="Index"
+   asp-route-pageIndex="@(Model.ContentList.PageIndex - 1)"
+   class="btn btn-default @prevDisabled">
+            Previous
+    </a>
+    <a asp-action="Index"
+   asp-route-pageIndex="@(Model.ContentList.PageIndex + 1)"
+   class="btn btn-default @nextDisabled">
+            Next
+    </a>
+
+@{
+    ViewContentModel.lastDelete = 0;
+}

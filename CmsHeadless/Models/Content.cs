@@ -9,7 +9,7 @@ namespace CmsHeadless.Models
         [Key]
         public int ContentId { get; set; }
         [MaxLength(50)]
-        public string? Title { get; set; }
+        public string Title { get; set; } = null!;
         [MaxLength(150)]
         public string? Media { get; set; }
         [MaxLength(100)]
@@ -25,11 +25,14 @@ namespace CmsHeadless.Models
         public string UserId { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime LastEdit { get; set; }
-        
-        public virtual ICollection<ContentAttributes> ContentAttributes { get; set; } = null!;
-        public virtual ICollection<ContentCategory> ContentCategory { get; set; } = null!;
-        public virtual ICollection<ContentTag> ContentTag { get; set; } = null!;
+        public DateTime? LastEdit { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime? PubblicationDate { get; set; }
+
+        public virtual ICollection<ContentAttributes>? ContentAttributes { get; set; }
+        public virtual ICollection<ContentCategory>? ContentCategory { get; set; }
+        public virtual ICollection<ContentTag>? ContentTag { get; set; }
 
     }
 

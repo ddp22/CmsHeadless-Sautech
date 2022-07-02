@@ -1,11 +1,11 @@
 using CmsHeadless.Models;
-using CmsHeadless.ViewModels;
+using CmsHeadless.ViewModels.Category;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CmsHeadless.Pages.Category
 {
-    
+
     public class EditCategoryModel : PageModel
     {
         IQueryable<Models.Category> selectCategoryQuery;
@@ -101,6 +101,17 @@ namespace CmsHeadless.Pages.Category
             {
                 categoryToUpdate.Media = uniqueFileName;
             }
+            if (DateTime.Now.Date > _formEditCategoryModel.CreationDate.Date)
+            {
+                ModelState.AddModelError("Make", "Inserire una data successiva a quella odierna");
+                selectCategoryQuery = from Category in _context.Category select Category;
+                CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
+                category = await _context.Category.FindAsync(CategoryId);
+
+                CreationDate = category.CreationDate.ToString("yyyy-MM-dd");
+                return Page();
+            }
+
             categoryToUpdate.CategoryParentId = _formEditCategoryModel.CategoryParentId;
             lastEdit = await _context.SaveChangesAsync();
 

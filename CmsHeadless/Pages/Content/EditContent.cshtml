@@ -1,0 +1,97 @@
+﻿@page
+@model CmsHeadless.Pages.Content.EditContentModel
+@{
+}
+<div class="col-12 col-xl-6 custom-form-border">
+    <form method="post"  class="custom-form" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="_formEditContentModel.Title" class="control-label"></label>
+            <input asp-for="_formEditContentModel.Title" class="form-control" required value="@Model.content.Title"/>
+            <span asp-validation-for="_formEditContentModel.Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="_formEditContentModel.Media" class="control-label"></label>
+            <input asp-for="_formEditContentModel.Media" class="form-control" value="@Model.content.Media"/>
+            <span asp-validation-for="_formEditContentModel.Media" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="_formEditContentModel.Description" class="control-label"></label>
+            <input asp-for="_formEditContentModel.Description" class="form-control" value="@Model.content.Description"/>
+            <span asp-validation-for="_formEditContentModel.Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="_formEditContentModel.Text" class="control-label"></label>
+            <input asp-for="_formEditContentModel.Text" class="form-control" value="@Model.content.Text"/>
+            <span asp-validation-for="_formEditContentModel.Text" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="_formEditContentModel.PubblicationDate" class="control-label"></label>
+            <input asp-for="_formEditContentModel.PubblicationDate" class="form-control" value="@Model.content.PubblicationDate"/>
+            <span asp-validation-for="_formEditContentModel.PubblicationDate" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="_formEditContentModel.ContentAttributes" class="control-label"></label>
+            <select asp-for="_formEditContentModel.ContentAttributes" class="form-select" multiple>
+                @{
+                    foreach(var i in Model.AttributesAvailable)
+                    {
+                        if (@Model.AttributesSelected!=null && @Model.AttributesSelected.Contains(i.AttributesId))
+                        {
+                            <option selected value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>
+                        }
+                        else
+                        {
+                            <option value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>                            
+                        }
+                    }
+                }
+            </select>
+            <span asp-validation-for="_formEditContentModel.ContentAttributes" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="_formEditContentModel.ContentCategory" class="control-label"></label>
+            <select asp-for="_formEditContentModel.ContentCategory" class="form-select" multiple>
+                @{
+                    foreach(var i in Model.CategoryAvailable)
+                    {
+                        if (@Model.CategorySelected!=null && @Model.CategorySelected.Contains(i.CategoryId))
+                        {
+                            <option selected value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
+                        }
+                    }
+                }
+            </select>
+            <span asp-validation-for="_formEditContentModel.ContentCategory" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="_formEditContentModel.ContentTag" class="control-label"></label>
+            <select asp-for="_formEditContentModel.ContentTag" class="form-select" multiple>
+                @{
+                    foreach(var i in Model.TagAvailable)
+                    {
+                        if (@Model.TagSelected!=null && @Model.TagSelected.Contains(i.TagId))
+                        {
+                            <option selected value="@i.TagId" id="@i.TagId">@i.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@i.TagId" id="@i.TagId">@i.Name</option>
+                        }
+                    }
+                }
+            </select>
+            <span asp-validation-for="_formEditContentModel.ContentTag" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <input asp-page-handler="Create" type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+<a href="../Content/">Return to content pages</a>
