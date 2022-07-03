@@ -18,7 +18,9 @@ namespace CmsHeadless.Pages.Content
         public ContentViewModel _formContentModel { get; set; }
         public static int lastCreate = 0;
         public static int lastDelete = 0;
-        
+
+        public static int ContentId = 0;
+
 
         [BindProperty]
         public Models.Content ContentNew { get; set; }
@@ -48,6 +50,46 @@ namespace CmsHeadless.Pages.Content
 
         public async Task<IActionResult> OnGetAsync(int? pageIndex)
         {
+
+            /*if (ContentId!=0)
+            {
+                var contentToUpdate = await _context.Content.FindAsync(ContentId);
+
+                var tempContentAttributes = new Models.ContentAttributes();
+                IQueryable<Models.ContentAttributes> selectContentAttributesQuery = from ContentAttributes in _context.ContentAttributes where ContentAttributes.ContentId==ContentId select ContentAttributes;
+                List<ContentAttributes> ContentAttributesAvailable = selectContentAttributesQuery.ToList<Models.ContentAttributes>();
+                
+                foreach(ContentAttributes i in ContentAttributesAvailable)
+                {
+                    contentToUpdate.ContentAttributes.Add(i);
+                }
+
+                var tempContentCategory = new Models.ContentCategory();
+                IQueryable<Models.ContentCategory> selectContentCategoryQuery = from ContentCategory in _context.ContentCategory where ContentCategory.ContentId == ContentId select ContentCategory;
+                List<ContentCategory> ContentCategoryAvailable = selectContentCategoryQuery.ToList<Models.ContentCategory>();
+                foreach (ContentCategory i in ContentCategoryAvailable)
+                {
+                    contentToUpdate.ContentCategory.Add(i);
+                }
+
+                var tempContentTag = new Models.ContentTag();
+                IQueryable<Models.ContentTag> selectContentTagQuery = from ContentTag in _context.ContentTag where ContentTag.ContentId == ContentId select ContentTag;
+                List<ContentTag> ContentTagAvailable = selectContentTagQuery.ToList<Models.ContentTag>();
+                foreach (ContentTag i in ContentTagAvailable)
+                {
+                    contentToUpdate.ContentTag.Add(i);
+                }
+
+                int k=await _context.SaveChangesAsync();
+                if (k <= 0)
+                {
+                    ContentId = 0;
+                    ModelState.AddModelError("Make", "Errore");
+                }
+            }
+            ContentId = 0;*/
+
+
             IQueryable<Models.Content> selectContentQuery = from Content in _context.Content select Content;
             ContentAvailable = selectContentQuery.ToList<Models.Content>();
 
@@ -57,7 +99,7 @@ namespace CmsHeadless.Pages.Content
             }
             var pageSize = Configuration.GetValue("PageSize", numberPage);
             ContentList = await ContentList<Models.Content>.CreateAsync(
-                selectContentQuery.AsNoTracking(), pageIndex ?? 1, pageSize);
+            selectContentQuery.AsNoTracking(), pageIndex ?? 1, pageSize);
             return Page();
         }
 
@@ -128,19 +170,20 @@ namespace CmsHeadless.Pages.Content
 
             selectContentQuery = from Content in _context.Content where Content.Title==temp.Title select Content;
             Models.Content tempContent = selectContentQuery.ToList<Models.Content>().First<Models.Content>();
+            ContentId=tempContent.ContentId;
 
             /*ContentAttributes*/
             if (_formContentModel.ContentAttributes != null)
             {
                 var tempContentAttributes = new Models.ContentAttributes();
-                temp.ContentAttributes = new List<Models.ContentAttributes>();
+                //temp.ContentAttributes = new List<Models.ContentAttributes>();
                 foreach (int i in _formContentModel.ContentAttributes)
                 {
                     var entryContentAttributes = _context.Add(new Models.ContentAttributes());
                     tempContentAttributes.AttributesId = i;
                     tempContentAttributes.ContentId = tempContent.ContentId;
 
-                    temp.ContentAttributes.Add(tempContentAttributes);
+                    //temp.ContentAttributes.Add(tempContentAttributes);
 
                     entryContentAttributes.CurrentValues.SetValues(tempContentAttributes);
                     int k = await _context.SaveChangesAsync();
@@ -156,14 +199,14 @@ namespace CmsHeadless.Pages.Content
             if (_formContentModel.ContentTag != null)
             {
                 var tempContentTag = new Models.ContentTag();
-                temp.ContentTag = new List<Models.ContentTag>();
+                //temp.ContentTag = new List<Models.ContentTag>();
                 foreach (int i in _formContentModel.ContentTag)
                 {
                     var entryContentTag = _context.Add(new Models.ContentTag());
                     tempContentTag.TagId = i;
                     tempContentTag.ContentId = tempContent.ContentId;
 
-                    temp.ContentTag.Add(tempContentTag);
+                    //temp.ContentTag.Add(tempContentTag);
 
                     entryContentTag.CurrentValues.SetValues(tempContentTag);
                     int k = await _context.SaveChangesAsync();
@@ -179,14 +222,14 @@ namespace CmsHeadless.Pages.Content
             if (_formContentModel.ContentCategory != null)
             {
                 var tempContentCategory = new Models.ContentCategory();
-                temp.ContentCategory = new List<Models.ContentCategory>();
+                //temp.ContentCategory = new List<Models.ContentCategory>();
                 foreach (int i in _formContentModel.ContentCategory)
                 {
                     var entryContentCategory = _context.Add(new Models.ContentCategory());
                     tempContentCategory.CategoryId = i;
                     tempContentCategory.ContentId = tempContent.ContentId;
 
-                    temp.ContentCategory.Add(tempContentCategory);
+                    //temp.ContentCategory.Add(tempContentCategory);
 
                     entryContentCategory.CurrentValues.SetValues(tempContentCategory);
                     int k = await _context.SaveChangesAsync();

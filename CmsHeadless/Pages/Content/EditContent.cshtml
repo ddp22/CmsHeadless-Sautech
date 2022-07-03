@@ -27,7 +27,7 @@
         </div>
         <div class="form-group">
             <label asp-for="_formEditContentModel.PubblicationDate" class="control-label"></label>
-            <input asp-for="_formEditContentModel.PubblicationDate" class="form-control" value="@Model.content.PubblicationDate"/>
+            <input asp-for="_formEditContentModel.PubblicationDate" class="form-control" value="@Model.PubblicationDateString"/>
             <span asp-validation-for="_formEditContentModel.PubblicationDate" class="text-danger"></span>
         </div>
 
@@ -88,14 +88,43 @@
             </select>
             <span asp-validation-for="_formEditContentModel.ContentTag" class="text-danger"></span>
         </div>
+        <div class="form-group">
+            <label asp-for="_formEditContentModel.InsertionDate" class="control-label"></label>
+            <input asp-for="_formEditContentModel.InsertionDate" class="form-control" value="@Model.InsertionDateString" readonly/>
+            <span asp-validation-for="_formEditContentModel.InsertionDate" class="text-danger"></span>
+        </div>
+        @if (@Model.content.LastEdit!=null)
+        {
+            <div class="form-group">
+                <label asp-for="_formEditContentModel.lastEdit" class="control-label"></label>
+                <input asp-for="_formEditContentModel.lastEdit" class="form-control" value="@Model.lastEditString" readonly/>
+                <span asp-validation-for="_formEditContentModel.lastEdit" class="text-danger"></span>
+            </div>
+        }
 
         <div class="form-group">
-            <input asp-page-handler="Create" type="submit" value="Create" class="btn btn-primary" />
+
+            <input asp-page-handler="Edit" asp-route-contentId="@EditContentModel.EditContentId" type="submit" value="Edit" class="btn btn-primary" />
         </div>
+        @if((EditContentModel.lastEdit>0 || EditContentModel.lastEditAttributes>0 || EditContentModel.lastEditCategory>0 || EditContentModel.lastEditTag>0) && ModelState.ErrorCount == 0)
+            {
+                <div class="alert alert-success" role="alert">
+                    <p>Content modificato con successo</p>
+                </div>
+            }
+        @if(ModelState.ErrorCount > 0)
+        {
+            <div class="alert alert-danger" role="alert">
+                @Html.ValidationSummary(false, "", new { @class = "text-danger font-weight-bold" })
+            </div>
+        }
     </form>
 </div>
 <a href="../Content/">Return to content pages</a>
 
 @{
     EditContentModel.lastEdit = 0;
+    EditContentModel.lastEditAttributes = 0;
+    EditContentModel.lastEditCategory = 0;
+    EditContentModel.lastEditTag = 0;
 }

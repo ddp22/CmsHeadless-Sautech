@@ -26,6 +26,9 @@ namespace CmsHeadless.Models
         public DbSet<Category> Category { get; set; }
         public DbSet<Content> Content { get; set; }
         public DbSet<Tag> Tag { get; set; }
+        public DbSet<ContentAttributes> ContentAttributes { get; set; }
+        public DbSet<ContentTag> ContentTag { get; set; }
+        public DbSet<ContentCategory> ContentCategory { get; set; }
     }
     
 }
