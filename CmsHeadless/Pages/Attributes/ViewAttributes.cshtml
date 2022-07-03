@@ -1,44 +1,7 @@
 ﻿@page
-@model CmsHeadless.Pages.Attributes.IndexModel
-
+@model CmsHeadless.Pages.Attributes.ViewAttributesModel
 @{
 }
-
-<div class="col-12 col-xl-4 custom-form-border">
-    <form method="post"  class="custom-form" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="_formAttributesModel.AttributeName" class="control-label"></label>
-            <input asp-for="_formAttributesModel.AttributeName" class="form-control" required/>
-            <span asp-validation-for="_formAttributesModel.AttributeName" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="_formAttributesModel.AttributeValue" class="control-label"></label>
-            <input asp-for="_formAttributesModel.AttributeValue" class="form-control" required/>
-            <span asp-validation-for="_formAttributesModel.AttributeValue" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <input type="submit" asp-page-handler="Create" value="Create" class="btn btn-primary" />
-        </div>
-    </form>
-</div>
-
-        @{
-    if(IndexModel.lastCreate>0 && ModelState.ErrorCount == 0)
-    {
-        <div class="alert alert-success" role="alert">
-            <p>Tag inserito con successo</p>
-        </div>
-    }
-}
-@if(ModelState.ErrorCount > 0)
-{
-    <div class="alert alert-danger" role="alert">
-        @Html.ValidationSummary(false, "", new { @class = "text-danger font-weight-bold" })
-    </div>
-}
-
-
         <h1>Lista Attributes</h1>
 <table class="table table-striped table-bordered" id="attributesList">
   <thead >
@@ -67,7 +30,7 @@
                         <td>
                             <a asp-page="./EditAttributes" asp-route-id="@item.AttributesId">Edit</a> |
                                                          
-                            <a asp-page="index" asp-page-handler="Delete" asp-route-attributesId="@item.AttributesId">Delete</a>
+                            <a asp-page="./ViewAttributes" asp-page-handler="Delete" asp-route-attributesId="@item.AttributesId">Delete</a>
                         </td>
                     </tr>
                     k++;

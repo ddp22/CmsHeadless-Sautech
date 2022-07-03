@@ -1,43 +1,8 @@
 ﻿@page
-@model CmsHeadless.Pages.Tag.IndexModel
-@{
-}
-
-<div class="col-12 col-xl-4 custom-form-border">
-    <form method="post"  class="custom-form" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="_formTagModel.Name" class="control-label"></label>
-            <input asp-for="_formTagModel.Name" class="form-control" required/>
-            <span asp-validation-for="_formTagModel.Name" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="_formTagModel.Url" class="control-label"></label>
-            <input asp-for="_formTagModel.Url" class="form-control" required/>
-            <span asp-validation-for="_formTagModel.Url" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <input type="submit" asp-page-handler="Create" value="Create" class="btn btn-primary" />
-        </div>
-    </form>
-</div>
+@model CmsHeadless.Pages.Tag.ViewTagModel;
 
 @{
-    if(IndexModel.lastCreate>0 && ModelState.ErrorCount == 0)
-    {
-        <div class="alert alert-success" role="alert">
-            <p>Tag inserito con successo</p>
-        </div>
-    }
 }
-@if(ModelState.ErrorCount > 0)
-{
-    <div class="alert alert-danger" role="alert">
-        @Html.ValidationSummary(false, "", new { @class = "text-danger font-weight-bold" })
-    </div>
-}
-
-
         <h1>Lista Tag</h1>
 <table class="table table-striped table-bordered" id="tagList">
   <thead >
@@ -66,7 +31,7 @@
                         <td>
                             <a asp-page="./EditTag" asp-route-id="@item.TagId">Edit</a> |
                                                          
-                            <a asp-page="index" asp-page-handler="Delete" asp-route-tagId="@item.TagId">Delete</a>
+                            <a asp-page="./ViewTag" asp-page-handler="Delete" asp-route-tagId="@item.TagId">Delete</a>
                         </td>
                     </tr>
                     k++;

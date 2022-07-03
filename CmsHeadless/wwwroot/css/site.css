@@ -47,19 +47,19 @@ body {
     padding:20px;
 }
 
-.dropDownMenuCategory, .dropDownMenuContent {
+.dropDownMenuCategory, .dropDownMenuContent, .dropDownMenuTag, .dropDownMenuAttributes {
     background-color: white;
     color: black;
     font-size: large;
     margin-right: 1.5rem;
 }
 
-    .dropDownMenuCategory:hover, .dropDownMenuContent:hover {
+.dropDownMenuCategory:hover, .dropDownMenuContent:hover, .dropDownMenuTag:hover, .dropDownMenuAttributes:hover {
         background-color: lightgrey;
         color: black;
     }
 
-.dropDownMenuItemCategory, .dropDownMenuItemContent {
+.dropDownMenuItemCategory, .dropDownMenuItemContent, .dropDownMenuItemTag, .dropDownMenuItemAttributes {
     color: black !important;
 }
 /*

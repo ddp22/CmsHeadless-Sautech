@@ -8,10 +8,9 @@ namespace CmsHeadless.Models
         [Key]
         public int TagId { get; set; }
         [MaxLength(30)]
-        public string? Name { get; set; }
+        public string Name { get; set; }
         [DataType(DataType.Url)]
         [MaxLength(150)]
-        public string? Url { get; set; }
-        public ICollection<ContentTag> ContentTag { get; set; } = null!;
+        public string Url { get; set; }
     }
 }

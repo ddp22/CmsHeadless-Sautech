@@ -62,7 +62,7 @@
         @if(EditCategoryModel.lastEdit>0 && ModelState.ErrorCount == 0)
             {
                 <div class="alert alert-success" role="alert">
-                    <p>Categoria inserita con successo</p>
+                    <p>Categoria modificata con successo</p>
                 </div>
             }
         @if(ModelState.ErrorCount > 0)
@@ -74,3 +74,7 @@
     </form>
 </div>
 <a href="../Category/">Return to category pages</a>
+
+@{
+    EditCategoryModel.lastEdit = 0;
+}
