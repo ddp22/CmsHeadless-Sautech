@@ -17,6 +17,7 @@ namespace CmsHeadless.Pages.Content
         private readonly CmsHeadlessDbContext _context;
         private readonly IConfiguration Configuration;
         public static int lastDelete = 0;
+        public static string searchString { get; set; }
         public Models.Content ContentNew { get; set; }
 
         public List<Models.Content> ContentAvailable { get; set; }
@@ -30,9 +31,46 @@ namespace CmsHeadless.Pages.Content
 
 
         public ContentList<Models.Content> ContentList { get; set; }
-        public async Task<IActionResult> OnGetAsync(int? pageIndex) {
+        public async Task<IActionResult> OnGetAsync(int? pageIndex, string? searchString) {
+            IQueryable<Models.Content> selectContentQueryOrder;
+            IQueryable<Models.Content> selectContentQuery;
 
-            IQueryable<Models.Content> selectContentQuery = from Content in _context.Content select Content;
+            selectContentQueryOrder = from Content in _context.Content select Content;
+            selectContentQuery = selectContentQueryOrder.OrderByDescending(c => c.ContentId);
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                ViewContentModel.searchString = searchString;
+                List<int> tempContentAttribute = (from c in _context.Content
+                                                  join ca in _context.ContentAttributes
+                                                  on c.ContentId equals ca.ContentId
+                                                  join a in _context.Attributes
+                                                  on ca.AttributesId equals a.AttributesId
+                                                  where a.AttributeName.Contains(searchString)
+                                                  select c.ContentId).ToList<int>();
+
+                List<int> tempContentTag = (from c in _context.Content
+                                            join ct in _context.ContentTag
+                                            on c.ContentId equals ct.ContentId
+                                            join t in _context.Tag
+                                            on ct.TagId equals t.TagId
+                                            where t.Name.Contains(searchString)
+                                            select c.ContentId).ToList<int>();
+
+                List<int> tempContentCategory = (from c in _context.Content
+                                                 join cc in _context.ContentCategory
+                                                 on c.ContentId equals cc.ContentId
+                                                 join ca in _context.Category
+                                                 on cc.CategoryId equals ca.CategoryId
+                                                 where ca.Name.Contains(searchString)
+                                                 select c.ContentId).ToList<int>();
+
+                selectContentQuery = selectContentQuery.Where(s => (s.Title.Contains(searchString)
+                || s.Description.Contains(searchString)
+                || s.Text.Contains(searchString))
+                || tempContentAttribute.Contains(s.ContentId)
+                || tempContentTag.Contains(s.ContentId)
+                || tempContentCategory.Contains(s.ContentId));
+            }
             ContentAvailable = selectContentQuery.ToList<Models.Content>();
 
             if (pageIndex == null)
@@ -53,7 +91,7 @@ namespace CmsHeadless.Pages.Content
             }
 
             var content = await _context.Content.FindAsync(contentId);
-
+            IQueryable<Models.Content> selectContentQueryOrder;
             IQueryable<Models.Content> selectContentQuery;
             if (content == null)
             {
@@ -66,7 +104,8 @@ namespace CmsHeadless.Pages.Content
                 ModelState.AddModelError("Make", "Errore nell'inserimento");
                 return Page();
             }
-            selectContentQuery = from Content in _context.Content select Content;
+            selectContentQueryOrder = from Content in _context.Content select Content;
+            selectContentQuery = selectContentQueryOrder.OrderByDescending(c => c.ContentId);
             ContentAvailable = selectContentQuery.ToList<Models.Content>();
             if (pageIndex == null)
             {

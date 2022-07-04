@@ -21,7 +21,7 @@ namespace CmsHeadless.Pages.Category
         [BindProperty]
         public CategoryViewModel _formCategoryModel { get; set; }
 
-
+        public static string searchString { get; set; }
         public Models.Category CategoryNew { get; set; }
 
         public List<Models.Category> CategoryAvailable { get; set; }
@@ -36,9 +36,18 @@ namespace CmsHeadless.Pages.Category
 
 
         public CategoryList<Models.Category> CategoryList { get; set; }
-        public async Task<IActionResult> OnGetAsync(int? pageIndex) {
-            
-            IQueryable<Models.Category> selectCategoryQuery = from Category in _context.Category select Category;
+        public async Task<IActionResult> OnGetAsync(int? pageIndex, string? searchString) {
+
+            IQueryable<Models.Category> selectCategoryQuery;
+            IQueryable<Models.Category> selectCategoryQueryOrder;
+
+            selectCategoryQueryOrder = from Category in _context.Category select Category;
+            selectCategoryQuery = selectCategoryQueryOrder.OrderByDescending(x => x.CategoryId);
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                IndexModel.searchString = searchString;
+                selectCategoryQuery = selectCategoryQuery.Where(s => s.Name.Contains(searchString) || s.Description.Contains(searchString));
+            }
             CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
 
             if (pageIndex == null)
@@ -53,11 +62,12 @@ namespace CmsHeadless.Pages.Category
 
 
 
-        public async Task<IActionResult> OnPostCreateAsync(int? pageIndex)
+        public async Task<IActionResult> OnPostCreateAsync(int? pageIndex, string? searchString)
         {
             lastCreate = 0;
             lastDelete = 0;
             IQueryable<Models.Category> selectCategoryQuery;
+            IQueryable<Models.Category> selectCategoryQueryOrder;
 
             var pageSize = 5;
 
@@ -65,7 +75,12 @@ namespace CmsHeadless.Pages.Category
 
             if (is_exsist>0) {
                 ModelState.AddModelError("Make", "Non è stato possibile inserire la categoria perchè già esiste");
-                selectCategoryQuery = from Category in _context.Category select Category;
+                selectCategoryQueryOrder = from Category in _context.Category select Category;
+                selectCategoryQuery = selectCategoryQueryOrder.OrderByDescending(x => x.CategoryId);
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    selectCategoryQuery = selectCategoryQuery.Where(s => s.Name.Contains(searchString));
+                }
                 CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
                 if (pageIndex == null)
                 {
@@ -102,7 +117,8 @@ namespace CmsHeadless.Pages.Category
                 ModelState.AddModelError("Make", "Inserire una data successiva a quella odierna");
 
 
-                selectCategoryQuery = from Category in _context.Category select Category;
+                selectCategoryQueryOrder = from Category in _context.Category select Category;
+                selectCategoryQuery = selectCategoryQueryOrder.OrderByDescending(x => x.CategoryId);
                 CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
                 if (pageIndex == null)
                 {
@@ -127,7 +143,8 @@ namespace CmsHeadless.Pages.Category
                 return Page();
             }
 
-            selectCategoryQuery = from Category in _context.Category select Category;
+            selectCategoryQueryOrder = from Category in _context.Category select Category;
+            selectCategoryQuery = selectCategoryQueryOrder.OrderByDescending(x => x.CategoryId);
             CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
             if (pageIndex == null){
                 pageIndex = 1;
@@ -150,6 +167,7 @@ namespace CmsHeadless.Pages.Category
 
             var category = await _context.Category.FindAsync(categoryId);
 
+            IQueryable<Models.Category> selectCategoryQueryOrder;
             IQueryable<Models.Category> selectCategoryQuery;
             if (category == null)
             {
@@ -162,7 +180,8 @@ namespace CmsHeadless.Pages.Category
                 ModelState.AddModelError("Make", "Errore nell'eliminazione");
                 return Page();
             }
-            selectCategoryQuery = from Category in _context.Category select Category;
+            selectCategoryQueryOrder = from Category in _context.Category select Category;
+            selectCategoryQuery = selectCategoryQueryOrder.OrderByDescending(x => x.CategoryId);
             CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
             if (pageIndex == null)
             {

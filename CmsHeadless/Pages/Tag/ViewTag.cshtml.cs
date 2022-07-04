@@ -17,6 +17,7 @@ namespace CmsHeadless.Pages.Tag
         private readonly CmsHeadlessDbContext _context;
         private readonly IConfiguration Configuration;
         public static int lastDelete = 0;
+        public static string searchString { get; set; }
         public Models.Tag TagNew { get; set; }
 
         public List<Models.Tag> tagAvailable { get; set; }
@@ -30,9 +31,17 @@ namespace CmsHeadless.Pages.Tag
 
 
         public TagList<Models.Tag> TagList { get; set; }
-        public async Task<IActionResult> OnGetAsync(int? pageIndex) {
+        public async Task<IActionResult> OnGetAsync(int? pageIndex, string? searchString) {
 
-            IQueryable<Models.Tag> selectTagQuery = from Tag in _context.Tag select Tag;
+            IQueryable<Models.Tag> selectTagQuery;
+            IQueryable<Models.Tag> selectTagQueryOrder;
+            selectTagQueryOrder = from Tag in _context.Tag select Tag;
+            selectTagQuery=selectTagQueryOrder.OrderByDescending(x => x.TagId);
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                ViewTagModel.searchString = searchString;
+                selectTagQuery = selectTagQuery.Where(s => s.Name.Contains(searchString));
+            }
             tagAvailable = selectTagQuery.ToList<Models.Tag>();
 
             if (pageIndex == null)
@@ -55,6 +64,7 @@ namespace CmsHeadless.Pages.Tag
             var Tag = await _context.Tag.FindAsync(tagId);
 
             IQueryable<Models.Tag> selectTagQuery;
+            IQueryable<Models.Tag> selectTagQueryOrder;
             if (Tag == null)
             {
                 return NotFound();
@@ -66,7 +76,8 @@ namespace CmsHeadless.Pages.Tag
                 ModelState.AddModelError("Make", "Errore nell'inserimento");
                 return Page();
             }
-            selectTagQuery = from tag in _context.Tag select Tag;
+            selectTagQueryOrder = from tag in _context.Tag select Tag;
+            selectTagQuery = selectTagQueryOrder.OrderByDescending(x => x.TagId);
             tagAvailable = selectTagQuery.ToList<Models.Tag>();
             if (pageIndex == null)
             {

@@ -10,6 +10,7 @@ namespace CmsHeadless.Pages.Tag
     public class EditTagModel : PageModel
     {
         IQueryable<Models.Tag> selectTagQuery;
+        IQueryable<Models.Tag> selectTagQueryOrder;
         public static int EditTagId = 0;
         public static int lastEdit = 0;
         public Models.Tag tag;
@@ -26,7 +27,8 @@ namespace CmsHeadless.Pages.Tag
         }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            selectTagQuery = from Tag in _context.Tag select Tag;
+            selectTagQueryOrder = from Tag in _context.Tag select Tag;
+            selectTagQuery = selectTagQueryOrder.OrderByDescending(x => x.TagId);
             TagAvailable = selectTagQuery.ToList<Models.Tag>();
             if (id == null)
             {
@@ -71,7 +73,8 @@ namespace CmsHeadless.Pages.Tag
                 if (tagToSearch.Count<Models.Tag>() != 0)
                 {
                     ModelState.AddModelError("Make", "Tag già esistente. Inserirne un altro");
-                    selectTagQuery = from Tag in _context.Tag select Tag;
+                    selectTagQueryOrder = from Tag in _context.Tag select Tag;
+                    selectTagQuery = selectTagQueryOrder.OrderByDescending(x => x.TagId);
                     TagAvailable = selectTagQuery.ToList<Models.Tag>();
                     tag = await _context.Tag.FindAsync(tagId);
 
@@ -87,7 +90,8 @@ namespace CmsHeadless.Pages.Tag
             
             lastEdit = await _context.SaveChangesAsync();
 
-            selectTagQuery = from Tag in _context.Tag select Tag;
+            selectTagQueryOrder = from Tag in _context.Tag select Tag;
+            selectTagQuery = selectTagQueryOrder.OrderByDescending(x => x.TagId);
             TagAvailable = selectTagQuery.ToList<Models.Tag>();
             tag = await _context.Tag.FindAsync(tagId);
             return RedirectToPage("./EditTag", new { id = tagId });

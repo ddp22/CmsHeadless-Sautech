@@ -10,6 +10,7 @@ namespace CmsHeadless.Pages.Attributes
     public class EditAttributesModel : PageModel
     {
         IQueryable<Models.Attributes> selectAttributesQuery;
+        IQueryable<Models.Attributes> selectAttributesQueryOrder;
         public static int EditAttributesId = 0;
         public static int lastEdit = 0;
         public Models.Attributes attributes;
@@ -26,7 +27,8 @@ namespace CmsHeadless.Pages.Attributes
         }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            selectAttributesQuery = from Attributes in _context.Attributes select Attributes;
+            selectAttributesQueryOrder = from Attributes in _context.Attributes select Attributes;
+            selectAttributesQuery = selectAttributesQueryOrder.OrderByDescending(c => c.AttributesId);
             AttributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
             if (id == null)
             {
@@ -71,7 +73,8 @@ namespace CmsHeadless.Pages.Attributes
                 if (attributesToSearch.Count<Models.Attributes>() != 0)
                 {
                     ModelState.AddModelError("Make", "Attributo già esistente. Inserirne un altro");
-                    selectAttributesQuery = from Attributes in _context.Attributes select Attributes;
+                    selectAttributesQueryOrder = from Attributes in _context.Attributes select Attributes;
+                    selectAttributesQuery = selectAttributesQueryOrder.OrderByDescending(c => c.AttributesId);
                     AttributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
                     attributes = await _context.Attributes.FindAsync(attributesId);
 
@@ -85,7 +88,8 @@ namespace CmsHeadless.Pages.Attributes
 
             lastEdit = await _context.SaveChangesAsync();
 
-            selectAttributesQuery = from Attributes in _context.Attributes select Attributes;
+            selectAttributesQueryOrder = from Attributes in _context.Attributes select Attributes;
+            selectAttributesQuery = selectAttributesQueryOrder.OrderByDescending(c => c.AttributesId);
             AttributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
             attributes = await _context.Attributes.FindAsync(attributesId);
             return RedirectToPage("./EditAttributes", new { id = attributesId });

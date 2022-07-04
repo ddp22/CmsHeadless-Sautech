@@ -9,6 +9,7 @@ namespace CmsHeadless.Pages.Content
     public class EditContentModel : PageModel
     {
         IQueryable<Models.Content> selectContentQuery;
+        IQueryable<Models.Content> selectContentQueryOrder;
         public static int EditContentId=0;
         public static int lastEdit = 0;
         public static int lastEditAttributes = 0;
@@ -54,9 +55,14 @@ namespace CmsHeadless.Pages.Content
             CategorySelected= new List<int>();
 
         }
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id, string? searchString)
         {
-            selectContentQuery = from Content in _context.Content select Content;
+            selectContentQueryOrder = from Content in _context.Content select Content;
+            selectContentQuery = selectContentQueryOrder.OrderByDescending(c => c.ContentId);
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                selectContentQuery = selectContentQuery.Where(s => s.Title.Contains(searchString));
+            }
             ContentAvailable = selectContentQuery.ToList<Models.Content>();
             if (id == null)
             {
@@ -167,7 +173,8 @@ namespace CmsHeadless.Pages.Content
                 if (ContentToSearch.Count<Models.Content>() != 0)
                 {
                     ModelState.AddModelError("Make", "Content già esistente. Inserirne un altro");
-                    selectContentQuery = from Content in _context.Content select Content;
+                    selectContentQueryOrder = from Content in _context.Content select Content;
+                    selectContentQuery = selectContentQueryOrder.OrderByDescending(c => c.ContentId);
                     ContentAvailable = selectContentQuery.ToList<Models.Content>();
                     content = await _context.Content.FindAsync(contentId);
                     if (content.PubblicationDate == null)
@@ -353,7 +360,8 @@ namespace CmsHeadless.Pages.Content
             ContentToUpdate.LastEdit = DateTime.Now.Date;
             lastEdit = await _context.SaveChangesAsync();
 
-            selectContentQuery = from Content in _context.Content select Content;
+            selectContentQueryOrder = from Content in _context.Content select Content;
+            selectContentQuery = selectContentQueryOrder.OrderByDescending(c => c.ContentId);
             ContentAvailable = selectContentQuery.ToList<Models.Content>();
             content = await _context.Content.FindAsync(contentId);
             if (content.PubblicationDate == null)

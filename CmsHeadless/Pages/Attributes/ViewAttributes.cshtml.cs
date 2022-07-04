@@ -13,6 +13,7 @@ namespace CmsHeadless.Pages.Attributes
         private readonly CmsHeadlessDbContext _context;
         private readonly IConfiguration Configuration;
         public static int lastDelete = 0;
+        public static string searchString { get; set; }
         public Models.Attributes AttributesNew { get; set; }
 
         public List<Models.Attributes> attributesAvailable { get; set; }
@@ -26,10 +27,18 @@ namespace CmsHeadless.Pages.Attributes
 
 
         public AttributesList<Models.Attributes> AttributesList { get; set; }
-        public async Task<IActionResult> OnGetAsync(int? pageIndex)
+        public async Task<IActionResult> OnGetAsync(int? pageIndex, string? searchString)
         {
+            IQueryable<Models.Attributes> selectAttributesQuery;
+            IQueryable<Models.Attributes> selectAttributesQueryOrder;
 
-            IQueryable<Models.Attributes> selectAttributesQuery = from Attributes in _context.Attributes select Attributes;
+            selectAttributesQueryOrder = from Attributes in _context.Attributes select Attributes;
+            selectAttributesQuery = selectAttributesQueryOrder.OrderByDescending(c => c.AttributesId);
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                ViewAttributesModel.searchString = searchString;
+                selectAttributesQuery = selectAttributesQuery.Where(s => (s.AttributeName.Contains(searchString) || s.AttributeValue.Contains(searchString)));
+            }
             attributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
 
             if (pageIndex == null)
@@ -53,6 +62,8 @@ namespace CmsHeadless.Pages.Attributes
             var Attributes = await _context.Attributes.FindAsync(attributesId);
 
             IQueryable<Models.Attributes> selectAttributesQuery;
+            IQueryable<Models.Attributes> selectAttributesQueryOrder;
+
             if (Attributes == null)
             {
                 return NotFound();
@@ -64,7 +75,8 @@ namespace CmsHeadless.Pages.Attributes
                 ModelState.AddModelError("Make", "Errore nell'inserimento");
                 return Page();
             }
-            selectAttributesQuery = from attributes in _context.Attributes select Attributes;
+            selectAttributesQueryOrder = from attributes in _context.Attributes select Attributes;
+            selectAttributesQuery = selectAttributesQueryOrder.OrderByDescending(c => c.AttributesId);
             attributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
             if (pageIndex == null)
             {

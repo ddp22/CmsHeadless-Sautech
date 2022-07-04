@@ -67,6 +67,14 @@
 </div>
 
 <h1>Lista categorie</h1>
+<form>
+    <p>
+        Name: <input type="text" name="searchString" />
+        <div class="form-group">
+            <input type="submit" value="Search" class="btn btn-primary" />
+        </div>
+    </p>
+</form>
 <table class="table table-striped table-bordered" id="categoryList">
   <thead >
     <tr>
@@ -103,9 +111,6 @@
                             <td>
                                     <a asp-page="./EditCategory" asp-route-id="@item.CategoryId">Edit</a> |
                                                          
-                                    <!--form method="post">
-                                        <input type="submit" class="custom-link" value="Delete" asp-route-categoryId="@item.CategoryId" asp-page-handler="Delete"/>
-                                    </form-->
                                     <a asp-page="index" asp-page-handler="Delete" asp-route-categoryId="@item.CategoryId">Delete</a>
                             </td>
                         </tr>
@@ -143,11 +148,13 @@ else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
 
     <a asp-action="Index"
    asp-route-pageIndex="@(Model.CategoryList.PageIndex - 1)"
+   asp-route-searchString="@IndexModel.searchString"
    class="btn btn-default @prevDisabled">
             Previous
     </a>
     <a asp-action="Index"
    asp-route-pageIndex="@(Model.CategoryList.PageIndex + 1)"
+   asp-route-searchString="@IndexModel.searchString"
    class="btn btn-default @nextDisabled">
             Next
     </a>
@@ -156,4 +163,5 @@ else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
 @{
     IndexModel.lastCreate = 0;
     IndexModel.lastDelete = 0;
+    IndexModel.searchString = null;
 }

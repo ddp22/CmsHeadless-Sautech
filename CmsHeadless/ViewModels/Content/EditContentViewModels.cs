@@ -14,7 +14,8 @@ namespace CmsHeadless.ViewModels.Content
         public string? Description { get; set; }
 
         [DataType(DataType.MultilineText)]
-        public string? Text { get; set; }
+        [Required]
+        public string Text { get; set; }
         [DataType(DataType.Date)]
         public DateTime? PubblicationDate { get; set; }
         [DataType(DataType.Date)]

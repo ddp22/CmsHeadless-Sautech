@@ -15,6 +15,7 @@ namespace CmsHeadless.Pages.Attributes
         public const int numberPage = 5;
         public static int lastCreate = 0;
         public static int lastDelete = 0;
+        public static string searchString { get; set; }
 
         [BindProperty]
         public ViewModels.Attributes.AttributesViewModel _formAttributesModel { get; set; }
@@ -31,9 +32,18 @@ namespace CmsHeadless.Pages.Attributes
         public AttributesList<Models.Attributes> AttributesList { get; set; }
 
 
-        public async Task<IActionResult> OnGetAsync(int? pageIndex)
+        public async Task<IActionResult> OnGetAsync(int? pageIndex, string? searchString)
         {
-            IQueryable<Models.Attributes> selectAttributesQuery = from Attributes in _context.Attributes select Attributes;
+            IQueryable<Models.Attributes> selectAttributesQuery;
+            IQueryable<Models.Attributes> selectAttributesQueryOrder;
+
+            selectAttributesQueryOrder = from Attributes in _context.Attributes select Attributes;
+            selectAttributesQuery = selectAttributesQueryOrder.OrderByDescending(c => c.AttributesId);
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                IndexModel.searchString=searchString;
+                selectAttributesQuery = selectAttributesQuery.Where(s => s.AttributeName.Contains(searchString) || s.AttributeValue.Contains(searchString));
+            }
             AttributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
 
             if (pageIndex == null)
@@ -51,6 +61,7 @@ namespace CmsHeadless.Pages.Attributes
             lastCreate = 0;
             lastDelete = 0;
             IQueryable<Models.Attributes> selectAttributesQuery;
+            IQueryable<Models.Attributes> selectAttributesQueryOrder;
 
             var pageSize = 5;
 
@@ -59,7 +70,8 @@ namespace CmsHeadless.Pages.Attributes
             if (is_exsist > 0)
             {
                 ModelState.AddModelError("Make", "Non è stato possibile inserire l'attributo perchè già esiste");
-                selectAttributesQuery = from Attributes in _context.Attributes select Attributes;
+                selectAttributesQueryOrder = from Attributes in _context.Attributes select Attributes;
+                selectAttributesQuery = selectAttributesQueryOrder.OrderByDescending(c => c.AttributesId);
                 AttributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
                 if (pageIndex == null)
                 {
@@ -82,7 +94,8 @@ namespace CmsHeadless.Pages.Attributes
                 return Page();
             }
 
-            selectAttributesQuery = from Attributes in _context.Attributes select Attributes;
+            selectAttributesQueryOrder = from Attributes in _context.Attributes select Attributes;
+            selectAttributesQuery = selectAttributesQueryOrder.OrderByDescending(c => c.AttributesId);
             AttributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
             if (pageIndex == null)
             {
@@ -107,6 +120,8 @@ namespace CmsHeadless.Pages.Attributes
             var attributes = await _context.Attributes.FindAsync(attributesId);
 
             IQueryable<Models.Attributes> selectAttributesQuery;
+            IQueryable<Models.Attributes> selectAttributesQueryOrder;
+
             if (attributes == null)
             {
                 return NotFound();
@@ -118,7 +133,8 @@ namespace CmsHeadless.Pages.Attributes
                 ModelState.AddModelError("Make", "Errore nell'eliminazione");
                 return Page();
             }
-            selectAttributesQuery = from Attributes in _context.Attributes select attributes;
+            selectAttributesQueryOrder = from Attributes in _context.Attributes select Attributes;
+            selectAttributesQuery = selectAttributesQueryOrder.OrderByDescending(c => c.AttributesId);
             AttributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
             if (pageIndex == null)
             {

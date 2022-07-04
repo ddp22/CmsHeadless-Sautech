@@ -4,6 +4,14 @@
 @{
 }
         <h1>Lista content</h1>
+ <form>
+    <p>
+        Title: <input type="text" name="searchString" />
+        <div class="form-group">
+            <input type="submit" value="Search" class="btn btn-primary" />
+        </div>
+    </p>
+</form>
 <table class="table table-striped table-bordered" id="contentList">
   <thead >
     <tr>
@@ -92,15 +100,18 @@ else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
 
     <a asp-action="Index"
    asp-route-pageIndex="@(Model.ContentList.PageIndex - 1)"
+   asp-route-searchString="@ViewContentModel.searchString"
    class="btn btn-default @prevDisabled">
             Previous
     </a>
     <a asp-action="Index"
    asp-route-pageIndex="@(Model.ContentList.PageIndex + 1)"
+   asp-route-searchString="@ViewContentModel.searchString"
    class="btn btn-default @nextDisabled">
             Next
     </a>
 
 @{
     ViewContentModel.lastDelete = 0;
+    ViewContentModel.searchString = null;
 }

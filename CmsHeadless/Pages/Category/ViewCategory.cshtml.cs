@@ -17,6 +17,7 @@ namespace CmsHeadless.Pages.Category
         private readonly CmsHeadlessDbContext _context;
         private readonly IConfiguration Configuration;
         public static int lastDelete = 0;
+        public static string searchString { get; set; }
         public Models.Category CategoryNew { get; set; }
 
         public List<Models.Category> CategoryAvailable { get; set; }
@@ -30,9 +31,18 @@ namespace CmsHeadless.Pages.Category
 
 
         public CategoryList<Models.Category> CategoryList { get; set; }
-        public async Task<IActionResult> OnGetAsync(int? pageIndex) {
+        public async Task<IActionResult> OnGetAsync(int? pageIndex, string? searchString) {
 
-            IQueryable<Models.Category> selectCategoryQuery = from Category in _context.Category select Category;
+            IQueryable<Models.Category> selectCategoryQuery;
+            IQueryable<Models.Category> selectCategoryQueryOrder;
+
+            selectCategoryQueryOrder = from Category in _context.Category select Category;
+            selectCategoryQuery = selectCategoryQueryOrder.OrderByDescending(x => x.CategoryId);
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                ViewCategoryModel.searchString = searchString;
+                selectCategoryQuery = selectCategoryQuery.Where(s => (s.Name.Contains(searchString) || s.Description.Contains(searchString)));
+            }
             CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
 
             if (pageIndex == null)
@@ -55,6 +65,7 @@ namespace CmsHeadless.Pages.Category
             var category = await _context.Category.FindAsync(categoryId);
 
             IQueryable<Models.Category> selectCategoryQuery;
+            IQueryable<Models.Category> selectCategoryQueryOrder;
             if (category == null)
             {
                 return NotFound();
@@ -66,7 +77,8 @@ namespace CmsHeadless.Pages.Category
                 ModelState.AddModelError("Make", "Errore nell'inserimento");
                 return Page();
             }
-            selectCategoryQuery = from Category in _context.Category select Category;
+            selectCategoryQueryOrder = from Category in _context.Category select Category;
+            selectCategoryQuery=selectCategoryQueryOrder.OrderByDescending(x => x.CategoryId);
             CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
             if (pageIndex == null)
             {

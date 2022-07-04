@@ -3,38 +3,40 @@
 @{
 }
 
-<div class="col-12 col-xl-4 custom-form-border">
-    <form method="post"  class="custom-form" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="_formContentModel.Title" class="control-label"></label>
-            <input asp-for="_formContentModel.Title" class="form-control" required/>
-            <span asp-validation-for="_formContentModel.Title" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="_formContentModel.Media" class="control-label"></label>
-            <input asp-for="_formContentModel.Media" class="form-control" />
-            <span asp-validation-for="_formContentModel.Media" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="_formContentModel.Description" class="control-label"></label>
-            <input asp-for="_formContentModel.Description" class="form-control" />
-            <span asp-validation-for="_formContentModel.Description" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="_formContentModel.Text" class="control-label"></label>
-            <input asp-for="_formContentModel.Text" class="form-control" />
-            <span asp-validation-for="_formContentModel.Text" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="_formContentModel.PubblicationDate" class="control-label"></label>
-            <input asp-for="_formContentModel.PubblicationDate" class="form-control" />
-            <span asp-validation-for="_formContentModel.PubblicationDate" class="text-danger"></span>
-        </div>
 
-        <div class="form-group">
+<div class="col-12 custom-form-border">
+    <form method="post"  class="row custom-form" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-12 col-xl-6">
+            <div class="form-group">
+                <label asp-for="_formContentModel.Title" class="control-label"></label>
+                <input asp-for="_formContentModel.Title" class="form-control" required/>
+                <span asp-validation-for="_formContentModel.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="_formContentModel.Media" class="control-label"></label>
+                <input asp-for="_formContentModel.Media" class="form-control" />
+                <span asp-validation-for="_formContentModel.Media" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="_formContentModel.Description" class="control-label"></label>
+                <input asp-for="_formContentModel.Description" class="form-control" />
+                <span asp-validation-for="_formContentModel.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="_formContentModel.Text" class="control-label"></label>
+                <input asp-for="_formContentModel.Text" class="form-control" required/>
+                <span asp-validation-for="_formContentModel.Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="_formContentModel.PubblicationDate" class="control-label"></label>
+                <input asp-for="_formContentModel.PubblicationDate" class="form-control" />
+                <span asp-validation-for="_formContentModel.PubblicationDate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12 col-xl-2 form-group">
             <label asp-for="_formContentModel.ContentAttributes" class="control-label"></label>
-            <select asp-for="_formContentModel.ContentAttributes" class="form-select" multiple>
+            <select asp-for="_formContentModel.ContentAttributes" class="form-select" multiple size="15">
                 @{
                     foreach(var i in Model.AttributesAvailable)
                     {
@@ -44,9 +46,9 @@
             </select>
             <span asp-validation-for="_formContentModel.ContentAttributes" class="text-danger"></span>
         </div>
-        <div class="form-group">
+        <div class="col-12 col-xl-2 form-group">
             <label asp-for="_formContentModel.ContentCategory" class="control-label"></label>
-            <select asp-for="_formContentModel.ContentCategory" class="form-select" multiple>
+            <select asp-for="_formContentModel.ContentCategory" class="form-select" multiple size="15">
                 @{
                     foreach(var i in Model.CategoryAvailable)
                     {
@@ -56,9 +58,9 @@
             </select>
             <span asp-validation-for="_formContentModel.ContentCategory" class="text-danger"></span>
         </div>
-        <div class="form-group">
+        <div class="col-12 col-xl-2 form-group">
             <label asp-for="_formContentModel.ContentTag" class="control-label"></label>
-            <select asp-for="_formContentModel.ContentTag" class="form-select" multiple>
+            <select asp-for="_formContentModel.ContentTag" class="form-select" multiple size="15">
                 @{
                     foreach(var i in Model.TagAvailable)
                     {
@@ -92,6 +94,14 @@
 
 
         <h1>Lista content</h1>
+<form>
+    <p>
+        Title: <input type="text" name="searchString" />
+        <div class="form-group">
+            <input type="submit" value="Search" class="btn btn-primary" />
+        </div>
+    </p>
+</form>
 <table class="table table-striped table-bordered" id="contentList">
   <thead >
     <tr>
@@ -180,11 +190,13 @@ else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
 
     <a asp-action="Index"
    asp-route-pageIndex="@(Model.ContentList.PageIndex - 1)"
+   asp-route-searchString="@IndexModel.searchString"
    class="btn btn-default @prevDisabled">
             Previous
     </a>
     <a asp-action="Index"
    asp-route-pageIndex="@(Model.ContentList.PageIndex + 1)"
+   asp-route-searchString="@IndexModel.searchString"
    class="btn btn-default @nextDisabled">
             Next
     </a>
@@ -193,4 +205,5 @@ else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
 @{
     IndexModel.lastCreate = 0;
     IndexModel.lastDelete = 0;
+    IndexModel.searchString = null;
 }

@@ -8,6 +8,7 @@ namespace CmsHeadless.Pages.Category
 
     public class EditCategoryModel : PageModel
     {
+        IQueryable<Models.Category> selectCategoryQueryOrder;
         IQueryable<Models.Category> selectCategoryQuery;
         public static int EditCategoryId=0;
         public static int lastEdit = 0;
@@ -26,7 +27,8 @@ namespace CmsHeadless.Pages.Category
         }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            selectCategoryQuery = from Category in _context.Category select Category;
+            selectCategoryQueryOrder = from Category in _context.Category select Category;
+            selectCategoryQuery = selectCategoryQueryOrder.OrderByDescending(x => x.CategoryId);
             CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
             if (id == null)
             {
@@ -72,7 +74,8 @@ namespace CmsHeadless.Pages.Category
                 if (categoryToSearch.Count<Models.Category>() != 0)
                 {
                     ModelState.AddModelError("Make", "Categoria già esistente. Inserirne un'altra");
-                    selectCategoryQuery = from Category in _context.Category select Category;
+                    selectCategoryQueryOrder = from Category in _context.Category select Category;
+                    selectCategoryQuery = selectCategoryQueryOrder.OrderByDescending(x => x.CategoryId);
                     CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
                     category = await _context.Category.FindAsync(CategoryId);
 
@@ -104,7 +107,8 @@ namespace CmsHeadless.Pages.Category
             if (DateTime.Now.Date > _formEditCategoryModel.CreationDate.Date)
             {
                 ModelState.AddModelError("Make", "Inserire una data successiva a quella odierna");
-                selectCategoryQuery = from Category in _context.Category select Category;
+                selectCategoryQueryOrder = from Category in _context.Category select Category;
+                selectCategoryQuery = selectCategoryQueryOrder.OrderByDescending(x => x.CategoryId);
                 CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
                 category = await _context.Category.FindAsync(CategoryId);
 
@@ -115,7 +119,8 @@ namespace CmsHeadless.Pages.Category
             categoryToUpdate.CategoryParentId = _formEditCategoryModel.CategoryParentId;
             lastEdit = await _context.SaveChangesAsync();
 
-            selectCategoryQuery = from Category in _context.Category select Category;
+            selectCategoryQueryOrder = from Category in _context.Category select Category;
+            selectCategoryQuery = selectCategoryQueryOrder.OrderByDescending(x => x.CategoryId);
             CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
             category = await _context.Category.FindAsync(CategoryId);
             CreationDate = category.CreationDate.ToString("yyyy-MM-dd");

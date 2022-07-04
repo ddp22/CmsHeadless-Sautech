@@ -16,6 +16,7 @@ namespace CmsHeadless.Pages.Tag
         public const int numberPage = 5;
         public static int lastCreate = 0;
         public static int lastDelete = 0;
+        public static string searchString { get; set; }
 
         [BindProperty]
         public TagViewModel _formTagModel { get; set; }
@@ -32,9 +33,18 @@ namespace CmsHeadless.Pages.Tag
         public TagList<Models.Tag> TagList { get; set; }
 
 
-        public async Task<IActionResult> OnGetAsync(int? pageIndex)
+        public async Task<IActionResult> OnGetAsync(int? pageIndex, string? searchString)
         {
-            IQueryable<Models.Tag> selectTagQuery = from Tag in _context.Tag select Tag;
+            IQueryable<Models.Tag> selectTagQuery;
+            IQueryable<Models.Tag> selectTagQueryOrder;
+
+            selectTagQueryOrder = from Tag in _context.Tag select Tag;
+            selectTagQuery = selectTagQueryOrder.OrderByDescending(x => x.TagId);
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                IndexModel.searchString=searchString;
+                selectTagQuery = selectTagQuery.Where(s => s.Name.Contains(searchString));
+            }
             TagAvailable = selectTagQuery.ToList<Models.Tag>();
 
             if (pageIndex == null)
@@ -52,6 +62,7 @@ namespace CmsHeadless.Pages.Tag
             lastCreate = 0;
             lastDelete = 0;
             IQueryable<Models.Tag> selectTagQuery;
+            IQueryable<Models.Tag> selectTagQueryOrder;
 
             var pageSize = 5;
 
@@ -60,7 +71,8 @@ namespace CmsHeadless.Pages.Tag
             if (is_exsist > 0)
             {
                 ModelState.AddModelError("Make", "Non è stato possibile inserire il tag perchè già esiste");
-                selectTagQuery = from Tag in _context.Tag select Tag;
+                selectTagQueryOrder = from Tag in _context.Tag select Tag;
+                selectTagQuery = selectTagQueryOrder.OrderByDescending(x => x.TagId);
                 TagAvailable = selectTagQuery.ToList<Models.Tag>();
                 if (pageIndex == null)
                 {
@@ -83,7 +95,8 @@ namespace CmsHeadless.Pages.Tag
                 return Page();
             }
 
-            selectTagQuery = from Tag in _context.Tag select Tag;
+            selectTagQueryOrder = from Tag in _context.Tag select Tag;
+            selectTagQuery = selectTagQueryOrder.OrderByDescending(x => x.TagId);
             TagAvailable = selectTagQuery.ToList<Models.Tag>();
             if (pageIndex == null)
             {
@@ -108,6 +121,7 @@ namespace CmsHeadless.Pages.Tag
             var tag = await _context.Tag.FindAsync(tagId);
 
             IQueryable<Models.Tag> selectTagQuery;
+            IQueryable<Models.Tag> selectTagQueryOrder;
             if (tag == null)
             {
                 return NotFound();
@@ -119,7 +133,8 @@ namespace CmsHeadless.Pages.Tag
                 ModelState.AddModelError("Make", "Errore nell'eliminazione");
                 return Page();
             }
-            selectTagQuery = from Tag in _context.Tag select Tag;
+            selectTagQueryOrder = from Tag in _context.Tag select Tag;
+            selectTagQuery = selectTagQueryOrder.OrderByDescending(x => x.TagId);
             TagAvailable = selectTagQuery.ToList<Models.Tag>();
             if (pageIndex == null)
             {

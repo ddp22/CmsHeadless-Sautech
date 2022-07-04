@@ -40,6 +40,14 @@
 
 
         <h1>Lista Attributes</h1>
+<form>
+    <p>
+        Name: <input type="text" name="searchString" />
+        <div class="form-group">
+            <input type="submit" value="Search" class="btn btn-primary" />
+        </div>
+    </p>
+</form>
 <table class="table table-striped table-bordered" id="attributesList">
   <thead >
     <tr>
@@ -104,11 +112,13 @@ else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
 
     <a asp-action="Index"
    asp-route-pageIndex="@(Model.AttributesList.PageIndex - 1)"
+   asp-route-searchString="@IndexModel.searchString"
    class="btn btn-default @prevDisabled">
             Previous
     </a>
     <a asp-action="Index"
    asp-route-pageIndex="@(Model.AttributesList.PageIndex + 1)"
+   asp-route-searchString="@IndexModel.searchString"
    class="btn btn-default @nextDisabled">
             Next
     </a>
@@ -117,4 +127,5 @@ else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
 @{
     IndexModel.lastCreate = 0;
     IndexModel.lastDelete = 0;
+    IndexModel.searchString = null;
 }
