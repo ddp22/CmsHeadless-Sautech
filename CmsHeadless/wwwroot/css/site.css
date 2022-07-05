@@ -79,3 +79,10 @@ label + .fileForm {
     border-radius: 10px;
 }*/
 
+.logo {
+    width:100px;
+}
+
+.logoHeader {
+    width: 40px;
+}

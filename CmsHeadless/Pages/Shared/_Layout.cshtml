@@ -9,62 +9,77 @@
     <link rel="stylesheet" href="~/CmsHeadless.styles.css" asp-append-version="true" />
 </head>
 <body>
+    
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">CmsHeadless</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <a class="navbar-brand" asp-area="" asp-page="/Index"><img src="~/img/icons/cms.png" class="logoHeader"/></a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                           <div class="dropdown">
-                              <button class="btn btn-secondary dropdown-toggle dropDownMenuCategory" type="button" id="dropdownMenuButtonCategory" data-bs-toggle="dropdown" aria-expanded="false">
-                                   Categorie
-                              </button>
-                              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonCategory">
-                                  <li><a class="dropdown-item dropDownMenuItemCategory" href="../Category/ViewCategory">Visualizza categorie</a></li>
-                                  <li><a class="dropdown-item dropDownMenuItemCategory" href="../Category/">Crea categoria</a></li>
-                              </ul>
-                           </div>
-                        </li>
-                        <li>
-                            <div class="dropdown">
-                              <button class="btn btn-secondary dropdown-toggle dropDownMenuContent" type="button" id="dropdownMenuButtonCategory" data-bs-toggle="dropdown" aria-expanded="false">
-                                   Content
-                              </button>
-                              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonContent">
-                                  <li><a class="dropdown-item dropDownMenuItemContent" href="../Content/ViewContent">Visualizza content</a></li>
-                                  <li><a class="dropdown-item dropDownMenuItemContent" href="../Content/">Crea content</a></li>
-                              </ul>
-                           </div>
-                        </li>
-                        <li>
-                            <div class="dropdown">
-                              <button class="btn btn-secondary dropdown-toggle dropDownMenuTag" type="button" id="dropdownMenuButtonTag" data-bs-toggle="dropdown" aria-expanded="false">
-                                   Tag
-                              </button>
-                              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonTag">
-                                  <li><a class="dropdown-item dropDownMenuItemTag" href="../Tag/ViewTag">Visualizza tag</a></li>
-                                  <li><a class="dropdown-item dropDownMenuItemTag" href="../Tag/">Crea tag</a></li>
-                              </ul>
-                           </div>
-                        </li>
-                        <li>
-                            <div class="dropdown">
-                              <button class="btn btn-secondary dropdown-toggle dropDownMenuAttributes" type="button" id="dropdownMenuButtonAttributes" data-bs-toggle="dropdown" aria-expanded="false">
-                                   Attributes
-                              </button>
-                              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonAttributes">
-                                  <li><a class="dropdown-item dropDownMenuItemAttributes" href="../Attributes/ViewAttributes">Visualizza attributi</a></li>
-                                  <li><a class="dropdown-item dropDownMenuItemAttributes" href="../Attributes/">Crea attributi</a></li>
-                              </ul>
-                           </div>
-                        </li>
-                    </ul>
-                </div>
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle dropDownMenuCategory" type="button" id="dropdownMenuButtonCategory" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Categorie
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonCategory">
+                                        <li><a class="dropdown-item dropDownMenuItemCategory" href="/Category/ViewCategory">Visualizza categorie</a></li>
+                                        <li><a class="dropdown-item dropDownMenuItemCategory" href="/Category/">Crea categoria</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle dropDownMenuContent" type="button" id="dropdownMenuButtonCategory" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Content
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonContent">
+                                        <li><a class="dropdown-item dropDownMenuItemContent" href="/Content/ViewContent">Visualizza content</a></li>
+                                        <li><a class="dropdown-item dropDownMenuItemContent" href="/Content/">Crea content</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle dropDownMenuTag" type="button" id="dropdownMenuButtonTag" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Tag
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonTag">
+                                        <li><a class="dropdown-item dropDownMenuItemTag" href="/Tag/ViewTag">Visualizza tag</a></li>
+                                        <li><a class="dropdown-item dropDownMenuItemTag" href="/Tag/">Crea tag</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle dropDownMenuAttributes" type="button" id="dropdownMenuButtonAttributes" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Attributes
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonAttributes">
+                                        <li><a class="dropdown-item dropDownMenuItemAttributes" href="/Attributes/ViewAttributes">Visualizza attributi</a></li>
+                                        <li><a class="dropdown-item dropDownMenuItemAttributes" href="/Attributes/">Crea attributi</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <div >
+                                    <a class="navbar-brand" href="/Identity/Account/Manage/">Area Utente</a>
+                                </div>
+                            </li>
+                        </ul>
+                        <div>
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index")" method="post">
+                                <button type="submit" class=" btn text-dark">Logout</button>
+                            </form>
+                        </div>
+                        
+                    </div>
+                }
             </div>
         </nav>
     </header>

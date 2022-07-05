@@ -4,8 +4,61 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    @Model.test
-</div>
+<div class="container flex-grow-1 container-p-y my-2">
+
+    <h1 class="row justify-content-md-center">Cms headless</h1>
+    <h5>Un CMS headless è un sistema di gestione dei contenuti in cui il back-end ed i dati, ovvero il "corpo", sono separati o disaccoppiati dal front-end, ovvero la "testa". I contenuti di un'architettura headless vengono gestiti attraverso API, per ottenere la visualizzazione su diversi dispositivi e piattaforme.</h5>
+
+      <div class="col-12 mb-3">
+        <div class="card">
+
+          <h5 class="card-header">Pagine disponibili</h5>
+          <!-- Other Links -->
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Link</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr>
+                <td>Category </td>
+                <td>
+                  <a href="./Category/">Vai alla pagina</a>
+                </td>
+              </tr>
+
+              <tr>
+                <td>Content</td>
+                <td>
+                  <a href="./Content/">Vai alla pagina</a>
+                </td>
+              </tr>
+
+              <tr>
+                <td>Tag</td>
+                <td>
+                  <a href="./Tag/">Vai alla pagina</a>
+                </td>
+              </tr>
+
+
+              <tr>
+                <td>Attributes</td>
+                <td>
+                  <a href="./Attributes/">Vai alla pagina</a>
+                </td>
+              </tr>
+
+
+            </tbody>
+          </table>
+          <!--/ Other Links -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- / Content -->

@@ -3,15 +3,21 @@
 
 @{
 }
-<h1>Lista categorie</h1>
-<form>
-    <p>
-        Name: <input type="text" name="searchString" />
-        <div class="form-group">
-            <input type="submit" value="Search" class="btn btn-primary" />
-        </div>
-    </p>
-</form>
+<div class="row justify-content-between">
+    <div class="col-4">
+        <h1>Lista categorie</h1>
+    </div>
+    <div class="col-4">
+        <form>
+            <p>
+                Search: <input type="text" name="searchString" />
+                <span class="form-group">
+                    <input type="submit" value="Search" class="btn btn-primary" />
+                </span>
+            </p>
+        </form>
+    </div>
+</div>
 <table class="table table-striped table-bordered" id="categoryList">
   <thead >
     <tr>
