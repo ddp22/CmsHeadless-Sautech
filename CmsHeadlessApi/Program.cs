@@ -9,6 +9,10 @@ var connectionString = builder.Configuration.GetConnectionString("CmsHeadlessCon
 
 builder.Services.AddDbContext<CmsHeadless.Models.CmsHeadlessDbContext>(options => options.UseSqlServer(connectionString));
 
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

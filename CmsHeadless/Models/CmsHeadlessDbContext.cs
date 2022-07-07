@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,10 @@ namespace CmsHeadless.Models
         {
         }
 
-        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Category>()
-                .HasAlternateKey(c => c.Name)
-                .HasName("AlternateKey_LicensePlate");
-        }*/
+            modelBuilder.Entity<IdentityUser>().ToTable("User");
+        }
         public DbSet<Attributes> Attributes { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<Content> Content { get; set; }
@@ -29,6 +28,8 @@ namespace CmsHeadless.Models
         public DbSet<ContentAttributes> ContentAttributes { get; set; }
         public DbSet<ContentTag> ContentTag { get; set; }
         public DbSet<ContentCategory> ContentCategory { get; set; }
+        public virtual DbSet<User> User { get; set; }
+        
     }
     
 }

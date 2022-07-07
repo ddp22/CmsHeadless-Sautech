@@ -12,5 +12,14 @@ namespace CmsHeadless.Models
         [DataType(DataType.Url)]
         [MaxLength(150)]
         public string Url { get; set; }
+        public Tag()
+        {
+        }
+        public Tag(int tagId, string name, string url)
+        {
+            TagId = tagId;
+            Name = name;
+            Url = url;
+        }
     }
 }

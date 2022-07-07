@@ -5,6 +5,17 @@ namespace CmsHeadless.Models
 {
     public class Attributes
     {
+        public Attributes()
+        {
+        }
+
+        public Attributes(int attributesId, string attributeName, string attributeValue)
+        {
+            AttributesId = attributesId;
+            AttributeName = attributeName;
+            AttributeValue = attributeValue;
+        }
+
         [Key]
         public int AttributesId { get; set; }
         [MaxLength(50)]

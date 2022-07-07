@@ -33,6 +33,7 @@ namespace CmsHeadless.Models
         public virtual ICollection<ContentAttributes>? ContentAttributes { get; set; }
         public virtual ICollection<ContentCategory>? ContentCategory { get; set; }
         public virtual ICollection<ContentTag>? ContentTag { get; set; }
+        public virtual User User { get; set; }
 
     }
 

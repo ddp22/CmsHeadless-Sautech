@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using CmsHeadless.Models;
+using System.Data.Entity.Core.EntityClient;
+using System.Data;
+using CmsHeadlessApi.ModelsController;
 
 namespace CmsHeadlessApi.Controllers
 {
@@ -17,8 +20,18 @@ namespace CmsHeadlessApi.Controllers
         [HttpGet]
         public JsonResult GetAllCategory(int? idCategory, string? nameCategory)
         {
+            string pathMedia = "/img/category/";
             if (idCategory ==null && nameCategory == null) {
-                return Json(_contextDb.Category.ToList<Category>());
+                var categoryItem = _contextDb.Category.ToList<Category>();
+                foreach (var category in categoryItem)
+                {
+                    if (category.Media != null)
+                    {
+                        category.Media = pathMedia + category.Media;
+                    }
+
+                }
+                return Json(categoryItem);
             }
             else if(nameCategory == null){
                 var categoryItem = _contextDb.Category.FindAsync(idCategory);
@@ -28,6 +41,10 @@ namespace CmsHeadlessApi.Controllers
                 }
                 else
                 {
+                    if(categoryItem.Result.Media!=null)
+                    { 
+                        categoryItem.Result.Media = pathMedia + categoryItem.Result.Media; 
+                    }
                     return Json(categoryItem.Result);
                 }
             }
@@ -40,6 +57,13 @@ namespace CmsHeadlessApi.Controllers
                 }
                 else
                 {
+                    foreach (var category in categoryItem)
+                    {
+                        if (category.Media != null)
+                        {
+                            category.Media = pathMedia + category.Media;
+                        }
+                    }
                     return Json(categoryItem);
                 }
             }
@@ -52,6 +76,13 @@ namespace CmsHeadlessApi.Controllers
                 }
                 else
                 {
+                    foreach (var category in categoryItem)
+                    {
+                        if (category.Media != null)
+                        {
+                            category.Media = pathMedia + category.Media;
+                        }
+                    }
                     return Json(categoryItem);
                 }
             }

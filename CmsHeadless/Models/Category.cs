@@ -18,6 +18,18 @@ namespace CmsHeadless.Models
         [DataType(DataType.Date)]
         public DateTime CreationDate { get; set; }
         public ICollection<ContentCategory> ContentCategory { get; set; } = null!;
+        public Category()
+        {
+        }
 
+        public Category(int CategoryId, string Name, string? Description, int?CategoryParentId, string Media, DateTime CreationDate)
+        {
+            this.CategoryId = CategoryId;
+            this.Name = Name;
+            this.Description = Description;
+            this.CategoryParentId = CategoryParentId;
+            this.Media = Media;
+            this.CreationDate = CreationDate;
+        }
     }
 }

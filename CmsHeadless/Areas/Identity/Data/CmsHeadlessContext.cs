@@ -1,10 +1,11 @@
 ﻿using CmsHeadless.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CmsHeadless.Data;
 
-public class CmsHeadlessContext :IdentityDbContext
+public class CmsHeadlessContext :IdentityDbContext<IdentityUser, IdentityRole, string>
 {
 
 
