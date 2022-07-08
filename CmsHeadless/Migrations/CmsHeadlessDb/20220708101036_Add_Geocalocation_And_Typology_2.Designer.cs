@@ -4,6 +4,7 @@ using CmsHeadless.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CmsHeadless.Migrations.CmsHeadlessDb
 {
     [DbContext(typeof(CmsHeadlessDbContext))]
-    partial class CmsHeadlessDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220708101036_Add_Geocalocation_And_Typology_2")]
+    partial class Add_Geocalocation_And_Typology_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,12 +42,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<int?>("GeolocationId")
-                        .HasColumnType("int");
-
                     b.HasKey("AttributesId");
-
-                    b.HasIndex("GeolocationId");
 
                     b.ToTable("Attributes");
                 });
@@ -128,23 +125,6 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.ToTable("Category");
                 });
 
-            modelBuilder.Entity("CmsHeadless.Models.City", b =>
-                {
-                    b.Property<int>("CityId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CityId"), 1L, 1);
-
-                    b.Property<string>("CityName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CityId");
-
-                    b.ToTable("City");
-                });
-
             modelBuilder.Entity("CmsHeadless.Models.Content", b =>
                 {
                     b.Property<int>("ContentId")
@@ -156,9 +136,6 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.Property<string>("Description")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("GeolocationId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("InsertionDate")
                         .HasColumnType("datetime2");
@@ -186,8 +163,6 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ContentId");
-
-                    b.HasIndex("GeolocationId");
 
                     b.HasIndex("UserId");
 
@@ -271,58 +246,15 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GeolocationId"), 1L, 1);
 
-                    b.Property<int>("CityId1")
-                        .HasColumnType("int");
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
 
-                    b.Property<int>("NationId1")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RegionId1")
-                        .HasColumnType("int");
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
 
                     b.HasKey("GeolocationId");
 
-                    b.HasIndex("CityId1");
-
-                    b.HasIndex("NationId1");
-
-                    b.HasIndex("RegionId1");
-
                     b.ToTable("Geolocation");
-                });
-
-            modelBuilder.Entity("CmsHeadless.Models.Nation", b =>
-                {
-                    b.Property<int>("NationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NationId"), 1L, 1);
-
-                    b.Property<string>("NationName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("NationId");
-
-                    b.ToTable("Nation");
-                });
-
-            modelBuilder.Entity("CmsHeadless.Models.Region", b =>
-                {
-                    b.Property<int>("RegionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RegionId"), 1L, 1);
-
-                    b.Property<string>("RegionName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("RegionId");
-
-                    b.ToTable("Region");
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Tag", b =>
@@ -363,6 +295,30 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.HasKey("Id");
 
                     b.ToTable("Typology");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.UserGeolocation", b =>
+                {
+                    b.Property<int>("UserGeolocationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserGeolocationId"), 1L, 1);
+
+                    b.Property<int>("GeolocationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserGeolocationId");
+
+                    b.HasIndex("GeolocationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserGeolocation");
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.UserTypology", b =>
@@ -476,19 +432,10 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.HasDiscriminator().HasValue("User");
                 });
 
-            modelBuilder.Entity("CmsHeadless.Models.Attributes", b =>
-                {
-                    b.HasOne("CmsHeadless.Models.Geolocation", "Geolocation")
-                        .WithMany()
-                        .HasForeignKey("GeolocationId");
-
-                    b.Navigation("Geolocation");
-                });
-
             modelBuilder.Entity("CmsHeadless.Models.AttributesGeolocation", b =>
                 {
                     b.HasOne("CmsHeadless.Models.Attributes", "Attributes")
-                        .WithMany()
+                        .WithMany("AttributesGeolocation")
                         .HasForeignKey("AttributesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -525,19 +472,11 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
             modelBuilder.Entity("CmsHeadless.Models.Content", b =>
                 {
-                    b.HasOne("CmsHeadless.Models.Geolocation", "Geolocation")
-                        .WithMany()
-                        .HasForeignKey("GeolocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("CmsHeadless.Models.User", "User")
                         .WithMany("Content")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Geolocation");
 
                     b.Navigation("User");
                 });
@@ -599,31 +538,23 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("CmsHeadless.Models.Geolocation", b =>
+            modelBuilder.Entity("CmsHeadless.Models.UserGeolocation", b =>
                 {
-                    b.HasOne("CmsHeadless.Models.City", "CityId")
-                        .WithMany()
-                        .HasForeignKey("CityId1")
+                    b.HasOne("CmsHeadless.Models.Geolocation", "Geolocation")
+                        .WithMany("UserGeolocation")
+                        .HasForeignKey("GeolocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CmsHeadless.Models.Nation", "NationId")
+                    b.HasOne("CmsHeadless.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("NationId1")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CmsHeadless.Models.Region", "RegionId")
-                        .WithMany()
-                        .HasForeignKey("RegionId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Geolocation");
 
-                    b.Navigation("CityId");
-
-                    b.Navigation("NationId");
-
-                    b.Navigation("RegionId");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.UserTypology", b =>
@@ -648,7 +579,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
             modelBuilder.Entity("CmsHeadless.Models.User", b =>
                 {
                     b.HasOne("CmsHeadless.Models.Geolocation", "Residence")
-                        .WithMany("User")
+                        .WithMany()
                         .HasForeignKey("ResidenceGeolocationId");
 
                     b.Navigation("Residence");
@@ -656,6 +587,8 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
             modelBuilder.Entity("CmsHeadless.Models.Attributes", b =>
                 {
+                    b.Navigation("AttributesGeolocation");
+
                     b.Navigation("AttributesTypology");
 
                     b.Navigation("ContentAttributes");
@@ -679,7 +612,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                 {
                     b.Navigation("AttributesGeolocation");
 
-                    b.Navigation("User");
+                    b.Navigation("UserGeolocation");
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Typology", b =>

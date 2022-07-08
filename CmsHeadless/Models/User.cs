@@ -1,7 +1,5 @@
 ﻿using CmsHeadless.Models;
 using Microsoft.AspNetCore.Identity;
-
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,7 +17,13 @@ namespace CmsHeadless.Models
 
     {
         public string Nickname { get; set; }
-        
-        public virtual ICollection<Content> Content { get; set; }
+        public double LatitudeUser { get; set; }
+        public double LongitudeUser { get; set; }
+        [Required]
+        public DateTime DateOfBirth { get; set; }
+        public string Gender { get; set; }
+        public virtual ICollection<Content>? Content { get; set; }
+        public virtual ICollection<UserTypology>? UserTypology { get; set; }
+        public virtual Geolocation? Residence { get; set; }
     }
 }

@@ -1,0 +1,67 @@
+﻿@page
+@model CmsHeadlessApi.Views.Home.IndexModel
+@{
+}
+<h1>Servizi Disponibili</h1>
+<div class="wrapper accordion">
+  <details class="det">
+    <summary><span>Content</span></summary>
+    <div>
+        <ul>
+            <li>
+                <dt>getContentById</dt>
+                <dd>
+                    Questa funzione restituisce un oggetto Json che contiene tutti i content e i tag,attributi e categorie contenuti in essi.<br />
+                    Se si vuole ricevere un particolare content, è possibile specificare un id.
+                </dd>
+            </li>
+        </ul>
+    </div>
+  </details>
+  <details>
+    <summary><span>Category</span></summary>
+    <div>
+        <ul>
+            <li>
+                <dt>GetAllCategory</dt>
+                <dd>
+                    Questa funzione restituisce un oggetto Json che contiene tutte le categorie <br />
+                    Se si vuole ricevere una particolare categoria, è possibile specificare un id.<br/>
+                    Se si vuole ricevere una particolare categoria il cui nome contiene un particolare testo, è possibile specificare una stringa.
+                </dd>
+            </li>
+        </ul>
+    </div>
+  </details>
+  <details>
+    <summary><span>Attributes</span></summary>
+    <div>
+        <ul>
+            <li>
+                <dt>GetAllAttributes</dt>
+                <dd>
+                    Questa funzione restituisce un oggetto Json che contiene tutti gli attributi <br />
+                    Se si vuole ricevere un particolare attributo, è possibile specificare un id.<br/>
+                    Se si vuole ricevere un particolare attributo il cui nome contiene un particolare testo, è possibile specificare una stringa.
+                </dd>
+            </li>
+        </ul>
+    </div>
+  </details>
+  <details>
+    <summary><span>Tag</span></summary>
+    <div>
+        <ul>
+            <li>
+                <dt>GetAllTag</dt>
+                <dd>
+                    Questa funzione restituisce un oggetto Json che contiene tutti i tag <br />
+                    Se si vuole ricevere un particolare tag, è possibile specificare un id.<br/>
+                    Se si vuole ricevere un particolare tag il cui nome contiene un particolare testo, è possibile specificare una stringa.
+                </dd>
+            </li>
+        </ul>
+        
+    </div>
+  </details>
+</div>

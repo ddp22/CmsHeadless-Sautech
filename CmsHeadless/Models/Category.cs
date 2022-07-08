@@ -17,7 +17,7 @@ namespace CmsHeadless.Models
         public string? Media { get; set; }
         [DataType(DataType.Date)]
         public DateTime CreationDate { get; set; }
-        public ICollection<ContentCategory> ContentCategory { get; set; } = null!;
+        public virtual ICollection<ContentCategory> ContentCategory { get; set; } = null!;
         public Category()
         {
         }

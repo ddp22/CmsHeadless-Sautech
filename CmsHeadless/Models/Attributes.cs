@@ -22,7 +22,8 @@ namespace CmsHeadless.Models
         public string AttributeName { get; set; }
         [MaxLength(150)]
         public string AttributeValue { get; set; }
-        public ICollection<ContentAttributes> ContentAttributes { get; set; } = null!;
-
+        public ICollection<ContentAttributes> ContentAttributes { get; set; }
+        public ICollection<AttributesTypology>? AttributesTypology { get; set; }
+        public virtual Geolocation? Geolocation { get; set; }
     }
 }
