@@ -4,6 +4,7 @@ using CmsHeadless.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CmsHeadless.Migrations.CmsHeadlessDb
 {
     [DbContext(typeof(CmsHeadlessDbContext))]
-    partial class CmsHeadlessDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220708141709_Location_In_Content_Change_In_Nullable")]
+    partial class Location_In_Content_Change_In_Nullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,6 +125,9 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.Property<DateTime?>("LastEdit")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("LocationId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Media")
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
@@ -143,6 +148,8 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ContentId");
+
+                    b.HasIndex("LocationId");
 
                     b.HasIndex("UserId");
 
@@ -195,29 +202,6 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.ToTable("ContentCategory");
                 });
 
-            modelBuilder.Entity("CmsHeadless.Models.ContentLocation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("ContentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContentId");
-
-                    b.HasIndex("LocationId");
-
-                    b.ToTable("ContentLocation");
-                });
-
             modelBuilder.Entity("CmsHeadless.Models.ContentTag", b =>
                 {
                     b.Property<int>("Id")
@@ -249,9 +233,6 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LocationId"), 1L, 1);
 
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("NationId")
                         .HasColumnType("int");
 
@@ -262,6 +243,12 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                         .HasColumnType("int");
 
                     b.HasKey("LocationId");
+
+                    b.HasIndex("NationId");
+
+                    b.HasIndex("ProvinceId");
+
+                    b.HasIndex("RegionId");
 
                     b.ToTable("Location");
                 });
@@ -294,15 +281,15 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProvinceId"), 1L, 1);
 
-                    b.Property<bool>("ProvinceIsActive")
-                        .HasColumnType("bit");
-
                     b.Property<string>("ProvinceName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RegionId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("RegionIsActive")
+                        .HasColumnType("bit");
 
                     b.HasKey("ProvinceId");
 
@@ -517,11 +504,17 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
             modelBuilder.Entity("CmsHeadless.Models.Content", b =>
                 {
+                    b.HasOne("CmsHeadless.Models.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId");
+
                     b.HasOne("CmsHeadless.Models.User", "User")
                         .WithMany("Content")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Location");
 
                     b.Navigation("User");
                 });
@@ -564,25 +557,6 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.Navigation("Content");
                 });
 
-            modelBuilder.Entity("CmsHeadless.Models.ContentLocation", b =>
-                {
-                    b.HasOne("CmsHeadless.Models.Content", "Content")
-                        .WithMany("ContentLocation")
-                        .HasForeignKey("ContentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CmsHeadless.Models.Location", "Location")
-                        .WithMany("ContentLocation")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Content");
-
-                    b.Navigation("Location");
-                });
-
             modelBuilder.Entity("CmsHeadless.Models.ContentTag", b =>
                 {
                     b.HasOne("CmsHeadless.Models.Content", "Content")
@@ -600,6 +574,27 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.Navigation("Content");
 
                     b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.Location", b =>
+                {
+                    b.HasOne("CmsHeadless.Models.Nation", "Nation")
+                        .WithMany()
+                        .HasForeignKey("NationId");
+
+                    b.HasOne("CmsHeadless.Models.Province", "Province")
+                        .WithMany()
+                        .HasForeignKey("ProvinceId");
+
+                    b.HasOne("CmsHeadless.Models.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("RegionId");
+
+                    b.Navigation("Nation");
+
+                    b.Navigation("Province");
+
+                    b.Navigation("Region");
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Province", b =>
@@ -646,7 +641,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
             modelBuilder.Entity("CmsHeadless.Models.User", b =>
                 {
                     b.HasOne("CmsHeadless.Models.Location", "Location")
-                        .WithMany()
+                        .WithMany("User")
                         .HasForeignKey("LocationId");
 
                     b.Navigation("Location");
@@ -670,8 +665,6 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.Navigation("ContentCategory");
 
-                    b.Navigation("ContentLocation");
-
                     b.Navigation("ContentTag");
                 });
 
@@ -679,7 +672,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                 {
                     b.Navigation("Attributes");
 
-                    b.Navigation("ContentLocation");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Typology", b =>

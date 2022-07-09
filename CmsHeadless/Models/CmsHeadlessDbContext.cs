@@ -28,9 +28,12 @@ namespace CmsHeadless.Models
         public DbSet<ContentAttributes> ContentAttributes { get; set; }
         public DbSet<ContentTag> ContentTag { get; set; }
         public DbSet<ContentCategory> ContentCategory { get; set; }
-        public virtual DbSet<User> User { get; set; }
-        public virtual DbSet<Geolocation> Geolocations { get; set; }
-        
+        public  DbSet<User> User { get; set; }
+        public  DbSet<Location> Location { get; set; }
+        public DbSet<Province> Province { get; set; }
+        public DbSet<Region> Region { get; set; }
+        public DbSet<Nation> Nation { get; set; }
+        public DbSet<ContentLocation> ContentLocation { get; set; }
     }
     
 }

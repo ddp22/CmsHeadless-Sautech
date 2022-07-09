@@ -75,4 +75,8 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Content}/{action=Index}/{id?}");
+
 app.Run();

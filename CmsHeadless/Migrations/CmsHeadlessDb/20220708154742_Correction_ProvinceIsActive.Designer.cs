@@ -4,6 +4,7 @@ using CmsHeadless.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CmsHeadless.Migrations.CmsHeadlessDb
 {
     [DbContext(typeof(CmsHeadlessDbContext))]
-    partial class CmsHeadlessDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220708154742_Correction_ProvinceIsActive")]
+    partial class Correction_ProvinceIsActive
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,6 +264,12 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                         .HasColumnType("int");
 
                     b.HasKey("LocationId");
+
+                    b.HasIndex("NationId");
+
+                    b.HasIndex("ProvinceId");
+
+                    b.HasIndex("RegionId");
 
                     b.ToTable("Location");
                 });
@@ -600,6 +608,27 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.Navigation("Content");
 
                     b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.Location", b =>
+                {
+                    b.HasOne("CmsHeadless.Models.Nation", "Nation")
+                        .WithMany()
+                        .HasForeignKey("NationId");
+
+                    b.HasOne("CmsHeadless.Models.Province", "Province")
+                        .WithMany()
+                        .HasForeignKey("ProvinceId");
+
+                    b.HasOne("CmsHeadless.Models.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("RegionId");
+
+                    b.Navigation("Nation");
+
+                    b.Navigation("Province");
+
+                    b.Navigation("Region");
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Province", b =>

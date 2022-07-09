@@ -1,7 +1,9 @@
-﻿@page
+﻿@page 
 @model CmsHeadless.Pages.Content.IndexModel
 @{
 }
+
+
 
 
 <div class="col-12 custom-form-border">
@@ -40,7 +42,7 @@
                 @{
                     foreach(var i in Model.AttributesAvailable)
                     {
-                        <option value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>
+                                                                <option value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>
                     }
                 }
             </select>
@@ -52,7 +54,7 @@
                 @{
                     foreach(var i in Model.CategoryAvailable)
                     {
-                        <option value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
+                                                                <option value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
                     }
                 }
             </select>
@@ -64,11 +66,51 @@
                 @{
                     foreach(var i in Model.TagAvailable)
                     {
-                        <option value="@i.TagId" id="@i.TagId">@i.Name</option>
+                                                                <option value="@i.TagId" id="@i.TagId">@i.Name</option>
                     }
                 }
             </select>
             <span asp-validation-for="_formContentModel.ContentTag" class="text-danger"></span>
+        </div>
+
+        <div class="col-12 col-xl-2 form-group">
+            <label asp-for="_formContentModel.Nation" class="control-label"></label>
+           
+            <select id="NationSelectContentCreate" asp-for="_formContentModel.Nation" class="form-select">
+                <option value="-1">Select Nation</option>
+                @{
+                    foreach(var i in Model.NationAvailable)
+                    {
+                        if (i.NationIsActive)
+                        {
+                                                 <option value="@i.NationId" id="@i.NationId">@i.NationName</option>
+                        }
+                    }
+                }
+            </select>
+            <span asp-validation-for="_formContentModel.Nation" class="text-danger"></span>
+        </div>
+
+        <div class="col-12 col-xl-2 form-group">
+            <label asp-for="_formContentModel.Region" class="control-label"></label>
+            <select id="RegionSelectContentCreate" asp-for="_formContentModel.Region" class="form-select" disabled="disabled">
+                
+            </select>
+            <span asp-validation-for="_formContentModel.Region" class="text-danger"></span>
+        </div>
+
+        <div class="col-12 col-xl-2 form-group">
+            <label asp-for="_formContentModel.Province" class="control-label"></label>
+            <select id="ProvinceSelectContentCreate" asp-for="_formContentModel.Province" class="form-select" disabled="disabled">
+                
+            </select>
+            <span asp-validation-for="_formContentModel.Province" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-6">
+            <label asp-for="_formContentModel.City" class="control-label"></label>
+            <input id="CitySelectContentCreate" asp-for="_formContentModel.City" class="form-control" disabled="disabled"/>
+            <span asp-validation-for="_formContentModel.City" class="text-danger"></span>
         </div>
 
         <div class="form-group">
@@ -80,9 +122,9 @@
 @{
     if(IndexModel.lastCreate>0 && ModelState.ErrorCount == 0)
     {
-        <div class="alert alert-success" role="alert">
-            <p>Categoria inserita con successo</p>
-        </div>
+    <div class="alert alert-success" role="alert">
+                     <p>Categoria inserita con successo</p>
+    </div>
     }
 }
 @if(ModelState.ErrorCount > 0)
@@ -126,48 +168,48 @@
         @{
             if(Model.ContentList!=null){
             int k=1+(Model.ContentList.PageIndex-1)*IndexModel.numberPage ;
-                    @foreach (var item in Model.ContentList)
+                        @foreach (var item in Model.ContentList)
                 {
-                        <tr>
-                            <th scope="row">
-                                @k
-                            </th>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Title)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Description)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.InsertionDate)
-                            </td>
-                            <td>
-                                <img style="max-height:100px" src="~/img/content/@Html.DisplayFor(modelItem => item.Media)" alt="image not available"/>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Text)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.UserId)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.LastEdit)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PubblicationDate)
-                            </td>
-                            <td>
-                                    <a asp-page="./EditContent" asp-route-id="@item.ContentId">Edit</a> |
-                                                         
-                                    <a asp-page="index" asp-page-handler="Delete" asp-route-contentId="@item.ContentId">Delete</a>
-                            </td>
-                        </tr>
+                                <tr>
+                                    <th scope="row">
+                                        @k
+                                    </th>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Title)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.InsertionDate)
+                                    </td>
+                                    <td>
+                                        <img style="max-height:100px" src="~/img/content/@Html.DisplayFor(modelItem => item.Media)" alt="image not available"/>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Text)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UserId)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LastEdit)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PubblicationDate)
+                                    </td>
+                                    <td>
+                                            <a asp-page="./EditContent" asp-route-id="@item.ContentId">Edit</a> |
+                                                                                                 
+                                            <a asp-page="index" asp-page-handler="Delete" asp-route-contentId="@item.ContentId">Delete</a>
+                                    </td>
+                                </tr>
                     k++;
                 }
             }
             else
             {
-                <h1>C'è stato un problema relativo al database. Ricaricare la pagina</h1>
+                        <h1>C'è stato un problema relativo al database. Ricaricare la pagina</h1>
                 return;
             }
        }
@@ -207,6 +249,92 @@ else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
             Next
     </a>
 
+
+    @section Scripts{
+    <script type="text/javascript">
+
+$(document).ready(function(){
+    $("#NationSelectContentCreate").change(function() {
+        var selectedNation = $("#NationSelectContentCreate option:selected").val();
+        $("#RegionSelectContentCreate").empty();
+        $("#ProvinceSelectContentCreate").empty();
+        $("#ProvinceSelectContentCreate").attr('disabled','disabled');
+        $("#CitySelectContentCreate").attr('disabled','disabled');
+        $("#CitySelectContentCreate").val("");
+        if (selectedNation == -1) {
+            $("#RegionSelectContentCreate").attr('disabled','disabled');
+            return;
+        }
+        $("#RegionSelectContentCreate").removeAttr('disabled'); 
+        
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("LoadRegion")',
+            dataType: 'json',
+            data: {
+                id: parseInt(selectedNation)
+            },
+            success: function(states) {
+                $("#RegionSelectContentCreate").append(
+                    '<option value="' + -1 + '">' + "Select Region" + '</option>');
+
+                $.each(states, function(i, state) {
+                    $("#RegionSelectContentCreate").append(
+                        '<option value="' + state.RegionId + '">' + state.RegionName + '</option>');
+                });
+            }
+        });
+    });
+});
+
+
+$(document).ready(function(){
+    $("#RegionSelectContentCreate").change(function() {
+        var selectedRegion = $("#RegionSelectContentCreate option:selected").val();
+        $("#ProvinceSelectContentCreate").empty();
+        $("#CitySelectContentCreate").attr('disabled','disabled');
+        $("#CitySelectContentCreate").val("");
+        if (selectedRegion == -1) {
+            $("#ProvinceSelectContentCreate").attr('disabled','disabled');
+            return;
+        }
+        $("#ProvinceSelectContentCreate").removeAttr('disabled');
+        
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("LoadProvince")',
+            dataType: 'json',
+            data: {
+                id: parseInt(selectedRegion)
+            },
+            success: function(states) {
+                $("#ProvinceSelectContentCreate").append(
+                    '<option value="' + -1 + '">' + "Select Province" + '</option>');
+
+                $.each(states, function(i, state) {
+                    $("#ProvinceSelectContentCreate").append(
+                        '<option value="' + state.ProvinceId + '">' + state.ProvinceName + '</option>');
+                });
+            }
+        });
+    });
+});
+
+
+$(document).ready(function(){
+    $("#ProvinceSelectContentCreate").change(function() {
+        var selectedProvince = $("#ProvinceSelectContentCreate option:selected").val();
+        $("#CitySelectContentCreate").val("");
+        if (selectedProvince == -1) {
+            $("#CitySelectContentCreate").attr('disabled','disabled');
+            return;
+        }
+        $("#CitySelectContentCreate").removeAttr('disabled');
+    });
+});
+
+</script>
+}
 
 @{
     IndexModel.lastCreate = 0;

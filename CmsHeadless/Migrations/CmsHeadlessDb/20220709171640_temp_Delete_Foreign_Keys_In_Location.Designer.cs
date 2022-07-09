@@ -4,6 +4,7 @@ using CmsHeadless.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CmsHeadless.Migrations.CmsHeadlessDb
 {
     [DbContext(typeof(CmsHeadlessDbContext))]
-    partial class CmsHeadlessDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220709171640_temp_Delete_Foreign_Keys_In_Location")]
+    partial class temp_Delete_Foreign_Keys_In_Location
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -251,15 +253,6 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("NationId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProvinceId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RegionId")
-                        .HasColumnType("int");
 
                     b.HasKey("LocationId");
 

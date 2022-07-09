@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CmsHeadless.Models
 {
@@ -8,6 +9,9 @@ namespace CmsHeadless.Models
         public int RegionId { get; set; }
         [Required]
         public string RegionName { get; set; }
-        //public virtual ICollection<Geolocation>? Geolocations { get; set; }
+        public virtual Nation Nation { get; set; }
+        [ForeignKey("Nation")]
+        public int NationId { get; set; }
+        public bool RegionIsActive { get; set; } = true;
     }
 }

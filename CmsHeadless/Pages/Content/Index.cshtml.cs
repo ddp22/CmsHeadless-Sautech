@@ -1,4 +1,3 @@
-using CmsHeadless.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -6,8 +5,7 @@ using CmsHeadless.Models;
 using CmsHeadless.ViewModels.Content;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Data;
 
 namespace CmsHeadless.Pages.Content
 {
@@ -32,6 +30,10 @@ namespace CmsHeadless.Pages.Content
         public List<Models.Tag> TagAvailable { get; set; }
 
 
+        public List<Models.Nation> NationAvailable { get; set; }
+        public List<Models.Region> RegionAvailable { get; set; }
+        public List<Models.Province> ProvinceAvailable { get; set; }
+        public List<Models.Location> LocationAvailable { get; set; }
         public IndexModel(CmsHeadlessDbContext context, IConfiguration configuration)
         {
             _context = context;
@@ -47,7 +49,17 @@ namespace CmsHeadless.Pages.Content
             IQueryable<Models.Tag> selectTagQuery = from Tag in _context.Tag select Tag;
             TagAvailable = selectTagQuery.ToList<Models.Tag>();
 
+            IQueryable<Models.Nation> selectNationQuery = from Nation in _context.Nation select Nation;
+            NationAvailable = selectNationQuery.ToList<Models.Nation>();
 
+            IQueryable<Models.Region> selectRegionQuery = from Region in _context.Region select Region;
+            RegionAvailable = selectRegionQuery.ToList<Models.Region>();
+
+            IQueryable<Models.Province> selectProvinceQuery = from Province in _context.Province select Province;
+            ProvinceAvailable = selectProvinceQuery.ToList<Models.Province>();
+
+            IQueryable<Models.Location> selectLocationQuery = from Location in _context.Location select Location;
+            LocationAvailable = selectLocationQuery.ToList<Models.Location>();
         }
 
         public ContentList<Models.Content> ContentList { get; set; }
@@ -167,10 +179,10 @@ namespace CmsHeadless.Pages.Content
             {
                 temp.PubblicationDate = null;
             }
-
+            
 
             temp.UserId = User.Identity.GetUserId();
-
+            
 
             var entry = _context.Add(new Models.Content());
             entry.CurrentValues.SetValues(temp);
@@ -254,6 +266,88 @@ namespace CmsHeadless.Pages.Content
                 }
             }
 
+            /*ContentLocation*/
+            int? nation = (_formContentModel.Nation==null || _formContentModel.Nation<=0) ? null : _formContentModel.Nation;
+            int? region = (_formContentModel.Region == null || _formContentModel.Region <= 0) ? null : _formContentModel.Region;
+            int? province = (_formContentModel.Province == null || _formContentModel.Province <= 0) ? null : _formContentModel.Province;
+            string? city = _formContentModel.City == null ? null : _formContentModel.City;
+            var is_exists = LocationAvailable.Where(c => c.NationId == nation
+                                              && c.RegionId == region
+                                              && c.ProvinceId == province
+                                              && c.City == city).ToList();
+            int? id=null;
+            if (is_exists.Count()>0)
+            {
+                id = is_exists.First().LocationId;
+            }
+            
+            if (nation > 0)
+            {
+                if(id == null)
+                {
+                    var entryLocation = _context.Add(new Location());
+                    /*Nation newNation = NationAvailable.Where(c=>c.NationId==nation).ToList().First();
+
+                    var tempNewRegion = RegionAvailable.Where(c => c.RegionId == region).ToList();
+                    Region newRegion;
+                    if (tempNewRegion.Count() > 0)
+                    {
+                        newRegion = tempNewRegion.First();
+                    }
+                    else
+                    {
+                        newRegion = null;
+                    }
+                    var tempNewProvince = newRegion == null ? ProvinceAvailable.Where(c => c.ProvinceId == province).ToList() : null;
+                    Province newProvince;
+                    if (tempNewProvince!=null && tempNewProvince.Count() > 0)
+                    {
+                        newProvince=tempNewProvince.First();
+                    }
+                    else
+                    {
+                        newProvince = null;
+                    }*/
+                    Location tempLocation = new Location(nation, region, province, city);
+                    entryLocation.CurrentValues.SetValues(tempLocation);
+                    int l=await _context.SaveChangesAsync();
+                    if (l <= 0)
+                    {
+                        ModelState.AddModelError("Make", "Errore nell'inserimento");
+                        return Page();
+                    }
+                    /*int? regionId = newRegion == null ? null : newRegion.RegionId;
+                    int? provinceId = newProvince == null ? null : newProvince.ProvinceId;
+                    id = (from Location in _context.Location
+                             where (Location.NationId == newNation.NationId
+                            && Location.RegionId == regionId
+                            && Location.ProvinceId == provinceId
+                            && Location.City == city)
+                             select Location.LocationId).ToList().First();*/
+
+                    id = (from Location in _context.Location
+                          where (Location.NationId == nation
+                         && Location.RegionId == region
+                         && Location.ProvinceId == province
+                         && Location.City == city)
+                          select Location.LocationId).ToList().First();
+                }
+
+                var tempContentLocation = new Models.ContentLocation();
+                var entryContentLocation = _context.Add(new Models.ContentLocation());
+                tempContentLocation.LocationId =(int) id;
+                tempContentLocation.ContentId = tempContent.ContentId;
+
+                entryContentLocation.CurrentValues.SetValues(tempContentLocation);
+                int j = await _context.SaveChangesAsync();
+                if (j <= 0)
+                {
+                    ModelState.AddModelError("Make", "Errore nell'inserimento");
+                    return Page();
+                }
+
+            }
+
 
             selectContentQueryOrder = from Content in _context.Content select Content;
             selectContentQuery = selectContentQueryOrder.OrderByDescending(c => c.ContentId);
@@ -306,5 +400,6 @@ namespace CmsHeadless.Pages.Content
             ContentList = await ContentList<Models.Content>.CreateAsync(selectContentQuery.AsNoTracking(), pageIndex ?? 1, pageSize);
             return RedirectToPage("./Index");
         }
+
     }
 }

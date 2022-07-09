@@ -17,5 +17,9 @@ namespace CmsHeadless.ViewModels.Content
         public string Text { get; set; }
         [DataType(DataType.Date)]
         public DateTime? PubblicationDate { get; set; }
+        public int? Nation { get; set; }
+        public int? Region { get; set; }
+        public int? Province { get; set; }
+        public string? City { get; set; }
     }
 }

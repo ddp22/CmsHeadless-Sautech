@@ -24,6 +24,6 @@ namespace CmsHeadless.Models
         public string Gender { get; set; }
         public virtual ICollection<Content>? Content { get; set; }
         public virtual ICollection<UserTypology>? UserTypology { get; set; }
-        public virtual Geolocation? Residence { get; set; }
+        public virtual Location? Location { get; set; }
     }
 }

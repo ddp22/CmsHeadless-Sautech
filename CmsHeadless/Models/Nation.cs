@@ -8,6 +8,6 @@ namespace CmsHeadless.Models
         public int NationId { get; set; }
         [Required]
         public string NationName { get; set; }
-        //public virtual ICollection<Geolocation>? Geolocations { get; set; }
+        public bool NationIsActive { get; set; } = true;
     }
 }
