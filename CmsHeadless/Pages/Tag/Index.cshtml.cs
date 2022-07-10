@@ -16,6 +16,7 @@ namespace CmsHeadless.Pages.Tag
         public const int numberPage = 5;
         public static int lastCreate = 0;
         public static int lastDelete = 0;
+        public static bool callDelete = false;
         public static string searchString { get; set; }
 
         [BindProperty]
@@ -113,6 +114,7 @@ namespace CmsHeadless.Pages.Tag
         {
             lastDelete = 0;
             lastCreate = 0;
+            callDelete = true;
             if (tagId == null)
             {
                 return NotFound();

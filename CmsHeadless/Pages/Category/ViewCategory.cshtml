@@ -86,15 +86,12 @@
     var nextDisabled = !Model.CategoryList.HasNextPage ? "disabled" : "";
 }
 
-    <a asp-action="Index"
-   asp-route-pageIndex="@(Model.CategoryList.PageIndex - 1)"
-   asp-route-searchString="@ViewCategoryModel.searchString"
+    <a href="/Category/ViewCategory?pageIndex=@(Model.CategoryList.PageIndex - 1)&searchString=@IndexModel.searchString"
    class="btn btn-default @prevDisabled">
             Previous
     </a>
-    <a asp-action="Index"
-   asp-route-pageIndex="@(Model.CategoryList.PageIndex + 1)"
-   asp-route-searchString="@ViewCategoryModel.searchString"
+
+    <a href="/Category/ViewCategory?pageIndex=@(Model.CategoryList.PageIndex + 1)&searchString=@IndexModel.searchString"
    class="btn btn-default @nextDisabled">
             Next
     </a>

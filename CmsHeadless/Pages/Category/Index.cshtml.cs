@@ -18,6 +18,7 @@ namespace CmsHeadless.Pages.Category
         private readonly IConfiguration Configuration;
         public static int lastCreate = 0;
         public static int lastDelete = 0;
+        public static bool callDelete = false;
         [BindProperty]
         public CategoryViewModel _formCategoryModel { get; set; }
 
@@ -160,6 +161,7 @@ namespace CmsHeadless.Pages.Category
         public async Task<IActionResult> OnGetDeleteAsync(int? pageIndex, int? categoryId) {
             lastDelete = 0;
             lastCreate = 0;
+            callDelete = true;
             if (categoryId == null)
             {
                 return NotFound();

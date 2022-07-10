@@ -34,6 +34,8 @@ namespace CmsHeadless.Models
         public DbSet<Region> Region { get; set; }
         public DbSet<Nation> Nation { get; set; }
         public DbSet<ContentLocation> ContentLocation { get; set; }
+        public DbSet<Typology> Typology { get; set; }
+        public DbSet<AttributesTypology> AttributesTypology { get; set; }
     }
     
 }

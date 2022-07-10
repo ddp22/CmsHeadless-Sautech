@@ -15,18 +15,24 @@ namespace CmsHeadless.Pages.Attributes
         public const int numberPage = 5;
         public static int lastCreate = 0;
         public static int lastDelete = 0;
+        public static bool callDelete = false;
         public static string searchString { get; set; }
+
 
         [BindProperty]
         public ViewModels.Attributes.AttributesViewModel _formAttributesModel { get; set; }
         public Models.Attributes AttributesNew { get; set; }
         public List<Models.Attributes> AttributesAvailable { get; set; }
+        public List<Models.Typology> TypologyAvailable { get; set; }
 
         public IndexModel(CmsHeadlessDbContext context, IConfiguration configuration)
         {
             _context = context;
             Configuration = configuration;
             AttributesAvailable = new List<Models.Attributes>();
+
+            IQueryable<Models.Typology> selectTypologyQuery = from Typology in _context.Typology select Typology;
+            TypologyAvailable = selectTypologyQuery.ToList<Models.Typology>();
         }
 
         public AttributesList<Models.Attributes> AttributesList { get; set; }
@@ -94,6 +100,32 @@ namespace CmsHeadless.Pages.Attributes
                 return Page();
             }
 
+            selectAttributesQuery = from Attributes in _context.Attributes where Attributes.AttributeName == temp.AttributeName select Attributes;
+            Models.Attributes tempAttributes = selectAttributesQuery.ToList<Models.Attributes>().First<Models.Attributes>();
+            int attributesId = tempAttributes.AttributesId;
+            /*AttributesTypology*/
+            if (_formAttributesModel.Typology != null)
+            {
+                var tempAttributesTypology = new Models.AttributesTypology();
+                foreach (var i in _formAttributesModel.Typology)
+                {
+                    var entryAttributesTypology = _context.Add(new Models.AttributesTypology());
+                    tempAttributesTypology.TypologyId = i;
+                    tempAttributesTypology.AttributesId = attributesId;
+
+
+                    entryAttributesTypology.CurrentValues.SetValues(tempAttributesTypology);
+                    int k = await _context.SaveChangesAsync();
+                    if (k <= 0)
+                    {
+                        ModelState.AddModelError("Make", "Errore nell'inserimento");
+                        return Page();
+                    }
+                }
+            }
+
+
+
             selectAttributesQueryOrder = from Attributes in _context.Attributes select Attributes;
             selectAttributesQuery = selectAttributesQueryOrder.OrderByDescending(c => c.AttributesId);
             AttributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
@@ -112,6 +144,7 @@ namespace CmsHeadless.Pages.Attributes
         {
             lastDelete = 0;
             lastCreate = 0;
+            callDelete = true;
             if (attributesId == null)
             {
                 return NotFound();

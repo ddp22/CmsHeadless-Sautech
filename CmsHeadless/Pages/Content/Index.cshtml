@@ -42,7 +42,7 @@
                 @{
                     foreach(var i in Model.AttributesAvailable)
                     {
-                                                                <option value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>
+                         <option value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>
                     }
                 }
             </select>
@@ -217,13 +217,13 @@
   </tbody>
 </table>
 
-@if(IndexModel.lastDelete>0 && ModelState.ErrorCount == 0)
+@if(IndexModel.callDelete==true && IndexModel.lastDelete>0 && ModelState.ErrorCount == 0)
 {
     <div class="alert alert-success" role="alert">
         <p>Categoria eliminata con successo</p>
     </div>
 }
-else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
+else if(IndexModel.callDelete==true && IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
 {
     <div class="alert alert-danger" role="alert">
         <p>Errore nell'eliminazione'</p>
@@ -236,18 +236,15 @@ else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
     var nextDisabled = !Model.ContentList.HasNextPage ? "disabled" : "";
 }
 
-    <a asp-action="Index"
-   asp-route-pageIndex="@(Model.ContentList.PageIndex - 1)"
-   asp-route-searchString="@IndexModel.searchString"
-   class="btn btn-default @prevDisabled">
-            Previous
-    </a>
-    <a asp-action="Index"
-   asp-route-pageIndex="@(Model.ContentList.PageIndex + 1)"
-   asp-route-searchString="@IndexModel.searchString"
-   class="btn btn-default @nextDisabled">
-            Next
-    </a>
+<a href="/Content/Index?pageIndex=@(Model.ContentList.PageIndex - 1)&searchString=@IndexModel.searchString"
+class="btn btn-default @prevDisabled">
+        Previous
+</a>
+
+<a href="/Content/Index?pageIndex=@(Model.ContentList.PageIndex + 1)&searchString=@IndexModel.searchString"
+class="btn btn-default @nextDisabled">
+        Next
+</a>
 
 
     @section Scripts{
@@ -336,8 +333,9 @@ $(document).ready(function(){
 </script>
 }
 
-@{
+    @{
     IndexModel.lastCreate = 0;
     IndexModel.lastDelete = 0;
     IndexModel.searchString = null;
+    IndexModel.callDelete = false;
 }

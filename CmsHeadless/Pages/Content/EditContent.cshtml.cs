@@ -166,7 +166,7 @@ namespace CmsHeadless.Pages.Content
                 return NotFound();
             }
 
-            var tempContentAttributes = new Models.ContentAttributes();
+            //var tempContentAttributes = new Models.ContentAttributes();
             IQueryable<Models.ContentAttributes> selectContentAttributesQuery = from ContentAttributes in _context.ContentAttributes where ContentAttributes.ContentId == id select ContentAttributes;
             if (selectContentAttributesQuery != null)
             {
@@ -176,7 +176,7 @@ namespace CmsHeadless.Pages.Content
                 }
             }
 
-            var tempContentTag = new Models.ContentTag();
+            //var tempContentTag = new Models.ContentTag();
             IQueryable<Models.ContentTag> selectContentTagQuery = from ContentTag in _context.ContentTag where ContentTag.ContentId == id select ContentTag;
             if (selectContentTagQuery != null)
             {
@@ -186,7 +186,7 @@ namespace CmsHeadless.Pages.Content
                 }
             }
 
-            var tempContentCategory = new Models.ContentCategory();
+            //var tempContentCategory = new Models.ContentCategory();
             IQueryable<Models.ContentCategory> selectContentCategoryQuery = from ContentCategory in _context.ContentCategory where ContentCategory.ContentId == id select ContentCategory;
             if (selectContentCategoryQuery != null)
             {
@@ -293,118 +293,124 @@ namespace CmsHeadless.Pages.Content
 
             /*ContentAttributes*/
 
-            
-            if (_formEditContentModel.ContentAttributes != null)
-            {
-                var tempContentAttributes = new Models.ContentAttributes();
-                IQueryable<int> selectAttributesIdQuery = from ContentAttributes in _context.ContentAttributes where ContentAttributes.ContentId == contentId select ContentAttributes.AttributesId;
-                List<int> selectAttributesIdList = selectAttributesIdQuery.ToList<int>();
-                foreach (int i in _formEditContentModel.ContentAttributes)
-                {
-                    if (!selectAttributesIdList.Contains(i))
-                    {
-                        var entryContentAttributes = _context.Add(new Models.ContentAttributes());
-                        tempContentAttributes.AttributesId = i;
-                        tempContentAttributes.ContentId = contentId;
-                        entryContentAttributes.CurrentValues.SetValues(tempContentAttributes);
-                        lastEditAttributes = await _context.SaveChangesAsync();
-                        if (lastEditAttributes <= 0)
-                        {
-                            ModelState.AddModelError("Make", "Errore nella modifica");
-                            return Page();
-                        }
-                    }
-                    else
-                    {
-                        selectAttributesIdList.Remove(i);
-                    }
-                    
-                }
-                if(selectAttributesIdList.Count > 0)
-                {
 
-                    foreach(int i in selectAttributesIdList)
+            if (_formEditContentModel.ContentAttributes == null)
+            {
+                _formEditContentModel.ContentAttributes = new List<int>();
+            }
+            var tempContentAttributes = new Models.ContentAttributes();
+            IQueryable<int> selectAttributesIdQuery = from ContentAttributes in _context.ContentAttributes where ContentAttributes.ContentId == contentId select ContentAttributes.AttributesId;
+            List<int> selectAttributesIdList = selectAttributesIdQuery.ToList<int>();
+            foreach (int i in _formEditContentModel.ContentAttributes)
+            {
+                if (!selectAttributesIdList.Contains(i))
+                {
+                    var entryContentAttributes = _context.Add(new Models.ContentAttributes());
+                    tempContentAttributes.AttributesId = i;
+                    tempContentAttributes.ContentId = contentId;
+                    entryContentAttributes.CurrentValues.SetValues(tempContentAttributes);
+                    lastEditAttributes = await _context.SaveChangesAsync();
+                    if (lastEditAttributes <= 0)
                     {
-                        IQueryable<ContentAttributes> selectAttributesRemainIdQuery = from ContentAttributes in _context.ContentAttributes where (ContentAttributes.ContentId == contentId && ContentAttributes.AttributesId==i) select ContentAttributes;
-                        ContentAttributes ContentAttributesToDelete = selectAttributesRemainIdQuery.ToList<ContentAttributes>().First<ContentAttributes>();
-                        _context.ContentAttributes.Remove(ContentAttributesToDelete);
+                        ModelState.AddModelError("Make", "Errore nella modifica");
+                        return Page();
                     }
+                }
+                else
+                {
+                    selectAttributesIdList.Remove(i);
+                }
+                    
+            }
+            if(selectAttributesIdList.Count > 0)
+            {
+
+                foreach(int i in selectAttributesIdList)
+                {
+                    IQueryable<ContentAttributes> selectAttributesRemainIdQuery = from ContentAttributes in _context.ContentAttributes where (ContentAttributes.ContentId == contentId && ContentAttributes.AttributesId==i) select ContentAttributes;
+                    ContentAttributes ContentAttributesToDelete = selectAttributesRemainIdQuery.ToList<ContentAttributes>().First<ContentAttributes>();
+                    _context.ContentAttributes.Remove(ContentAttributesToDelete);
                 }
             }
+            
 
             /*ContentTag*/
-            if (_formEditContentModel.ContentTag != null)
+            if (_formEditContentModel.ContentTag == null)
             {
-                var tempContentTag = new Models.ContentTag();
-                IQueryable<int> selectTagIdQuery = from ContentTag in _context.ContentTag where ContentTag.ContentId == contentId select ContentTag.TagId;
-                List<int> selectTagIdList = selectTagIdQuery.ToList<int>();
-                foreach (int i in _formEditContentModel.ContentTag)
+                _formEditContentModel.ContentTag = new List<int>();
+            }
+            var tempContentTag = new Models.ContentTag();
+            IQueryable<int> selectTagIdQuery = from ContentTag in _context.ContentTag where ContentTag.ContentId == contentId select ContentTag.TagId;
+            List<int> selectTagIdList = selectTagIdQuery.ToList<int>();
+            foreach (int i in _formEditContentModel.ContentTag)
+            {
+                if (!selectTagIdQuery.Contains(i))
                 {
-                    if (!selectTagIdQuery.Contains(i))
+                    var entryContentTag = _context.Add(new Models.ContentTag());
+                    tempContentTag.TagId = i;
+                    tempContentTag.ContentId = contentId;
+                    entryContentTag.CurrentValues.SetValues(tempContentTag);
+                    lastEditTag = await _context.SaveChangesAsync();
+                    if (lastEditTag <= 0)
                     {
-                        var entryContentTag = _context.Add(new Models.ContentTag());
-                        tempContentTag.TagId = i;
-                        tempContentTag.ContentId = contentId;
-                        entryContentTag.CurrentValues.SetValues(tempContentTag);
-                        lastEditTag = await _context.SaveChangesAsync();
-                        if (lastEditTag <= 0)
-                        {
-                            ModelState.AddModelError("Make", "Errore nella modifica");
-                            return Page();
-                        }
-                    }
-                    else
-                    {
-                        selectTagIdList.Remove(i);
+                        ModelState.AddModelError("Make", "Errore nella modifica");
+                        return Page();
                     }
                 }
-                if (selectTagIdList.Count > 0)
+                else
                 {
-                    foreach (int i in selectTagIdList)
-                    {
-                        IQueryable<ContentTag> selectTagRemainIdQuery = from ContentTag in _context.ContentTag where (ContentTag.ContentId == contentId && ContentTag.TagId == i) select ContentTag;
-                        ContentTag ContentTagToDelete = selectTagRemainIdQuery.ToList<ContentTag>().First<ContentTag>();
-                        _context.ContentTag.Remove(ContentTagToDelete);
-                    }
+                    selectTagIdList.Remove(i);
                 }
             }
+            if (selectTagIdList.Count > 0)
+            {
+                foreach (int i in selectTagIdList)
+                {
+                    IQueryable<ContentTag> selectTagRemainIdQuery = from ContentTag in _context.ContentTag where (ContentTag.ContentId == contentId && ContentTag.TagId == i) select ContentTag;
+                    ContentTag ContentTagToDelete = selectTagRemainIdQuery.ToList<ContentTag>().First<ContentTag>();
+                    _context.ContentTag.Remove(ContentTagToDelete);
+                }
+            }
+            
 
             /*ContentCategory*/
-            if (_formEditContentModel.ContentCategory != null)
+            if (_formEditContentModel.ContentCategory == null)
             {
-                var tempContentCategory = new Models.ContentCategory();
-                IQueryable<int> selectCategoryIdQuery = from Contentcategory in _context.ContentCategory where Contentcategory.ContentId == contentId select Contentcategory.CategoryId;
-                List<int> selectCategoryIdList = selectCategoryIdQuery.ToList<int>();
-                foreach (int i in _formEditContentModel.ContentCategory)
+                _formEditContentModel.ContentCategory = new List<int>();
+            }
+            var tempContentCategory = new Models.ContentCategory();
+            IQueryable<int> selectCategoryIdQuery = from Contentcategory in _context.ContentCategory where Contentcategory.ContentId == contentId select Contentcategory.CategoryId;
+            List<int> selectCategoryIdList = selectCategoryIdQuery.ToList<int>();
+            foreach (int i in _formEditContentModel.ContentCategory)
+            {
+                if (!selectCategoryIdQuery.Contains(i))
                 {
-                    if (!selectCategoryIdQuery.Contains(i))
+                    var entryContentCategory = _context.Add(new Models.ContentCategory());
+                    tempContentCategory.CategoryId = i;
+                    tempContentCategory.ContentId = contentId;
+                    entryContentCategory.CurrentValues.SetValues(tempContentCategory);
+                    lastEditCategory = await _context.SaveChangesAsync();
+                    if (lastEditCategory <= 0)
                     {
-                        var entryContentCategory = _context.Add(new Models.ContentCategory());
-                        tempContentCategory.CategoryId = i;
-                        tempContentCategory.ContentId = contentId;
-                        entryContentCategory.CurrentValues.SetValues(tempContentCategory);
-                        lastEditCategory = await _context.SaveChangesAsync();
-                        if (lastEditCategory <= 0)
-                        {
-                            ModelState.AddModelError("Make", "Errore nella modifica");
-                            return Page();
-                        }
-                    }
-                    else
-                    {
-                        selectCategoryIdList.Remove(i);
+                        ModelState.AddModelError("Make", "Errore nella modifica");
+                        return Page();
                     }
                 }
-                if (selectCategoryIdList.Count > 0)
+                else
                 {
-                    foreach (int i in selectCategoryIdList)
-                    {
-                        IQueryable<ContentCategory> selectCategoryRemainIdQuery = from ContentCategory in _context.ContentCategory where (ContentCategory.ContentId == contentId && ContentCategory.CategoryId == i) select ContentCategory;
-                        ContentCategory ContentCategoryToDelete = selectCategoryRemainIdQuery.ToList<ContentCategory>().First<ContentCategory>();
-                        _context.ContentCategory.Remove(ContentCategoryToDelete);
-                    }
+                    selectCategoryIdList.Remove(i);
                 }
             }
+            if (selectCategoryIdList.Count > 0)
+            {
+                foreach (int i in selectCategoryIdList)
+                {
+                    IQueryable<ContentCategory> selectCategoryRemainIdQuery = from ContentCategory in _context.ContentCategory where (ContentCategory.ContentId == contentId && ContentCategory.CategoryId == i) select ContentCategory;
+                    ContentCategory ContentCategoryToDelete = selectCategoryRemainIdQuery.ToList<ContentCategory>().First<ContentCategory>();
+                    _context.ContentCategory.Remove(ContentCategoryToDelete);
+                }
+            }
+            
 
             ContentToUpdate.InsertionDate = _formEditContentModel.InsertionDate;
             ContentToUpdate.LastEdit = DateTime.Now.Date;

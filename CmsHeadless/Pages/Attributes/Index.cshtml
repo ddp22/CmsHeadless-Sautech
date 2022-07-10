@@ -4,18 +4,30 @@
 @{
 }
 
-<div class="col-12 col-xl-4 custom-form-border">
+<div class=" col-12 col-xl-4 custom-form-border">
     <form method="post"  class="custom-form" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
+        <div class="col-12 form-group">
             <label asp-for="_formAttributesModel.AttributeName" class="control-label"></label>
             <input asp-for="_formAttributesModel.AttributeName" class="form-control" required/>
             <span asp-validation-for="_formAttributesModel.AttributeName" class="text-danger"></span>
         </div>
-        <div class="form-group">
+        <div class="col-12 form-group">
             <label asp-for="_formAttributesModel.AttributeValue" class="control-label"></label>
             <input asp-for="_formAttributesModel.AttributeValue" class="form-control" required/>
             <span asp-validation-for="_formAttributesModel.AttributeValue" class="text-danger"></span>
+        </div>
+        <div class="col-6 form-group">
+            <label asp-for="_formAttributesModel.Typology" class="control-label"></label>
+            <select asp-for="_formAttributesModel.Typology" class="form-select" multiple size="7">
+                @{
+                    foreach(var i in Model.TypologyAvailable)
+                    {
+                         <option value="@i.Id" id="@i.Id">@i.Name</option>
+                    }
+                }
+            </select>
+            <span asp-validation-for="_formAttributesModel.Typology" class="text-danger"></span>
         </div>
         <div class="form-group">
             <input type="submit" asp-page-handler="Create" value="Create" class="btn btn-primary" />
@@ -27,7 +39,7 @@
     if(IndexModel.lastCreate>0 && ModelState.ErrorCount == 0)
     {
         <div class="alert alert-success" role="alert">
-            <p>Tag inserito con successo</p>
+            <p>Attributo inserito con successo</p>
         </div>
     }
 }
@@ -97,13 +109,13 @@
   </tbody>
 </table>
 
-@if(IndexModel.lastDelete>0 && ModelState.ErrorCount == 0)
+@if(IndexModel.callDelete==true && IndexModel.lastDelete>0 && ModelState.ErrorCount == 0)
 {
     <div class="alert alert-success" role="alert">
         <p>Attributo eliminato con successo</p>
     </div>
 }
-else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
+else if(IndexModel.callDelete==true && IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
 {
     <div class="alert alert-danger" role="alert">
         <p>Errore nell'eliminazione'</p>
@@ -116,22 +128,33 @@ else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
     var nextDisabled = !Model.AttributesList.HasNextPage ? "disabled" : "";
 }
 
-    <a asp-action="Index"
+    <!--/*<a asp-action="../Attributes/Index"
    asp-route-pageIndex="@(Model.AttributesList.PageIndex - 1)"
    asp-route-searchString="@IndexModel.searchString"
    class="btn btn-default @prevDisabled">
             Previous
+    </a>*/-->
+
+    <a href="/Attributes/Index?pageIndex=@(Model.AttributesList.PageIndex - 1)&searchString=@IndexModel.searchString"
+   class="btn btn-default @prevDisabled">
+            Previous
     </a>
-    <a asp-action="Index"
+
+    <a href="/Attributes/Index?pageIndex=@(Model.AttributesList.PageIndex + 1)&searchString=@IndexModel.searchString"
+   class="btn btn-default @nextDisabled">
+            Next
+    </a>
+    <!--/*<a asp-action="./Attributes/Index"
    asp-route-pageIndex="@(Model.AttributesList.PageIndex + 1)"
    asp-route-searchString="@IndexModel.searchString"
    class="btn btn-default @nextDisabled">
             Next
-    </a>
+    </a>*/-->
 
 
 @{
     IndexModel.lastCreate = 0;
     IndexModel.lastDelete = 0;
     IndexModel.searchString = null;
+    IndexModel.callDelete = false;
 }

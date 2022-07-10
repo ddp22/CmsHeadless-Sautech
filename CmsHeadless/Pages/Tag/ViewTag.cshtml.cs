@@ -61,22 +61,22 @@ namespace CmsHeadless.Pages.Tag
                 return NotFound();
             }
 
-            var Tag = await _context.Tag.FindAsync(tagId);
+            var tag = await _context.Tag.FindAsync(tagId);
 
             IQueryable<Models.Tag> selectTagQuery;
             IQueryable<Models.Tag> selectTagQueryOrder;
-            if (Tag == null)
+            if (tag == null)
             {
                 return NotFound();
             }
-            _context.Tag.Remove(Tag);
+            _context.Tag.Remove(tag);
             lastDelete=await _context.SaveChangesAsync();
             if (lastDelete <= 0)
             {
                 ModelState.AddModelError("Make", "Errore nell'inserimento");
                 return Page();
             }
-            selectTagQueryOrder = from tag in _context.Tag select Tag;
+            selectTagQueryOrder = from Tag in _context.Tag select Tag;
             selectTagQuery = selectTagQueryOrder.OrderByDescending(x => x.TagId);
             tagAvailable = selectTagQuery.ToList<Models.Tag>();
             if (pageIndex == null)

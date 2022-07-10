@@ -1,5 +1,5 @@
 ﻿@page
-@model CmsHeadless.Pages.Tag.IndexModel
+@model CmsHeadless.Pages.Typology.IndexModel
 @{
 }
 
@@ -7,14 +7,9 @@
     <form method="post"  class="custom-form" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="_formTagModel.Name" class="control-label"></label>
-            <input asp-for="_formTagModel.Name" class="form-control" required/>
-            <span asp-validation-for="_formTagModel.Name" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="_formTagModel.Url" class="control-label"></label>
-            <input asp-for="_formTagModel.Url" class="form-control" required/>
-            <span asp-validation-for="_formTagModel.Url" class="text-danger"></span>
+            <label asp-for="_formTypologyModel.TypologyName" class="control-label"></label>
+            <input asp-for="_formTypologyModel.TypologyName" class="form-control" required/>
+            <span asp-validation-for="_formTypologyModel.TypologyName" class="text-danger"></span>
         </div>
         <div class="form-group">
             <input type="submit" asp-page-handler="Create" value="Create" class="btn btn-primary" />
@@ -22,11 +17,11 @@
     </form>
 </div>
 
-@{
+        @{
     if(IndexModel.lastCreate>0 && ModelState.ErrorCount == 0)
     {
         <div class="alert alert-success" role="alert">
-            <p>Tag inserito con successo</p>
+            <p>Tipologia inserito con successo</p>
         </div>
     }
 }
@@ -40,7 +35,7 @@
 
 <div class="row justify-content-between">
     <div class="col-4">
-        <h1>Lista tag</h1>
+        <h1>Lista Typology</h1>
     </div>
     <div class="col-4">
         <form>
@@ -53,19 +48,18 @@
         </form>
     </div>
 </div>
-<table class="table table-striped table-bordered" id="tagList">
+<table class="table table-striped table-bordered" id="typologyList">
   <thead >
     <tr>
       <th scope="col">#</th>
       <th scope="col">Name</th>
-      <th scope="col">Url</th>
     </tr>
   </thead>
   <tbody class="table-group-divider">
         @{
-            if(Model.TagList!=null){
-            int k=1+(Model.TagList.PageIndex-1)*IndexModel.numberPage ;
-                    @foreach (var item in Model.TagList)
+            if(Model.TypologyList!=null){
+            int k=1+(Model.TypologyList.PageIndex-1)*IndexModel.numberPage ;
+                    @foreach (var item in Model.TypologyList)
                 {
                     <tr>
                         <th scope="row">
@@ -75,12 +69,9 @@
                             @Html.DisplayFor(modelItem => item.Name)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Url)
-                        </td>
-                        <td>
-                            <a asp-page="./EditTag" asp-route-id="@item.TagId">Edit</a> |
+                            <a asp-page="./EditTypology" asp-route-id="@item.Id">Edit</a> |
                                                          
-                            <a asp-page="index" asp-page-handler="Delete" asp-route-tagId="@item.TagId">Delete</a>
+                            <a asp-page="index" asp-page-handler="Delete" asp-route-typologyId="@item.Id">Delete</a>
                         </td>
                     </tr>
                     k++;
@@ -99,7 +90,7 @@
 @if(IndexModel.callDelete==true && IndexModel.lastDelete>0 && ModelState.ErrorCount == 0)
 {
     <div class="alert alert-success" role="alert">
-        <p>Tag eliminato con successo</p>
+        <p>Tipologia eliminata con successo</p>
     </div>
 }
 else if(IndexModel.callDelete==true && IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
@@ -111,24 +102,24 @@ else if(IndexModel.callDelete==true && IndexModel.lastDelete==0 && ModelState.Er
 
 @{
     
-    var prevDisabled = !Model.TagList.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.TagList.HasNextPage ? "disabled" : "";
+    var prevDisabled = !Model.TypologyList.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.TypologyList.HasNextPage ? "disabled" : "";
 }
 
-<a href="/Tag/Index?pageIndex=@(Model.TagList.PageIndex - 1)&searchString=@IndexModel.searchString"
-class="btn btn-default @prevDisabled">
-        Previous
-</a>
+    <a href="/Typology/Index?pageIndex=@(Model.TypologyList.PageIndex - 1)&searchString=@IndexModel.searchString"
+   class="btn btn-default @prevDisabled">
+            Previous
+    </a>
 
-<a href="/Tag/Index?pageIndex=@(Model.TagList.PageIndex + 1)&searchString=@IndexModel.searchString"
-class="btn btn-default @nextDisabled">
-        Next
-</a>
+    <a href="/Typology/Index?pageIndex=@(Model.TypologyList.PageIndex + 1)&searchString=@IndexModel.searchString"
+   class="btn btn-default @nextDisabled">
+            Next
+    </a>
 
 
 @{
     IndexModel.lastCreate = 0;
     IndexModel.lastDelete = 0;
     IndexModel.searchString = null;
-    IndexModel.callDelete = true;
+    IndexModel.callDelete = false;
 }

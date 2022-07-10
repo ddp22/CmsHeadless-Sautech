@@ -59,23 +59,23 @@ namespace CmsHeadless.Pages.Attributes
                 return NotFound();
             }
 
-            var Attributes = await _context.Attributes.FindAsync(attributesId);
+            var attributes = await _context.Attributes.FindAsync(attributesId);
 
             IQueryable<Models.Attributes> selectAttributesQuery;
             IQueryable<Models.Attributes> selectAttributesQueryOrder;
 
-            if (Attributes == null)
+            if (attributes == null)
             {
                 return NotFound();
             }
-            _context.Attributes.Remove(Attributes);
+            _context.Attributes.Remove(attributes);
             lastDelete = await _context.SaveChangesAsync();
             if (lastDelete <= 0)
             {
                 ModelState.AddModelError("Make", "Errore nell'inserimento");
                 return Page();
             }
-            selectAttributesQueryOrder = from attributes in _context.Attributes select Attributes;
+            selectAttributesQueryOrder = from Attributes in _context.Attributes select Attributes;
             selectAttributesQuery = selectAttributesQueryOrder.OrderByDescending(c => c.AttributesId);
             attributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
             if (pageIndex == null)

@@ -10,5 +10,6 @@ namespace CmsHeadless.ViewModels.Attributes
         public string AttributeName { get; set; } = null!;
         [Required]
         public string AttributeValue { get; set; } = null!;
+        public List<int>? Typology { get; set; }
     }
 }

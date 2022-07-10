@@ -6,20 +6,40 @@
 <div class="col-12 col-xl-4 custom-form-border">
     <form method="post"  class="custom-form" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
+        <div class="col-12 form-group">
             <label asp-for="_formEditAttributesModel.AttributeName" class="control-label"></label>
             <input asp-for="_formEditAttributesModel.AttributeName" class="form-control" required value="@Model.attributes.AttributeName"/>
             <span asp-validation-for="_formEditAttributesModel.AttributeName" class="text-danger"></span>
         </div>
-        <div class="form-group">
+        <div class="col-12 form-group">
             <label asp-for="_formEditAttributesModel.AttributeValue" class="control-label"></label>
             <input asp-for="_formEditAttributesModel.AttributeValue" class="form-control" required value=@Model.attributes.AttributeValue/>
             <span asp-validation-for="_formEditAttributesModel.AttributeValue" class="text-danger"></span>
         </div>
+        <div class="col-6 form-group">
+            <label asp-for="_formEditAttributesModel.Typology" class="control-label"></label>
+            <select asp-for="_formEditAttributesModel.Typology" class="form-select" multiple size="7">
+                @{
+                    foreach(var i in Model.TypologyAvailable)
+                    {
+                        if (@Model.TypologySelected!=null && @Model.TypologySelected.Contains(i.Id))
+                        {
+                             <option selected value="@i.Id" id="@i.Id">@i.Name</option>
+                        }
+                        else
+                        {
+                             <option value="@i.Id" id="@i.Id">@i.Name</option>                            
+                        }
+                         
+                    }
+                }
+            </select>
+            <span asp-validation-for="_formEditAttributesModel.Typology" class="text-danger"></span>
+        </div>
         <div class="form-group">
             <input type="submit" asp-page-handler="Edit" asp-route-attributesId="@EditAttributesModel.EditAttributesId" value="Edit" class="btn btn-primary" />
         </div>
-        @if(EditAttributesModel.lastEdit>0 && ModelState.ErrorCount == 0)
+        @if((EditAttributesModel.lastEditTypology>0 || EditAttributesModel.lastEdit>0) && ModelState.ErrorCount == 0)
             {
                 <div class="alert alert-success" role="alert">
                     <p>Attributo inserito con successo</p>
@@ -38,4 +58,5 @@
 
 @{
     EditAttributesModel.lastEdit = 0;
+    EditAttributesModel.lastEditTypology = 0;
 }

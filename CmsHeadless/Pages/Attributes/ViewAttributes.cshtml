@@ -79,19 +79,15 @@ else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
     var nextDisabled = !Model.AttributesList.HasNextPage ? "disabled" : "";
 }
 
-    <a asp-action="Index"
-   asp-route-pageIndex="@(Model.AttributesList.PageIndex - 1)"
-   asp-route-searchString="@ViewAttributesModel.searchString"
-   class="btn btn-default @prevDisabled">
-            Previous
-    </a>
-    <a asp-action="Index"
-   asp-route-pageIndex="@(Model.AttributesList.PageIndex + 1)"
-   asp-route-searchString="@ViewAttributesModel.searchString"
-   class="btn btn-default @nextDisabled">
-            Next
-    </a>
+<a href="/Attributes/ViewAttributes?pageIndex=@(Model.AttributesList.PageIndex - 1)&searchString=@IndexModel.searchString"
+class="btn btn-default @prevDisabled">
+        Previous
+</a>
 
+<a href="/Attributes/ViewAttributes?pageIndex=@(Model.AttributesList.PageIndex + 1)&searchString=@IndexModel.searchString"
+class="btn btn-default @nextDisabled">
+        Next
+</a>
 
 @{
     IndexModel.lastCreate = 0;

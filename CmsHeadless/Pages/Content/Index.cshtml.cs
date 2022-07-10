@@ -19,6 +19,7 @@ namespace CmsHeadless.Pages.Content
         public ContentViewModel _formContentModel { get; set; }
         public static int lastCreate = 0;
         public static int lastDelete = 0;
+        public static bool callDelete = false;
 
         public static int ContentId = 0;
 
@@ -338,6 +339,7 @@ namespace CmsHeadless.Pages.Content
         {
             lastDelete = 0;
             lastCreate = 0;
+            callDelete = true;
             if (contentId == null)
             {
                 return NotFound();

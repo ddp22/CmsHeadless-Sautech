@@ -104,18 +104,15 @@ else if(IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
     var nextDisabled = !Model.ContentList.HasNextPage ? "disabled" : "";
 }
 
-    <a asp-action="Index"
-   asp-route-pageIndex="@(Model.ContentList.PageIndex - 1)"
-   asp-route-searchString="@ViewContentModel.searchString"
-   class="btn btn-default @prevDisabled">
-            Previous
-    </a>
-    <a asp-action="Index"
-   asp-route-pageIndex="@(Model.ContentList.PageIndex + 1)"
-   asp-route-searchString="@ViewContentModel.searchString"
-   class="btn btn-default @nextDisabled">
-            Next
-    </a>
+<a href="/Content/ViewContent?pageIndex=@(Model.ContentList.PageIndex - 1)&searchString=@IndexModel.searchString"
+class="btn btn-default @prevDisabled">
+        Previous
+</a>
+
+<a href="/Content/ViewContent?pageIndex=@(Model.ContentList.PageIndex + 1)&searchString=@IndexModel.searchString"
+class="btn btn-default @nextDisabled">
+        Next
+</a>
 
 @{
     ViewContentModel.lastDelete = 0;
