@@ -22,5 +22,10 @@ namespace CmsHeadless.ViewModels.Content
         public DateTime? lastEdit { get; }
         [DataType(DataType.Date)]
         public DateTime InsertionDate { get; }
+        public int? NationAdd { get; set; }
+        public int? RegionAdd { get; set; }
+        public int? ProvinceAdd { get; set; }
+        public string? CityAdd { get; set; }
+        public List<int>? LocationDelete { get; set; }
     }
 }

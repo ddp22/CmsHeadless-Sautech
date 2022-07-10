@@ -24,6 +24,6 @@ namespace CmsHeadless.Models
         public string AttributeValue { get; set; }
         public ICollection<ContentAttributes> ContentAttributes { get; set; }
         public ICollection<AttributesTypology>? AttributesTypology { get; set; }
-        public virtual Location? Location { get; set; }
+        
     }
 }

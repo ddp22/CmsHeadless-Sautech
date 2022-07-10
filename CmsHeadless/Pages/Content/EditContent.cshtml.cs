@@ -15,6 +15,7 @@ namespace CmsHeadless.Pages.Content
         public static int lastEditAttributes = 0;
         public static int lastEditTag = 0;
         public static int lastEditCategory = 0;
+        public static int lastEditLocation = 0;
         public Models.Content content;
         public Models.Content EditContentNew { get; set; }
         [BindProperty]
@@ -35,11 +36,22 @@ namespace CmsHeadless.Pages.Content
         public string? PubblicationDateString;
         public string? lastEditString;
 
+        public List<Models.Nation> NationAvailable { get; set; }
+        public List<Models.Region> RegionAvailable { get; set; }
+        public List<Models.Province> ProvinceAvailable { get; set; }
+        public List<Models.Location> LocationAvailable { get; set; }
+        public List<Models.ContentLocation> ContentLocationAvailable { get; set; }
+        public List<Models.Location> LocationsOfContent { get; set; }
+        /*da eliminare*/
+        public List<LocationsOfContent> LocationsOfContentAvailable { get; set; }
+        /* *** */
+
         public EditContentModel(CmsHeadlessDbContext context)
         {
             _context = context;
             ContentAvailable= new List<Models.Content>();
 
+            LocationsOfContentAvailable = new List<LocationsOfContent>();
 
             IQueryable<Models.Attributes> selectAttributesQuery = from Attributes in _context.Attributes select Attributes;
             AttributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
@@ -54,9 +66,46 @@ namespace CmsHeadless.Pages.Content
             TagSelected = new List<int>();
             CategorySelected= new List<int>();
 
+            IQueryable<Models.Nation> selectNationQuery = from Nation in _context.Nation select Nation;
+            NationAvailable = selectNationQuery.ToList<Models.Nation>();
+
+            IQueryable<Models.Location> selectLocationQuery = from Location in _context.Location select Location;
+            LocationAvailable = selectLocationQuery.ToList<Models.Location>();
+
+            IQueryable<Models.Region> selectRegionQuery = from Region in _context.Region select Region;
+            RegionAvailable = selectRegionQuery.ToList<Models.Region>();
+
+            IQueryable<Models.Province> selectProvinceQuery = from Province in _context.Province select Province;
+            ProvinceAvailable = selectProvinceQuery.ToList<Models.Province>();
+
+            IQueryable<Models.ContentLocation> selectContentLocationQuery = from ContentLocation in _context.ContentLocation select ContentLocation;
+            ContentLocationAvailable = selectContentLocationQuery.ToList<Models.ContentLocation>();
         }
         public async Task<IActionResult> OnGetAsync(int? id, string? searchString)
         {
+            LocationsOfContent = ContentLocationAvailable.Where(c => c.ContentId == id).Select(c=>c.Location).ToList();
+            foreach (var location in LocationsOfContent)
+            {
+                var tempNation = NationAvailable.Find(c => c.NationId == location.NationId);
+                string nation = tempNation!=null? tempNation.NationName : null;
+                string region = null;
+                string province = null;
+                string city = location.City;
+                if (nation != null)
+                {
+                    var tempRegion = RegionAvailable.Find(c => c.RegionId == location.RegionId);
+                    region = tempRegion != null ? tempRegion.RegionName : null;
+                    if(region != null)
+                    {
+                        var tempProvince = ProvinceAvailable.Find(c => c.ProvinceId == location.ProvinceId);
+                        province = tempProvince != null ? tempProvince.ProvinceName : null;
+                    }
+                }
+                LocationsOfContentAvailable.Add(new LocationsOfContent(location.LocationId, nation, region, province, city));
+            }
+
+            
+
             selectContentQueryOrder = from Content in _context.Content select Content;
             selectContentQuery = selectContentQueryOrder.OrderByDescending(c => c.ContentId);
             if (!string.IsNullOrEmpty(searchString))
@@ -158,6 +207,7 @@ namespace CmsHeadless.Pages.Content
             lastEditAttributes = 0;
             lastEditTag = 0;
             lastEditCategory = 0;
+            lastEditLocation = 0;
             var ContentToUpdate = await _context.Content.FindAsync(contentId);
 
             if (ContentToUpdate == null)
@@ -358,6 +408,92 @@ namespace CmsHeadless.Pages.Content
 
             ContentToUpdate.InsertionDate = _formEditContentModel.InsertionDate;
             ContentToUpdate.LastEdit = DateTime.Now.Date;
+
+            /*start ContentLocation*/
+
+            int? nation = (_formEditContentModel.NationAdd == null || _formEditContentModel.NationAdd <= 0) ? null : _formEditContentModel.NationAdd;
+            if (nation != null)
+            {
+
+
+                int? region = (_formEditContentModel.RegionAdd == null || _formEditContentModel.RegionAdd <= 0) ? null : _formEditContentModel.RegionAdd;
+                int? province = (_formEditContentModel.ProvinceAdd == null || _formEditContentModel.ProvinceAdd <= 0) ? null : _formEditContentModel.ProvinceAdd;
+                string? city = _formEditContentModel.CityAdd == null ? null : _formEditContentModel.CityAdd;
+                var is_exists = LocationAvailable.Where(c => c.NationId == nation
+                                                  && c.RegionId == region
+                                                  && c.ProvinceId == province
+                                                  && c.City == city).ToList();
+                int? locationId = null;
+                int? contentLocationId = null;
+                if (is_exists.Count() > 0)
+                {
+                    locationId = is_exists.First().LocationId;
+                }
+                if (locationId != null)
+                {
+                    var is_present = ContentLocationAvailable.Where(c => c.ContentId == contentId
+                                                  && c.LocationId == locationId).ToList();
+                    if (is_present.Count() > 0)
+                    {
+                        contentLocationId = is_present.First().Id;
+                    }
+                }
+                if (contentLocationId == null)
+                {
+                    if (locationId == null)
+                    {
+                        var entryLocation = _context.Add(new Location());
+                        Location tempLocation = new Location(nation, region, province, city);
+                        entryLocation.CurrentValues.SetValues(tempLocation);
+                        int j = await _context.SaveChangesAsync();
+                        if (j <= 0)
+                        {
+                            ModelState.AddModelError("Make", "Errore nella modifica");
+                            return Page();
+                        }
+                        locationId = (from Location in _context.Location
+                                      where (Location.NationId == nation
+                                     && Location.RegionId == region
+                                     && Location.ProvinceId == province
+                                     && Location.City == city)
+                                      select Location.LocationId).ToList().First();
+                    }
+                    var tempContentLocation = new Models.ContentLocation();
+                    var entryContentLocation = _context.Add(new Models.ContentLocation());
+                    tempContentLocation.LocationId = (int)locationId;
+                    tempContentLocation.ContentId = contentId;
+
+                    entryContentLocation.CurrentValues.SetValues(tempContentLocation);
+                    lastEditLocation = await _context.SaveChangesAsync();
+                    if (lastEditLocation <= 0)
+                    {
+                        ModelState.AddModelError("Make", "Errore nell'inserimento");
+                        return Page();
+                    }
+                }
+            }
+
+            if (_formEditContentModel.LocationDelete!=null &&_formEditContentModel.LocationDelete.Count() > 0)
+            {
+                ContentLocationAvailable = ContentLocationAvailable.Where(c => _formEditContentModel.LocationDelete.Contains(c.LocationId)).ToList();
+                if (ContentLocationAvailable.Count() > 0)
+                {
+                    foreach (var l in ContentLocationAvailable)
+                    {
+                        _context.ContentLocation.Remove(l);
+                        lastEditLocation = await _context.SaveChangesAsync();
+                        if (lastEditLocation <= 0)
+                        {
+                            ModelState.AddModelError("Make", "Errore nell'inserimento");
+                            return Page();
+                        }
+                    }
+                }
+            }
+
+
+            /*end ContentLocation*/
+
             lastEdit = await _context.SaveChangesAsync();
 
             selectContentQueryOrder = from Content in _context.Content select Content;

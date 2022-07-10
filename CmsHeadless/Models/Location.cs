@@ -10,11 +10,10 @@ namespace CmsHeadless.Models
         public int? NationId { get; set; }
         public int? RegionId { get; set; }
         public int? ProvinceId { get; set; }
-        /*public virtual Nation? Nation { get; set; }
-        public virtual Region? Region { get; set; }
-        public virtual Province? Province { get; set; }*/
+        /*public Nation? Nation { get; set; } = null;
+        public Region? Region { get; set; } = null;
+        public Province? Province { get; set; } = null;*/
         public string? City { get; set; }
-        public virtual ICollection<Attributes>? Attributes { get; set; }
         public virtual ICollection<ContentLocation>? ContentLocation { get; set; }
         public Location()
         {

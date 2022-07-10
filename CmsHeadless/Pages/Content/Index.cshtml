@@ -73,7 +73,7 @@
             <span asp-validation-for="_formContentModel.ContentTag" class="text-danger"></span>
         </div>
 
-        <div class="col-12 col-xl-2 form-group">
+        <div class="col-12 col-xl-3 form-group">
             <label asp-for="_formContentModel.Nation" class="control-label"></label>
            
             <select id="NationSelectContentCreate" asp-for="_formContentModel.Nation" class="form-select">
@@ -83,7 +83,7 @@
                     {
                         if (i.NationIsActive)
                         {
-                                                 <option value="@i.NationId" id="@i.NationId">@i.NationName</option>
+                             <option value="@i.NationId" id="@i.NationId">@i.NationName</option>
                         }
                     }
                 }
@@ -91,7 +91,7 @@
             <span asp-validation-for="_formContentModel.Nation" class="text-danger"></span>
         </div>
 
-        <div class="col-12 col-xl-2 form-group">
+        <div class="col-12 col-xl-3 form-group">
             <label asp-for="_formContentModel.Region" class="control-label"></label>
             <select id="RegionSelectContentCreate" asp-for="_formContentModel.Region" class="form-select" disabled="disabled">
                 
@@ -99,7 +99,7 @@
             <span asp-validation-for="_formContentModel.Region" class="text-danger"></span>
         </div>
 
-        <div class="col-12 col-xl-2 form-group">
+        <div class="col-12 col-xl-3 form-group">
             <label asp-for="_formContentModel.Province" class="control-label"></label>
             <select id="ProvinceSelectContentCreate" asp-for="_formContentModel.Province" class="form-select" disabled="disabled">
                 
@@ -107,7 +107,7 @@
             <span asp-validation-for="_formContentModel.Province" class="text-danger"></span>
         </div>
 
-        <div class="form-group col-6">
+        <div class="form-group col-12 col-xl-3">
             <label asp-for="_formContentModel.City" class="control-label"></label>
             <input id="CitySelectContentCreate" asp-for="_formContentModel.City" class="form-control" disabled="disabled"/>
             <span asp-validation-for="_formContentModel.City" class="text-danger"></span>
@@ -168,42 +168,42 @@
         @{
             if(Model.ContentList!=null){
             int k=1+(Model.ContentList.PageIndex-1)*IndexModel.numberPage ;
-                        @foreach (var item in Model.ContentList)
+                @foreach (var item in Model.ContentList)
                 {
-                                <tr>
-                                    <th scope="row">
-                                        @k
-                                    </th>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Title)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Description)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.InsertionDate)
-                                    </td>
-                                    <td>
-                                        <img style="max-height:100px" src="~/img/content/@Html.DisplayFor(modelItem => item.Media)" alt="image not available"/>
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Text)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.UserId)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.LastEdit)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PubblicationDate)
-                                    </td>
-                                    <td>
-                                            <a asp-page="./EditContent" asp-route-id="@item.ContentId">Edit</a> |
+                    <tr>
+                        <th scope="row">
+                            @k
+                        </th>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.InsertionDate)
+                        </td>
+                        <td>
+                            <img style="max-height:100px" src="~/img/content/@Html.DisplayFor(modelItem => item.Media)" alt="image not available"/>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Text)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastEdit)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PubblicationDate)
+                        </td>
+                        <td>
+                                <a asp-page="./EditContent" asp-route-id="@item.ContentId">Edit</a> |
                                                                                                  
-                                            <a asp-page="index" asp-page-handler="Delete" asp-route-contentId="@item.ContentId">Delete</a>
-                                    </td>
-                                </tr>
+                                <a asp-page="index" asp-page-handler="Delete" asp-route-contentId="@item.ContentId">Delete</a>
+                        </td>
+                    </tr>
                     k++;
                 }
             }

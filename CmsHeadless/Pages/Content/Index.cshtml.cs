@@ -286,28 +286,6 @@ namespace CmsHeadless.Pages.Content
                 if(id == null)
                 {
                     var entryLocation = _context.Add(new Location());
-                    /*Nation newNation = NationAvailable.Where(c=>c.NationId==nation).ToList().First();
-
-                    var tempNewRegion = RegionAvailable.Where(c => c.RegionId == region).ToList();
-                    Region newRegion;
-                    if (tempNewRegion.Count() > 0)
-                    {
-                        newRegion = tempNewRegion.First();
-                    }
-                    else
-                    {
-                        newRegion = null;
-                    }
-                    var tempNewProvince = newRegion == null ? ProvinceAvailable.Where(c => c.ProvinceId == province).ToList() : null;
-                    Province newProvince;
-                    if (tempNewProvince!=null && tempNewProvince.Count() > 0)
-                    {
-                        newProvince=tempNewProvince.First();
-                    }
-                    else
-                    {
-                        newProvince = null;
-                    }*/
                     Location tempLocation = new Location(nation, region, province, city);
                     entryLocation.CurrentValues.SetValues(tempLocation);
                     int l=await _context.SaveChangesAsync();
@@ -316,15 +294,6 @@ namespace CmsHeadless.Pages.Content
                         ModelState.AddModelError("Make", "Errore nell'inserimento");
                         return Page();
                     }
-                    /*int? regionId = newRegion == null ? null : newRegion.RegionId;
-                    int? provinceId = newProvince == null ? null : newProvince.ProvinceId;
-                    id = (from Location in _context.Location
-                             where (Location.NationId == newNation.NationId
-                            && Location.RegionId == regionId
-                            && Location.ProvinceId == provinceId
-                            && Location.City == city)
-                             select Location.LocationId).ToList().First();*/
-
                     id = (from Location in _context.Location
                           where (Location.NationId == nation
                          && Location.RegionId == region

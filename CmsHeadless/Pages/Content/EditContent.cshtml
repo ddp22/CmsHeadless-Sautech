@@ -40,11 +40,11 @@
                     {
                         if (@Model.AttributesSelected!=null && @Model.AttributesSelected.Contains(i.AttributesId))
                         {
-                            <option selected value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>
+                                    <option selected value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>
                         }
                         else
                         {
-                            <option value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>                            
+                                    <option value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>                            
                         }
                     }
                 }
@@ -59,11 +59,11 @@
                     {
                         if (@Model.CategorySelected!=null && @Model.CategorySelected.Contains(i.CategoryId))
                         {
-                            <option selected value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
+                                    <option selected value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
                         }
                         else
                         {
-                            <option value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
+                                    <option value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
                         }
                     }
                 }
@@ -78,11 +78,11 @@
                     {
                         if (@Model.TagSelected!=null && @Model.TagSelected.Contains(i.TagId))
                         {
-                            <option selected value="@i.TagId" id="@i.TagId">@i.Name</option>
+                                    <option selected value="@i.TagId" id="@i.TagId">@i.Name</option>
                         }
                         else
                         {
-                            <option value="@i.TagId" id="@i.TagId">@i.Name</option>
+                                    <option value="@i.TagId" id="@i.TagId">@i.Name</option>
                         }
                     }
                 }
@@ -104,11 +104,66 @@
                 </div>
             }
         </div>
-        <div class="form-group">
+        <div class="col-12 row">
+            <div class="col-12 col-xl-3 form-group">
+                <label asp-for="_formEditContentModel.NationAdd" class="control-label"></label>
+           
+                <select id="NationSelectContentAdd" asp-for="_formEditContentModel.NationAdd" class="form-select">
+                    <option value="-1">Select Nation</option>
+                    @{
+                        foreach(var i in Model.NationAvailable)
+                        {
+                            if (i.NationIsActive)
+                            {
+                                         <option value="@i.NationId" id="@i.NationId">@i.NationName</option>
+                            }
+                        }
+                    }
+                </select>
+                <span asp-validation-for="_formEditContentModel.NationAdd" class="text-danger"></span>
+            </div>
 
+            <div class="col-12 col-xl-3 form-group">
+                <label asp-for="_formEditContentModel.RegionAdd" class="control-label"></label>
+                <select id="RegionSelectContentAdd" asp-for="_formEditContentModel.RegionAdd" class="form-select" disabled="disabled">
+                
+                </select>
+                <span asp-validation-for="_formEditContentModel.RegionAdd" class="text-danger"></span>
+            </div>
+
+            <div class="col-12 col-xl-3 form-group">
+                <label asp-for="_formEditContentModel.ProvinceAdd" class="control-label"></label>
+                <select id="ProvinceSelectContentAdd" asp-for="_formEditContentModel.ProvinceAdd" class="form-select" disabled="disabled">
+                
+                </select>
+                <span asp-validation-for="_formEditContentModel.ProvinceAdd" class="text-danger"></span>
+            </div>
+
+            <div class="col-12  col-xl-3 form-group">
+                <label asp-for="_formEditContentModel.CityAdd" class="control-label"></label>
+                <input id="CitySelectContentAdd" asp-for="_formEditContentModel.CityAdd" class="form-control" disabled="disabled"/>
+                <span asp-validation-for="_formEditContentModel.CityAdd" class="text-danger"></span>
+            </div>
+        </div>
+        <p> </p>
+        <h5>Seleziona i luoghi da eliminare</h5>
+        <div class="col-12 col-xl-6 form-group">
+            <label asp-for="_formEditContentModel.LocationDelete" class="control-label"></label>
+            <select asp-for="_formEditContentModel.LocationDelete" class="form-select" multiple >
+                @{
+                    foreach(var i in Model.LocationsOfContentAvailable)
+                    {
+                        <option  value="@i.LocationId" id="@i.LocationId">@i.NationName, @i.RegionName, @i.ProvinceName, @i.CityName</option>
+                    }
+                }
+            </select>
+            <span asp-validation-for="_formEditContentModel.LocationDelete" class="text-danger"></span>
+        </div>
+        <div class="form-group">
             <input asp-page-handler="Edit" asp-route-contentId="@EditContentModel.EditContentId" type="submit" value="Edit" class="btn btn-primary" />
         </div>
-        @if((EditContentModel.lastEdit>0 || EditContentModel.lastEditAttributes>0 || EditContentModel.lastEditCategory>0 || EditContentModel.lastEditTag>0) && ModelState.ErrorCount == 0)
+
+        @if((EditContentModel.lastEdit>0 || EditContentModel.lastEditAttributes>0 || EditContentModel.lastEditCategory>0 || EditContentModel.lastEditTag>0 || EditContentModel.lastEditLocation>0) && ModelState.ErrorCount == 0)
             {
                 <div class="alert alert-success" role="alert">
                     <p>Content modificato con successo</p>
@@ -123,10 +178,97 @@
     </form>
 </div>
 <a href="../Content/">Return to content pages</a>
+    @section Scripts{
+    <script type="text/javascript">
+
+$(document).ready(function(){
+    $("#NationSelectContentAdd").change(function() {
+        var selectedNation = $("#NationSelectContentAdd option:selected").val();
+        $("#RegionSelectContentAdd").empty();
+        $("#ProvinceSelectContentAdd").empty();
+        $("#ProvinceSelectContentAdd").attr('disabled','disabled');
+        $("#CitySelectContentAdd").attr('disabled','disabled');
+        $("#CitySelectContentAdd").val("");
+        if (selectedNation == -1) {
+            $("#RegionSelectContentAdd").attr('disabled','disabled');
+            return;
+        }
+        $("#RegionSelectContentAdd").removeAttr('disabled'); 
+        
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("LoadRegion")',
+            dataType: 'json',
+            data: {
+                id: parseInt(selectedNation)
+            },
+            success: function(states) {
+                $("#RegionSelectContentAdd").append(
+                    '<option value="' + -1 + '">' + "Select Region" + '</option>');
+
+                $.each(states, function(i, state) {
+                    $("#RegionSelectContentAdd").append(
+                        '<option value="' + state.RegionId + '">' + state.RegionName + '</option>');
+                });
+            }
+        });
+    });
+});
+
+
+$(document).ready(function(){
+    $("#RegionSelectContentAdd").change(function() {
+        var selectedRegion = $("#RegionSelectContentAdd option:selected").val();
+        $("#ProvinceSelectContentAdd").empty();
+        $("#CitySelectContentAdd").attr('disabled','disabled');
+        $("#CitySelectContentAdd").val("");
+        if (selectedRegion == -1) {
+            $("#ProvinceSelectContentAdd").attr('disabled','disabled');
+            return;
+        }
+        $("#ProvinceSelectContentAdd").removeAttr('disabled');
+        
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("LoadProvince")',
+            dataType: 'json',
+            data: {
+                id: parseInt(selectedRegion)
+            },
+            success: function(states) {
+                $("#ProvinceSelectContentAdd").append(
+                    '<option value="' + -1 + '">' + "Select Province" + '</option>');
+
+                $.each(states, function(i, state) {
+                    $("#ProvinceSelectContentAdd").append(
+                        '<option value="' + state.ProvinceId + '">' + state.ProvinceName + '</option>');
+                });
+            }
+        });
+    });
+});
+
+
+$(document).ready(function(){
+    $("#ProvinceSelectContentAdd").change(function() {
+        var selectedProvince = $("#ProvinceSelectContentAdd option:selected").val();
+        $("#CitySelectContentAdd").val("");
+        if (selectedProvince == -1) {
+            $("#CitySelectContentAdd").attr('disabled','disabled');
+            return;
+        }
+        $("#CitySelectContentAdd").removeAttr('disabled');
+    });
+});
+
+</script>
+}
+
 
 @{
     EditContentModel.lastEdit = 0;
     EditContentModel.lastEditAttributes = 0;
     EditContentModel.lastEditCategory = 0;
     EditContentModel.lastEditTag = 0;
+    EditContentModel.lastEditLocation = 0;
 }
