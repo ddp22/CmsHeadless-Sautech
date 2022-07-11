@@ -17,7 +17,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="_formContentModel.Media" class="control-label"></label>
-                <input asp-for="_formContentModel.Media" class="form-control" />
+                <input asp-for="_formContentModel.Media" class="form-control textForm" />
                 <span asp-validation-for="_formContentModel.Media" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -72,6 +72,9 @@
             </select>
             <span asp-validation-for="_formContentModel.ContentTag" class="text-danger"></span>
         </div>
+        <p></p>
+        <hr />
+        <h5>Compilare i campi che seguono se si vuole associare una località al contenuto</h5>
 
         <div class="col-12 col-xl-3 form-group">
             <label asp-for="_formContentModel.Nation" class="control-label"></label>

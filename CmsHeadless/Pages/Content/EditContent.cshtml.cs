@@ -16,10 +16,15 @@ namespace CmsHeadless.Pages.Content
         public static int lastEditTag = 0;
         public static int lastEditCategory = 0;
         public static int lastEditLocation = 0;
+        public static int lastDeleteLocation = 0;
+        public static bool callDelete = false;
+
         public Models.Content content;
         public Models.Content EditContentNew { get; set; }
         [BindProperty]
         public EditContentViewModel _formEditContentModel { get; set; }
+        [BindProperty]
+        public DeleteContentViewModel _formDeleteContentModel { get; set; }
         private readonly CmsHeadlessDbContext _context;
         public List<Models.Content> ContentAvailable { get; set; }
         public string CreationDate;
@@ -208,6 +213,8 @@ namespace CmsHeadless.Pages.Content
             lastEditTag = 0;
             lastEditCategory = 0;
             lastEditLocation = 0;
+            lastDeleteLocation = 0;
+            callDelete = false;
             var ContentToUpdate = await _context.Content.FindAsync(contentId);
 
             if (ContentToUpdate == null)
@@ -479,25 +486,6 @@ namespace CmsHeadless.Pages.Content
                 }
             }
 
-            if (_formEditContentModel.LocationDelete!=null &&_formEditContentModel.LocationDelete.Count() > 0)
-            {
-                ContentLocationAvailable = ContentLocationAvailable.Where(c => _formEditContentModel.LocationDelete.Contains(c.LocationId)).ToList();
-                if (ContentLocationAvailable.Count() > 0)
-                {
-                    foreach (var l in ContentLocationAvailable)
-                    {
-                        _context.ContentLocation.Remove(l);
-                        lastEditLocation = await _context.SaveChangesAsync();
-                        if (lastEditLocation <= 0)
-                        {
-                            ModelState.AddModelError("Make", "Errore nell'inserimento");
-                            return Page();
-                        }
-                    }
-                }
-            }
-
-
             /*end ContentLocation*/
 
             lastEdit = await _context.SaveChangesAsync();
@@ -535,6 +523,71 @@ namespace CmsHeadless.Pages.Content
                 lastEditString = tempDate.ToString("yyyy-MM-dd");
             }
             return RedirectToPage("./EditContent" , new { id=contentId });
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int contentId)
+        {
+            lastEdit = 0;
+            lastEditAttributes = 0;
+            lastEditTag = 0;
+            lastEditCategory = 0;
+            lastEditLocation = 0;
+            lastDeleteLocation = 0;
+            callDelete = true;
+            if (_formDeleteContentModel.LocationDelete!=null && _formDeleteContentModel.LocationDelete.Count() > 0)
+            {
+                ContentLocationAvailable = ContentLocationAvailable.Where(c => _formDeleteContentModel.LocationDelete.Contains(c.LocationId)).ToList();
+                if (ContentLocationAvailable.Count() > 0)
+                {
+                    foreach (var l in ContentLocationAvailable)
+                    {
+                        _context.ContentLocation.Remove(l);
+                        
+                    }
+                    lastDeleteLocation = await _context.SaveChangesAsync();
+                    if (lastDeleteLocation <= 0)
+                    {
+                        ModelState.AddModelError("Make", "Errore nell'inserimento");
+                        return Page();
+                    }
+                }
+            }
+
+            //lastEdit = await _context.SaveChangesAsync();
+
+            selectContentQueryOrder = from Content in _context.Content select Content;
+            selectContentQuery = selectContentQueryOrder.OrderByDescending(c => c.ContentId);
+            ContentAvailable = selectContentQuery.ToList<Models.Content>();
+            content = await _context.Content.FindAsync(contentId);
+            if (content.PubblicationDate == null)
+            {
+                PubblicationDateString = null;
+            }
+            else
+            {
+                DateTime tempDate = (DateTime)content.PubblicationDate;
+                PubblicationDateString = tempDate.ToString("yyyy-MM-dd");
+            }
+
+            if (content.InsertionDate == null)
+            {
+                InsertionDateString = null;
+            }
+            else
+            {
+                InsertionDateString = content.InsertionDate.ToString("yyyy-MM-dd");
+            }
+
+            if (content.LastEdit == null)
+            {
+                lastEditString = null;
+            }
+            else
+            {
+                DateTime tempDate = (DateTime)content.LastEdit;
+                lastEditString = tempDate.ToString("yyyy-MM-dd");
+            }
+            return RedirectToPage("./EditContent", new { id = contentId });
         }
     }
 }

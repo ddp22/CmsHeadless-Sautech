@@ -13,7 +13,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="_formEditContentModel.Media" class="control-label"></label>
-                <input asp-for="_formEditContentModel.Media" class="form-control" value="@Model.content.Media"/>
+                <input asp-for="_formEditContentModel.Media" class="form-control textForm" value="@Model.content.Media"/>
                 <span asp-validation-for="_formEditContentModel.Media" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -40,11 +40,11 @@
                     {
                         if (@Model.AttributesSelected!=null && @Model.AttributesSelected.Contains(i.AttributesId))
                         {
-                                    <option selected value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>
+                                        <option selected value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>
                         }
                         else
                         {
-                                    <option value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>                            
+                                        <option value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>                            
                         }
                     }
                 }
@@ -59,11 +59,11 @@
                     {
                         if (@Model.CategorySelected!=null && @Model.CategorySelected.Contains(i.CategoryId))
                         {
-                                    <option selected value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
+                                        <option selected value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
                         }
                         else
                         {
-                                    <option value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
+                                        <option value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
                         }
                     }
                 }
@@ -78,11 +78,11 @@
                     {
                         if (@Model.TagSelected!=null && @Model.TagSelected.Contains(i.TagId))
                         {
-                                    <option selected value="@i.TagId" id="@i.TagId">@i.Name</option>
+                                        <option selected value="@i.TagId" id="@i.TagId">@i.Name</option>
                         }
                         else
                         {
-                                    <option value="@i.TagId" id="@i.TagId">@i.Name</option>
+                                        <option value="@i.TagId" id="@i.TagId">@i.Name</option>
                         }
                     }
                 }
@@ -115,7 +115,7 @@
                         {
                             if (i.NationIsActive)
                             {
-                                         <option value="@i.NationId" id="@i.NationId">@i.NationName</option>
+                                             <option value="@i.NationId" id="@i.NationId">@i.NationName</option>
                             }
                         }
                     }
@@ -145,25 +145,13 @@
                 <span asp-validation-for="_formEditContentModel.CityAdd" class="text-danger"></span>
             </div>
         </div>
-        <p> </p>
-        <h5>Seleziona i luoghi da eliminare</h5>
-        <div class="col-12 col-xl-6 form-group">
-            <label asp-for="_formEditContentModel.LocationDelete" class="control-label"></label>
-            <select asp-for="_formEditContentModel.LocationDelete" class="form-select selectForm" multiple >
-                @{
-                    foreach(var i in Model.LocationsOfContentAvailable)
-                    {
-                        <option  value="@i.LocationId" id="@i.LocationId">@i.NationName, @i.RegionName, @i.ProvinceName, @i.CityName</option>
-                    }
-                }
-            </select>
-            <span asp-validation-for="_formEditContentModel.LocationDelete" class="text-danger"></span>
-        </div>
         <div class="form-group">
             <input asp-page-handler="Edit" asp-route-contentId="@EditContentModel.EditContentId" type="submit" value="Edit" class="btn btn-primary" />
         </div>
+        <p> </p>
+        
 
-        @if((EditContentModel.lastEdit>0 || EditContentModel.lastEditAttributes>0 || EditContentModel.lastEditCategory>0 || EditContentModel.lastEditTag>0 || EditContentModel.lastEditLocation>0) && ModelState.ErrorCount == 0)
+        @if((EditContentModel.lastEdit>0 || EditContentModel.lastEditAttributes>0 || EditContentModel.lastEditCategory>0 || EditContentModel.lastEditTag>0 || EditContentModel.lastEditLocation>0) && ModelState.ErrorCount == 0 && EditContentModel.callDelete==false)
             {
                 <div class="alert alert-success" role="alert">
                     <p>Content modificato con successo</p>
@@ -176,7 +164,47 @@
             </div>
         }
     </form>
+
+    
 </div>
+
+<div class="col-12 col-xl-12 custom-form-border">
+    <form method="post"  class="row custom-form" enctype="multipart/form-data">
+        <h5>Seleziona i luoghi da eliminare</h5>
+        <div class="col-12 col-xl-6 form-group">
+            <label asp-for="_formDeleteContentModel.LocationDelete" class="control-label"></label>
+            <select asp-for="_formDeleteContentModel.LocationDelete" class="form-select selectForm" multiple >
+                @{
+                    foreach(var i in Model.LocationsOfContentAvailable)
+                    {
+                            <option value="@i.LocationId" id="@i.LocationId">@i.LocationString</option>
+                    }
+                }
+            </select>
+            <span asp-validation-for="_formDeleteContentModel.LocationDelete" class="text-danger"></span>
+        </div>
+        
+        <div class="form-group">
+            <input asp-page-handler="Delete" asp-route-contentId="@EditContentModel.EditContentId" type="submit" value="Delete" class="btn btn-primary" />
+        </div>
+
+        @{
+            if(EditContentModel.callDelete==true && ModelState.ErrorCount == 0 && EditContentModel.lastDeleteLocation>0)
+            {
+                    <div class="alert alert-success" role="alert">
+                        <p>Luoghi eliminati con successo</p>
+                    </div>
+            }
+            if(EditContentModel.callDelete==true && ModelState.ErrorCount > 0)
+        {
+                <div class="alert alert-danger" role="alert">
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger font-weight-bold" })
+                </div>
+        }
+        }
+    </form>
+</div>
+
 <a href="../Content/">Return to content pages</a>
     @section Scripts{
     <script type="text/javascript">
@@ -271,4 +299,6 @@ $(document).ready(function(){
     EditContentModel.lastEditCategory = 0;
     EditContentModel.lastEditTag = 0;
     EditContentModel.lastEditLocation = 0;
+    EditContentModel.lastDeleteLocation = 0;
+    EditContentModel.callDelete = false;
 }
