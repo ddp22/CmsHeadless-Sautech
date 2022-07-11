@@ -8,12 +8,12 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label asp-for="_formEditTagModel.Name" class="control-label"></label>
-            <input asp-for="_formEditTagModel.Name" class="form-control" required value="@Model.tag.Name"/>
+            <input asp-for="_formEditTagModel.Name" class="form-control textForm" required value="@Model.tag.Name"/>
             <span asp-validation-for="_formEditTagModel.Name" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="_formEditTagModel.Url" class="control-label"></label>
-            <input asp-for="_formEditTagModel.Url" class="form-control" required value=@Model.tag.Url/>
+            <input asp-for="_formEditTagModel.Url" class="form-control textForm" required value=@Model.tag.Url/>
             <span asp-validation-for="_formEditTagModel.Url" class="text-danger"></span>
         </div>
         <div class="form-group">

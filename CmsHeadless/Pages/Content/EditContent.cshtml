@@ -8,7 +8,7 @@
         <div class="col-12 col-xl-6">
             <div class="form-group">
                 <label asp-for="_formEditContentModel.Title" class="control-label"></label>
-                <input asp-for="_formEditContentModel.Title" class="form-control" required value="@Model.content.Title"/>
+                <input asp-for="_formEditContentModel.Title" class="form-control textForm" required value="@Model.content.Title"/>
                 <span asp-validation-for="_formEditContentModel.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -18,23 +18,23 @@
             </div>
             <div class="form-group">
                 <label asp-for="_formEditContentModel.Description" class="control-label"></label>
-                <input asp-for="_formEditContentModel.Description" class="form-control" value="@Model.content.Description"/>
+                <input asp-for="_formEditContentModel.Description" class="form-control textForm" value="@Model.content.Description"/>
                 <span asp-validation-for="_formEditContentModel.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="_formEditContentModel.Text" class="control-label"></label>
-                <input asp-for="_formEditContentModel.Text" class="form-control" value="@Model.content.Text" required/>
+                <input asp-for="_formEditContentModel.Text" class="form-control textForm" value="@Model.content.Text" required/>
                 <span asp-validation-for="_formEditContentModel.Text" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="_formEditContentModel.PubblicationDate" class="control-label"></label>
-                <input asp-for="_formEditContentModel.PubblicationDate" class="form-control" value="@Model.PubblicationDateString"/>
+                <input asp-for="_formEditContentModel.PubblicationDate" class="form-control dateForm" value="@Model.PubblicationDateString"/>
                 <span asp-validation-for="_formEditContentModel.PubblicationDate" class="text-danger"></span>
             </div>
         </div>
         <div class="col-12 col-xl-2 form-group">
             <label asp-for="_formEditContentModel.ContentAttributes" class="control-label"></label>
-            <select asp-for="_formEditContentModel.ContentAttributes" class="form-select" multiple size="15">
+            <select asp-for="_formEditContentModel.ContentAttributes" class="form-select selectForm" multiple size="15">
                 @{
                     foreach(var i in Model.AttributesAvailable)
                     {
@@ -53,7 +53,7 @@
         </div>
         <div class="col-12 col-xl-2 form-group">
             <label asp-for="_formEditContentModel.ContentCategory" class="control-label"></label>
-            <select asp-for="_formEditContentModel.ContentCategory" class="form-select" multiple size="15">
+            <select asp-for="_formEditContentModel.ContentCategory" class="form-select selectForm" multiple size="15">
                 @{
                     foreach(var i in Model.CategoryAvailable)
                     {
@@ -72,7 +72,7 @@
         </div>
         <div class="col-12 col-xl-2 form-group">
             <label asp-for="_formEditContentModel.ContentTag" class="control-label"></label>
-            <select asp-for="_formEditContentModel.ContentTag" class="form-select" multiple size="15">
+            <select asp-for="_formEditContentModel.ContentTag" class="form-select selectForm" multiple size="15">
                 @{
                     foreach(var i in Model.TagAvailable)
                     {
@@ -92,14 +92,14 @@
         <div class="col-12 col-xl-6">
             <div class="form-group">
                 <label asp-for="_formEditContentModel.InsertionDate" class="control-label"></label>
-                <input asp-for="_formEditContentModel.InsertionDate" class="form-control" value="@Model.InsertionDateString" readonly/>
+                <input asp-for="_formEditContentModel.InsertionDate" class="form-control dateForm" value="@Model.InsertionDateString" readonly/>
                 <span asp-validation-for="_formEditContentModel.InsertionDate" class="text-danger"></span>
             </div>
             @if (@Model.content.LastEdit!=null)
             {
                 <div class="form-group">
                     <label asp-for="_formEditContentModel.lastEdit" class="control-label"></label>
-                    <input asp-for="_formEditContentModel.lastEdit" class="form-control" value="@Model.lastEditString" readonly/>
+                    <input asp-for="_formEditContentModel.lastEdit" class="form-control dateForm" value="@Model.lastEditString" readonly/>
                     <span asp-validation-for="_formEditContentModel.lastEdit" class="text-danger"></span>
                 </div>
             }
@@ -108,7 +108,7 @@
             <div class="col-12 col-xl-3 form-group">
                 <label asp-for="_formEditContentModel.NationAdd" class="control-label"></label>
            
-                <select id="NationSelectContentAdd" asp-for="_formEditContentModel.NationAdd" class="form-select">
+                <select id="NationSelectContentAdd" asp-for="_formEditContentModel.NationAdd" class="form-select selectForm">
                     <option value="-1">Select Nation</option>
                     @{
                         foreach(var i in Model.NationAvailable)
@@ -125,7 +125,7 @@
 
             <div class="col-12 col-xl-3 form-group">
                 <label asp-for="_formEditContentModel.RegionAdd" class="control-label"></label>
-                <select id="RegionSelectContentAdd" asp-for="_formEditContentModel.RegionAdd" class="form-select" disabled="disabled">
+                <select id="RegionSelectContentAdd" asp-for="_formEditContentModel.RegionAdd" class="form-select selectForm" disabled="disabled">
                 
                 </select>
                 <span asp-validation-for="_formEditContentModel.RegionAdd" class="text-danger"></span>
@@ -133,7 +133,7 @@
 
             <div class="col-12 col-xl-3 form-group">
                 <label asp-for="_formEditContentModel.ProvinceAdd" class="control-label"></label>
-                <select id="ProvinceSelectContentAdd" asp-for="_formEditContentModel.ProvinceAdd" class="form-select" disabled="disabled">
+                <select id="ProvinceSelectContentAdd" asp-for="_formEditContentModel.ProvinceAdd" class="form-select selectForm" disabled="disabled">
                 
                 </select>
                 <span asp-validation-for="_formEditContentModel.ProvinceAdd" class="text-danger"></span>
@@ -141,7 +141,7 @@
 
             <div class="col-12  col-xl-3 form-group">
                 <label asp-for="_formEditContentModel.CityAdd" class="control-label"></label>
-                <input id="CitySelectContentAdd" asp-for="_formEditContentModel.CityAdd" class="form-control" disabled="disabled"/>
+                <input id="CitySelectContentAdd" asp-for="_formEditContentModel.CityAdd" class="form-control textForm" disabled="disabled"/>
                 <span asp-validation-for="_formEditContentModel.CityAdd" class="text-danger"></span>
             </div>
         </div>
@@ -149,7 +149,7 @@
         <h5>Seleziona i luoghi da eliminare</h5>
         <div class="col-12 col-xl-6 form-group">
             <label asp-for="_formEditContentModel.LocationDelete" class="control-label"></label>
-            <select asp-for="_formEditContentModel.LocationDelete" class="form-select" multiple >
+            <select asp-for="_formEditContentModel.LocationDelete" class="form-select selectForm" multiple >
                 @{
                     foreach(var i in Model.LocationsOfContentAvailable)
                     {

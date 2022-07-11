@@ -12,7 +12,7 @@
         <div class="col-12 col-xl-6">
             <div class="form-group">
                 <label asp-for="_formContentModel.Title" class="control-label"></label>
-                <input asp-for="_formContentModel.Title" class="form-control" required/>
+                <input asp-for="_formContentModel.Title" class="form-control textForm" required/>
                 <span asp-validation-for="_formContentModel.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -22,23 +22,23 @@
             </div>
             <div class="form-group">
                 <label asp-for="_formContentModel.Description" class="control-label"></label>
-                <input asp-for="_formContentModel.Description" class="form-control" />
+                <input asp-for="_formContentModel.Description" class="form-control textForm" />
                 <span asp-validation-for="_formContentModel.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="_formContentModel.Text" class="control-label"></label>
-                <input asp-for="_formContentModel.Text" class="form-control" required/>
+                <input asp-for="_formContentModel.Text" class="form-control textForm" required/>
                 <span asp-validation-for="_formContentModel.Text" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="_formContentModel.PubblicationDate" class="control-label"></label>
-                <input asp-for="_formContentModel.PubblicationDate" class="form-control" />
+                <input asp-for="_formContentModel.PubblicationDate" class="form-control dateForm" />
                 <span asp-validation-for="_formContentModel.PubblicationDate" class="text-danger"></span>
             </div>
         </div>
         <div class="col-12 col-xl-2 form-group">
             <label asp-for="_formContentModel.ContentAttributes" class="control-label"></label>
-            <select asp-for="_formContentModel.ContentAttributes" class="form-select" multiple size="15">
+            <select asp-for="_formContentModel.ContentAttributes" class="form-select selectForm" multiple size="15">
                 @{
                     foreach(var i in Model.AttributesAvailable)
                     {
@@ -50,11 +50,11 @@
         </div>
         <div class="col-12 col-xl-2 form-group">
             <label asp-for="_formContentModel.ContentCategory" class="control-label"></label>
-            <select asp-for="_formContentModel.ContentCategory" class="form-select" multiple size="15">
+            <select asp-for="_formContentModel.ContentCategory" class="form-select selectForm" multiple size="15">
                 @{
                     foreach(var i in Model.CategoryAvailable)
                     {
-                                                                <option value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
+                        <option value="@i.CategoryId" id="@i.CategoryId">@i.Name</option>
                     }
                 }
             </select>
@@ -62,11 +62,11 @@
         </div>
         <div class="col-12 col-xl-2 form-group">
             <label asp-for="_formContentModel.ContentTag" class="control-label"></label>
-            <select asp-for="_formContentModel.ContentTag" class="form-select" multiple size="15">
+            <select asp-for="_formContentModel.ContentTag" class="form-select selectForm" multiple size="15">
                 @{
                     foreach(var i in Model.TagAvailable)
                     {
-                                                                <option value="@i.TagId" id="@i.TagId">@i.Name</option>
+                        <option value="@i.TagId" id="@i.TagId">@i.Name</option>
                     }
                 }
             </select>
@@ -76,7 +76,7 @@
         <div class="col-12 col-xl-3 form-group">
             <label asp-for="_formContentModel.Nation" class="control-label"></label>
            
-            <select id="NationSelectContentCreate" asp-for="_formContentModel.Nation" class="form-select">
+            <select id="NationSelectContentCreate" asp-for="_formContentModel.Nation" class="form-select selectForm">
                 <option value="-1">Select Nation</option>
                 @{
                     foreach(var i in Model.NationAvailable)
@@ -93,7 +93,7 @@
 
         <div class="col-12 col-xl-3 form-group">
             <label asp-for="_formContentModel.Region" class="control-label"></label>
-            <select id="RegionSelectContentCreate" asp-for="_formContentModel.Region" class="form-select" disabled="disabled">
+            <select id="RegionSelectContentCreate" asp-for="_formContentModel.Region" class="form-select selectForm" disabled="disabled">
                 
             </select>
             <span asp-validation-for="_formContentModel.Region" class="text-danger"></span>
@@ -101,7 +101,7 @@
 
         <div class="col-12 col-xl-3 form-group">
             <label asp-for="_formContentModel.Province" class="control-label"></label>
-            <select id="ProvinceSelectContentCreate" asp-for="_formContentModel.Province" class="form-select" disabled="disabled">
+            <select id="ProvinceSelectContentCreate" asp-for="_formContentModel.Province" class="form-select selectForm" disabled="disabled">
                 
             </select>
             <span asp-validation-for="_formContentModel.Province" class="text-danger"></span>
@@ -109,7 +109,7 @@
 
         <div class="form-group col-12 col-xl-3">
             <label asp-for="_formContentModel.City" class="control-label"></label>
-            <input id="CitySelectContentCreate" asp-for="_formContentModel.City" class="form-control" disabled="disabled"/>
+            <input id="CitySelectContentCreate" asp-for="_formContentModel.City" class="form-control textForm" disabled="disabled"/>
             <span asp-validation-for="_formContentModel.City" class="text-danger"></span>
         </div>
 

@@ -8,7 +8,7 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label asp-for="_formEditTypologyModel.TypologyName" class="control-label"></label>
-            <input asp-for="_formEditTypologyModel.TypologyName" class="form-control" required value="@Model.typology.Name"/>
+            <input asp-for="_formEditTypologyModel.TypologyName" class="form-control textForm" required value="@Model.typology.Name"/>
             <span asp-validation-for="_formEditTypologyModel.TypologyName" class="text-danger"></span>
         </div>
         <div class="form-group">
