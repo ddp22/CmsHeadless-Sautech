@@ -19,6 +19,7 @@ namespace CmsHeadless.Pages.Category
         public static int lastCreate = 0;
         public static int lastDelete = 0;
         public static bool callDelete = false;
+        public string pathName = "/img/category/";
         [BindProperty]
         public CategoryViewModel _formCategoryModel { get; set; }
 
@@ -111,7 +112,7 @@ namespace CmsHeadless.Pages.Category
             temp.CategoryParentId = _formCategoryModel.CategoryParentId;
             if (_formCategoryModel.Media != null)
             {
-                temp.Media = uniqueFileName;
+                temp.Media = pathName + uniqueFileName;
             }
             if (DateTime.Now.Date> _formCategoryModel.CreationDate.Date)
             {
@@ -175,6 +176,14 @@ namespace CmsHeadless.Pages.Category
             {
                 return NotFound();
             }
+
+            string strPhysicalFolder = "wwwroot";
+            FileInfo file = new FileInfo(strPhysicalFolder + category.Media);
+            if (file.Exists)
+            {
+                file.Delete();
+            }
+
             _context.Category.Remove(category);
             lastDelete=await _context.SaveChangesAsync();
             if (lastDelete <= 0)

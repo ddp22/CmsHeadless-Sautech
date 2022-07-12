@@ -14,6 +14,7 @@ namespace CmsHeadless.Pages.Category
         public static int lastEdit = 0;
         public Models.Category category;
         public Models.Category EditCategoryNew { get; set; }
+        public string pathName = "/img/category/";
         [BindProperty]
         public EditCategoryViewModel _formEditCategoryModel { get; set; }
         private readonly CmsHeadlessDbContext _context;
@@ -88,6 +89,12 @@ namespace CmsHeadless.Pages.Category
             string uniqueFileName = null;
             if (_formEditCategoryModel.Media != null)
             {
+                string strPhysicalFolder = "wwwroot";
+                FileInfo file = new FileInfo(strPhysicalFolder + categoryToUpdate.Media);
+                if (file.Exists)
+                {
+                    file.Delete();
+                }
                 string uploadsFolder = Path.Combine("wwwroot/img/category");
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + _formEditCategoryModel.Media.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
@@ -102,7 +109,7 @@ namespace CmsHeadless.Pages.Category
             categoryToUpdate.CreationDate = _formEditCategoryModel.CreationDate;
             if (_formEditCategoryModel.Media != null)
             {
-                categoryToUpdate.Media = uniqueFileName;
+                categoryToUpdate.Media = pathName + uniqueFileName;
             }
             if (DateTime.Now.Date > _formEditCategoryModel.CreationDate.Date)
             {

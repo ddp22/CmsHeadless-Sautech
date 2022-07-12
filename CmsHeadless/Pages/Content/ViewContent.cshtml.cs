@@ -21,12 +21,16 @@ namespace CmsHeadless.Pages.Content
         public Models.Content ContentNew { get; set; }
 
         public List<Models.Content> ContentAvailable { get; set; }
+        public List<Models.User> Users { get; set; }
 
         public ViewContentModel(CmsHeadlessDbContext context, IConfiguration configuration)
         {
             _context = context;
             Configuration = configuration;
             ContentAvailable = new List<Models.Content>();
+
+            IQueryable<Models.User> selectUsersQuery = from User in _context.User select User;
+            Users = selectUsersQuery.ToList<Models.User>();
         }
 
 
@@ -97,6 +101,14 @@ namespace CmsHeadless.Pages.Content
             {
                 return NotFound();
             }
+
+            string strPhysicalFolder = "wwwroot";
+            FileInfo file = new FileInfo(strPhysicalFolder + content.Media);
+            if (file.Exists)
+            {
+                file.Delete();
+            }
+
             _context.Content.Remove(content);
             lastDelete=await _context.SaveChangesAsync();
             if (lastDelete <= 0)

@@ -49,14 +49,11 @@
                                 @Html.DisplayFor(modelItem => item.CreationDate)
                             </td>
                             <td>
-                                <img style="max-height:100px" src="~/img/category/@Html.DisplayFor(modelItem => item.Media)" alt="image not available"/>
+                                <img style="max-height:100px" src="@Html.DisplayFor(modelItem => item.Media)" alt="image not available"/>
                             </td>
                             <td>
                                     <a asp-page="./EditCategory" asp-route-id="@item.CategoryId">Edit</a> |
                                                          
-                                    <!--form method="post">
-                                        <input type="submit" class="custom-link" value="Delete" asp-route-categoryId="@item.CategoryId" asp-page-handler="Delete"/>
-                                    </form-->
                                     <a asp-page="./ViewCategory" asp-page-handler="Delete" asp-route-categoryId="@item.CategoryId">Delete</a>
                             </td>
                         </tr>

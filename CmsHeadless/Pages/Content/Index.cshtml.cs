@@ -20,6 +20,7 @@ namespace CmsHeadless.Pages.Content
         public static int lastCreate = 0;
         public static int lastDelete = 0;
         public static bool callDelete = false;
+        public string pathMedia = "/img/content/";
 
         public static int ContentId = 0;
 
@@ -35,6 +36,7 @@ namespace CmsHeadless.Pages.Content
         public List<Models.Region> RegionAvailable { get; set; }
         public List<Models.Province> ProvinceAvailable { get; set; }
         public List<Models.Location> LocationAvailable { get; set; }
+        public List<Models.User> Users { get; set; }
         public IndexModel(CmsHeadlessDbContext context, IConfiguration configuration)
         {
             _context = context;
@@ -42,7 +44,7 @@ namespace CmsHeadless.Pages.Content
             ContentAvailable = new List<Models.Content>();
 
             IQueryable<Models.Attributes> selectAttributesQuery = from Attributes in _context.Attributes select Attributes;
-            AttributesAvailable=selectAttributesQuery.ToList<Models.Attributes>();
+            AttributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
 
             IQueryable<Models.Category> selectCategoryQuery = from Category in _context.Category select Category;
             CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
@@ -61,6 +63,9 @@ namespace CmsHeadless.Pages.Content
 
             IQueryable<Models.Location> selectLocationQuery = from Location in _context.Location select Location;
             LocationAvailable = selectLocationQuery.ToList<Models.Location>();
+
+            IQueryable<Models.User> selectUsersQuery = from User in _context.User select User;
+            Users = selectUsersQuery.ToList<Models.User>();
         }
 
         public ContentList<Models.Content> ContentList { get; set; }
@@ -69,34 +74,34 @@ namespace CmsHeadless.Pages.Content
         {
 
             IQueryable<Models.Content> selectContentQueryOrder = from Content in _context.Content select Content;
-            IQueryable<Models.Content> selectContentQuery=selectContentQueryOrder.OrderByDescending(c => c.ContentId);
+            IQueryable<Models.Content> selectContentQuery = selectContentQueryOrder.OrderByDescending(c => c.ContentId);
             if (!string.IsNullOrEmpty(searchString))
             {
                 IndexModel.searchString = searchString;
 
                 List<int> tempContentAttribute = (from c in _context.Content
-                                 join ca in _context.ContentAttributes
-                                 on c.ContentId equals ca.ContentId
-                                 join a in _context.Attributes
-                                 on ca.AttributesId equals a.AttributesId
-                                 where a.AttributeName.Contains(searchString)
-                                 select c.ContentId).ToList<int>();
+                                                  join ca in _context.ContentAttributes
+                                                  on c.ContentId equals ca.ContentId
+                                                  join a in _context.Attributes
+                                                  on ca.AttributesId equals a.AttributesId
+                                                  where a.AttributeName.Contains(searchString)
+                                                  select c.ContentId).ToList<int>();
 
                 List<int> tempContentTag = (from c in _context.Content
-                                                  join ct in _context.ContentTag
-                                                  on c.ContentId equals ct.ContentId
-                                                  join t in _context.Tag
-                                                  on ct.TagId equals t.TagId
-                                                  where t.Name.Contains(searchString)
-                                                  select c.ContentId).ToList<int>();
+                                            join ct in _context.ContentTag
+                                            on c.ContentId equals ct.ContentId
+                                            join t in _context.Tag
+                                            on ct.TagId equals t.TagId
+                                            where t.Name.Contains(searchString)
+                                            select c.ContentId).ToList<int>();
 
                 List<int> tempContentCategory = (from c in _context.Content
-                                                  join cc in _context.ContentCategory
-                                                  on c.ContentId equals cc.ContentId
-                                                  join ca in _context.Category
-                                                  on cc.CategoryId equals ca.CategoryId
-                                                  where ca.Name.Contains(searchString)
-                                                  select c.ContentId).ToList<int>();
+                                                 join cc in _context.ContentCategory
+                                                 on c.ContentId equals cc.ContentId
+                                                 join ca in _context.Category
+                                                 on cc.CategoryId equals ca.CategoryId
+                                                 where ca.Name.Contains(searchString)
+                                                 select c.ContentId).ToList<int>();
 
                 selectContentQuery = selectContentQuery.Where(s => (s.Title.Contains(searchString)
                 || s.Description.Contains(searchString)
@@ -167,12 +172,12 @@ namespace CmsHeadless.Pages.Content
 
             temp.Title = _formContentModel.Title;
             temp.Description = _formContentModel.Description;
-            
+
             if (_formContentModel.Media != null)
             {
-                temp.Media = uniqueFileName;
+                temp.Media = pathMedia + uniqueFileName;
             }
-            temp.Text=_formContentModel.Text;
+            temp.Text = _formContentModel.Text;
             temp.InsertionDate = DateTime.Now.Date;
             temp.LastEdit = null;
             temp.PubblicationDate = _formContentModel.PubblicationDate;
@@ -180,10 +185,10 @@ namespace CmsHeadless.Pages.Content
             {
                 temp.PubblicationDate = null;
             }
-            
+
 
             temp.UserId = User.Identity.GetUserId();
-            
+
 
             var entry = _context.Add(new Models.Content());
             entry.CurrentValues.SetValues(temp);
@@ -194,11 +199,11 @@ namespace CmsHeadless.Pages.Content
                 return Page();
             }
 
-            selectContentQuery = from Content in _context.Content where Content.Title==temp.Title select Content;
+            selectContentQuery = from Content in _context.Content where Content.Title == temp.Title select Content;
             Models.Content tempContent = selectContentQuery.ToList<Models.Content>().First<Models.Content>();
-            ContentId=tempContent.ContentId;
+            ContentId = tempContent.ContentId;
 
-            /*ContentAttributes*/
+            /* ContentAttributes */
             if (_formContentModel.ContentAttributes != null)
             {
                 var tempContentAttributes = new Models.ContentAttributes();
@@ -221,7 +226,7 @@ namespace CmsHeadless.Pages.Content
                 }
             }
 
-            /*ContentTag*/
+            /* ContentTag */
             if (_formContentModel.ContentTag != null)
             {
                 var tempContentTag = new Models.ContentTag();
@@ -244,7 +249,7 @@ namespace CmsHeadless.Pages.Content
                 }
             }
 
-            /*ContentCategory*/
+            /* ContentCategory */
             if (_formContentModel.ContentCategory != null)
             {
                 var tempContentCategory = new Models.ContentCategory();
@@ -267,8 +272,8 @@ namespace CmsHeadless.Pages.Content
                 }
             }
 
-            /*ContentLocation*/
-            int? nation = (_formContentModel.Nation==null || _formContentModel.Nation<=0) ? null : _formContentModel.Nation;
+            /* ContentLocation */
+            int ? nation = (_formContentModel.Nation == null || _formContentModel.Nation <= 0) ? null : _formContentModel.Nation;
             int? region = (_formContentModel.Region == null || _formContentModel.Region <= 0) ? null : _formContentModel.Region;
             int? province = (_formContentModel.Province == null || _formContentModel.Province <= 0) ? null : _formContentModel.Province;
             string? city = _formContentModel.City == null ? null : _formContentModel.City;
@@ -276,20 +281,20 @@ namespace CmsHeadless.Pages.Content
                                               && c.RegionId == region
                                               && c.ProvinceId == province
                                               && c.City == city).ToList();
-            int? id=null;
-            if (is_exists.Count()>0)
+            int? id = null;
+            if (is_exists.Count() > 0)
             {
                 id = is_exists.First().LocationId;
             }
-            
+
             if (nation > 0)
             {
-                if(id == null)
+                if (id == null)
                 {
                     var entryLocation = _context.Add(new Location());
                     Location tempLocation = new Location(nation, region, province, city);
                     entryLocation.CurrentValues.SetValues(tempLocation);
-                    int l=await _context.SaveChangesAsync();
+                    int l = await _context.SaveChangesAsync();
                     if (l <= 0)
                     {
                         ModelState.AddModelError("Make", "Errore nell'inserimento");
@@ -305,7 +310,7 @@ namespace CmsHeadless.Pages.Content
 
                 var tempContentLocation = new Models.ContentLocation();
                 var entryContentLocation = _context.Add(new Models.ContentLocation());
-                tempContentLocation.LocationId =(int) id;
+                tempContentLocation.LocationId = (int)id;
                 tempContentLocation.ContentId = tempContent.ContentId;
 
                 entryContentLocation.CurrentValues.SetValues(tempContentLocation);
@@ -328,7 +333,7 @@ namespace CmsHeadless.Pages.Content
             }
             pageSize = Configuration.GetValue("PageSize", numberPage);
             ContentList = await ContentList<Models.Content>.CreateAsync(selectContentQuery.AsNoTracking(), pageIndex ?? 1, pageSize);
-            
+
             return RedirectToPage("./Index");
         }
 
@@ -352,6 +357,12 @@ namespace CmsHeadless.Pages.Content
             if (content == null)
             {
                 return NotFound();
+            }
+            string strPhysicalFolder = "wwwroot";
+            FileInfo file = new FileInfo(strPhysicalFolder+content.Media);
+            if (file.Exists)
+            {
+                file.Delete();
             }
             _context.Content.Remove(content);
             lastDelete = await _context.SaveChangesAsync();

@@ -70,6 +70,14 @@ namespace CmsHeadless.Pages.Category
             {
                 return NotFound();
             }
+
+            string strPhysicalFolder = "wwwroot";
+            FileInfo file = new FileInfo(strPhysicalFolder + category.Media);
+            if (file.Exists)
+            {
+                file.Delete();
+            }
+
             _context.Category.Remove(category);
             lastDelete=await _context.SaveChangesAsync();
             if (lastDelete <= 0)

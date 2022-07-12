@@ -7,6 +7,8 @@ using System.Data;
 using Microsoft.EntityFrameworkCore;
 using CmsHeadlessApi.ModelsController;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 
 namespace CmsHeadlessApi.Controllers
 {
@@ -14,13 +16,15 @@ namespace CmsHeadlessApi.Controllers
     {
         private readonly ILogger<ContentController> _logger;
         private readonly CmsHeadlessDbContext _contextDb;
-        public string pathMedia = AppDomain.CurrentDomain.BaseDirectory;
-
-        public ContentController(ILogger<ContentController> logger, CmsHeadlessDbContext contextDb)
+        //public string pathMedia = AppDomain.CurrentDomain.BaseDirectory;
+        public string pathMedia;
+        private readonly IServer _server;
+        public ContentController(ILogger<ContentController> logger, CmsHeadlessDbContext contextDb, IServer server)
         {
             _logger = logger;
             _contextDb = contextDb;
-
+            _server= server;
+            pathMedia = server.Features.Get<IServerAddressesFeature>().Addresses.ToList().FirstOrDefault();
         }
 
 
@@ -38,7 +42,6 @@ namespace CmsHeadlessApi.Controllers
         [HttpGet]
         public JsonResult getContentByIdDetails(int? id)
         {
-            
             List<ContentControllerModel> model = new List<ContentControllerModel>();
             List<Content> c = new List<Content>();
             if (id == null)

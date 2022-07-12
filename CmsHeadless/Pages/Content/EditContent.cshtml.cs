@@ -18,6 +18,7 @@ namespace CmsHeadless.Pages.Content
         public static int lastEditLocation = 0;
         public static int lastDeleteLocation = 0;
         public static bool callDelete = false;
+        public string pathName = "/img/content/";
 
         public Models.Content content;
         public Models.Content EditContentNew { get; set; }
@@ -50,6 +51,7 @@ namespace CmsHeadless.Pages.Content
         /*da eliminare*/
         public List<LocationsOfContent> LocationsOfContentAvailable { get; set; }
         /* *** */
+        
 
         public EditContentModel(CmsHeadlessDbContext context)
         {
@@ -85,6 +87,8 @@ namespace CmsHeadless.Pages.Content
 
             IQueryable<Models.ContentLocation> selectContentLocationQuery = from ContentLocation in _context.ContentLocation select ContentLocation;
             ContentLocationAvailable = selectContentLocationQuery.ToList<Models.ContentLocation>();
+
+            
         }
         public async Task<IActionResult> OnGetAsync(int? id, string? searchString)
         {
@@ -270,6 +274,12 @@ namespace CmsHeadless.Pages.Content
             string uniqueFileName = null;
             if (_formEditContentModel.Media != null)
             {
+                string strPhysicalFolder = "wwwroot";
+                FileInfo file = new FileInfo(strPhysicalFolder + ContentToUpdate.Media);
+                if (file.Exists)
+                {
+                    file.Delete();
+                }
                 string uploadsFolder = Path.Combine("wwwroot/img/Content");
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + _formEditContentModel.Media.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
@@ -285,7 +295,7 @@ namespace CmsHeadless.Pages.Content
             ContentToUpdate.PubblicationDate = _formEditContentModel.PubblicationDate;
             if (_formEditContentModel.Media != null)
             {
-                ContentToUpdate.Media = uniqueFileName;
+                ContentToUpdate.Media = pathName + uniqueFileName;
             }
 
             DateTime tempPubblicationDate=DateTime.Now.AddYears(-1).Date;

@@ -4,6 +4,8 @@ using CmsHeadless.Models;
 using System.Data.Entity.Core.EntityClient;
 using System.Data;
 using CmsHeadlessApi.ModelsController;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 
 namespace CmsHeadlessApi.Controllers
 {
@@ -11,16 +13,20 @@ namespace CmsHeadlessApi.Controllers
     {
         private readonly ILogger<CategoryController> _logger;
         private readonly CmsHeadlessDbContext _contextDb;
-        public CategoryController(ILogger<CategoryController> logger, CmsHeadlessDbContext contextDb)
+        public string pathMedia;
+        private readonly IServer _server;
+        public CategoryController(ILogger<CategoryController> logger, CmsHeadlessDbContext contextDb, IServer server)
         {
             _logger = logger;
             _contextDb = contextDb;
+            _server = server;
+            pathMedia = server.Features.Get<IServerAddressesFeature>().Addresses.ToList().FirstOrDefault();
         }
 
         [HttpGet]
         public JsonResult GetAllCategory(int? idCategory, string? nameCategory)
         {
-            string pathMedia = AppDomain.CurrentDomain.BaseDirectory;
+            //string pathMedia = AppDomain.CurrentDomain.BaseDirectory;
             if (idCategory ==null && nameCategory == null) {
                 var categoryItem = _contextDb.Category.ToList<Category>();
                 foreach (var category in categoryItem)

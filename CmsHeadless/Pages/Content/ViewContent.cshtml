@@ -52,13 +52,17 @@
                                 @Html.DisplayFor(modelItem => item.InsertionDate)
                             </td>
                             <td>
-                                <img style="max-height:100px" src="~/img/content/@Html.DisplayFor(modelItem => item.Media)" alt="image not available"/>
+                                <img style="max-height:100px" src="@Html.DisplayFor(modelItem => item.Media)" alt="image not available"/>
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Text)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.UserId)
+                                @{
+                                    var temp=item.UserId;
+                                    string user = Model.Users.Find(c=>c.Id==temp).Email;
+                                }
+                                @user   
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.LastEdit)
