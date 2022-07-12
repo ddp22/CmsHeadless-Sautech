@@ -42,7 +42,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasKey("AttributesId");
 
-                    b.ToTable("Attributes");
+                    b.ToTable("Attributes", (string)null);
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.AttributesTypology", b =>
@@ -65,7 +65,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasIndex("TypologyId");
 
-                    b.ToTable("AttributesTypology");
+                    b.ToTable("AttributesTypology", (string)null);
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Category", b =>
@@ -97,7 +97,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Content", b =>
@@ -141,7 +141,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Content");
+                    b.ToTable("Content", (string)null);
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.ContentAttributes", b =>
@@ -164,7 +164,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasIndex("ContentId");
 
-                    b.ToTable("ContentAttributes");
+                    b.ToTable("ContentAttributes", (string)null);
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.ContentCategory", b =>
@@ -187,7 +187,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasIndex("ContentId");
 
-                    b.ToTable("ContentCategory");
+                    b.ToTable("ContentCategory", (string)null);
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.ContentLocation", b =>
@@ -210,7 +210,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("ContentLocation");
+                    b.ToTable("ContentLocation", (string)null);
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.ContentTag", b =>
@@ -233,7 +233,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("ContentTag");
+                    b.ToTable("ContentTag", (string)null);
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Location", b =>
@@ -258,7 +258,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasKey("LocationId");
 
-                    b.ToTable("Location");
+                    b.ToTable("Location", (string)null);
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Nation", b =>
@@ -278,7 +278,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasKey("NationId");
 
-                    b.ToTable("Nation");
+                    b.ToTable("Nation", (string)null);
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Province", b =>
@@ -303,7 +303,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Province");
+                    b.ToTable("Province", (string)null);
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Region", b =>
@@ -328,7 +328,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasIndex("NationId");
 
-                    b.ToTable("Region");
+                    b.ToTable("Region", (string)null);
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Tag", b =>
@@ -351,7 +351,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasKey("TagId");
 
-                    b.ToTable("Tag");
+                    b.ToTable("Tag", (string)null);
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Typology", b =>
@@ -368,7 +368,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("Typology");
+                    b.ToTable("Typology", (string)null);
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.UserTypology", b =>
@@ -392,7 +392,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserTypology");
+                    b.ToTable("UserTypology", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>

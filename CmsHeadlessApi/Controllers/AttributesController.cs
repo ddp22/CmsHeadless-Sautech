@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using CmsHeadless.Models;
+using CmsHeadlessApi.ModelsController;
+using Microsoft.EntityFrameworkCore;
 
 namespace CmsHeadlessApi.Controllers
 {
@@ -8,51 +10,89 @@ namespace CmsHeadlessApi.Controllers
     {
         private readonly ILogger<AttributesController> _logger;
         private readonly CmsHeadlessDbContext _contextDb;
+        List<AttributesTypology> AttributesTypology { get; set; }
+        List<string> TypologyAvailable { get; set; }
         public AttributesController(ILogger<AttributesController> logger, CmsHeadlessDbContext contextDb)
         {
             _logger = logger;
             _contextDb = contextDb;
+
+            AttributesTypology = (from AttributesTypology in _contextDb.AttributesTypology select AttributesTypology).ToList();
+            
         }
 
         [HttpGet]
         public JsonResult GetAllAttributes(int? idAttributes, string? NameAttributes)
         {
+            List<AttributesControllerModel> model = new List<AttributesControllerModel>();
+            List<Attributes> a=new List<Attributes>();
             if (idAttributes == null && NameAttributes == null) {
-                return Json(_contextDb.Attributes.ToList<Attributes>());
+                a = _contextDb.Attributes.Include(c => c.AttributesTypology).ThenInclude(c => c.Typology).ToList();
+                foreach(var item in a)
+                {
+                    TypologyAvailable = new List<string>();
+                    TypologyAvailable = AttributesTypology.Where(c => c.AttributesId == item.AttributesId).Select(c => c.Typology.Name).ToList();
+                    model.Add(new AttributesControllerModel(item.AttributesId, item.AttributeName, item.AttributeValue, TypologyAvailable));
+                }
+                
+                return Json(model);
             }
             else if(NameAttributes == null){
-                var attributesItem = _contextDb.Attributes.FindAsync(idAttributes);
+                Attributes attributesItem = _contextDb.Attributes.FindAsync(idAttributes).Result;
                 if (attributesItem == null)
                 {
                     return Json(null);
                 }
                 else
                 {
-                    return Json(attributesItem.Result);
+                    a = _contextDb.Attributes.Where(c=>c.AttributesId==idAttributes).Include(c => c.AttributesTypology).ThenInclude(c => c.Typology).ToList();
+                    TypologyAvailable = new List<string>();
+                    foreach(var item in a)
+                    {
+                        TypologyAvailable = AttributesTypology.Where(c => c.AttributesId == item.AttributesId).Select(c => c.Typology.Name).ToList();
+                    }
+                    model.Add(new AttributesControllerModel(attributesItem.AttributesId, attributesItem.AttributeName, attributesItem.AttributeValue, TypologyAvailable));
+                    return Json(model);
                 }
             }
             else if(idAttributes == null)
             {
-                var attributesItem = _contextDb.Attributes.Where(c=>c.AttributeName.Contains(NameAttributes)).ToList<Attributes>();
-                if (attributesItem.Count()==0)
+                a = _contextDb.Attributes.Where(c => c.AttributeName.Contains(NameAttributes)).Include(c => c.AttributesTypology).ThenInclude(c => c.Typology).ToList();
+
+                if (a.Count()==0)
                 {
                     return Json(null);
                 }
                 else
                 {
-                    return Json(attributesItem);
+                    foreach (var item in a)
+                    {
+                        TypologyAvailable = new List<string>();
+                        TypologyAvailable = AttributesTypology.Where(c => c.AttributesId == item.AttributesId).Select(c => c.Typology.Name).ToList();
+                        model.Add(new AttributesControllerModel(item.AttributesId, item.AttributeName, item.AttributeValue, TypologyAvailable));
+                    }
+
+                    return Json(model);
                 }
             }
             else
             {
-                var attributesItem = _contextDb.Attributes.Where(c => c.AttributesId == idAttributes && c.AttributeName.Contains(NameAttributes)).ToList<Attributes>();
-                if (attributesItem.Count() == 0)
+                a = _contextDb.Attributes.Where(c => c.AttributesId == idAttributes && c.AttributeName.Contains(NameAttributes)).Include(c => c.AttributesTypology).ThenInclude(c => c.Typology).ToList();
+
+                if (a.Count() == 0)
                 {
                     return Json(null);
                 }
                 else
                 {
-                    return Json(attributesItem);
+                    foreach (var item in a)
+                    {
+                        TypologyAvailable = new List<string>();
+                        TypologyAvailable = AttributesTypology.Where(c => c.AttributesId == item.AttributesId).Select(c => c.Typology.Name).ToList();
+                        model.Add(new AttributesControllerModel(item.AttributesId, item.AttributeName, item.AttributeValue, TypologyAvailable));
+                    }
+
+                    return Json(model);
                 }
             }
         }

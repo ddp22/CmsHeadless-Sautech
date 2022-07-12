@@ -20,7 +20,7 @@ namespace CmsHeadlessApi.Controllers
         [HttpGet]
         public JsonResult GetAllCategory(int? idCategory, string? nameCategory)
         {
-            string pathMedia = "/img/category/";
+            string pathMedia = AppDomain.CurrentDomain.BaseDirectory;
             if (idCategory ==null && nameCategory == null) {
                 var categoryItem = _contextDb.Category.ToList<Category>();
                 foreach (var category in categoryItem)

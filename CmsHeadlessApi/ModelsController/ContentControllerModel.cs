@@ -9,7 +9,8 @@ namespace CmsHeadlessApi.ModelsController
         public List<Attributes> Attributes { get; set; }
         public List<Tag> Tag { get; set; }
         public List<Category> Category { get; set; }
-        public ContentControllerModel(Content content, string pathMedia, string email, List<Attributes> Attributes, List<Tag> Tag, List<Category> Category)
+        public List<string> Location { get; set; }
+        public ContentControllerModel(Content content, string pathMedia, string email, List<Attributes> Attributes, List<Tag> Tag, List<Category> Category, List<string> Location)
         {
             
             ContentId = content.ContentId;
@@ -28,6 +29,7 @@ namespace CmsHeadlessApi.ModelsController
             this.Attributes = Attributes;
             this.Tag = Tag;
             this.Category = Category;
+            this.Location = Location;
         }
     }
 }
