@@ -31,13 +31,13 @@
                 <span asp-validation-for="_formContentModel.Text" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="_formContentModel.PubblicationDate" class="control-label"></label>
+                <label asp-for="_formContentModel.PubblicationDate" class="control-label">Pubblication Date</label>
                 <input asp-for="_formContentModel.PubblicationDate" class="form-control dateForm" />
                 <span asp-validation-for="_formContentModel.PubblicationDate" class="text-danger"></span>
             </div>
         </div>
         <div class="col-12 col-xl-2 form-group">
-            <label asp-for="_formContentModel.ContentAttributes" class="control-label"></label>
+            <label asp-for="_formContentModel.ContentAttributes" class="control-label">Attributes</label>
             <select asp-for="_formContentModel.ContentAttributes" class="form-select selectForm" multiple size="15">
                 @{
                     foreach(var i in Model.AttributesAvailable)
@@ -49,7 +49,7 @@
             <span asp-validation-for="_formContentModel.ContentAttributes" class="text-danger"></span>
         </div>
         <div class="col-12 col-xl-2 form-group">
-            <label asp-for="_formContentModel.ContentCategory" class="control-label"></label>
+            <label asp-for="_formContentModel.ContentCategory" class="control-label">Categories</label>
             <select asp-for="_formContentModel.ContentCategory" class="form-select selectForm" multiple size="15">
                 @{
                     foreach(var i in Model.CategoryAvailable)
@@ -61,7 +61,7 @@
             <span asp-validation-for="_formContentModel.ContentCategory" class="text-danger"></span>
         </div>
         <div class="col-12 col-xl-2 form-group">
-            <label asp-for="_formContentModel.ContentTag" class="control-label"></label>
+            <label asp-for="_formContentModel.ContentTag" class="control-label">Tags</label>
             <select asp-for="_formContentModel.ContentTag" class="form-select selectForm" multiple size="15">
                 @{
                     foreach(var i in Model.TagAvailable)

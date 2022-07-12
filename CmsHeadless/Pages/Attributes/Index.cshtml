@@ -8,17 +8,17 @@
     <form method="post"  class="custom-form" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="col-12 form-group">
-            <label asp-for="_formAttributesModel.AttributeName" class="control-label"></label>
+            <label asp-for="_formAttributesModel.AttributeName" class="control-label">Name</label>
             <input asp-for="_formAttributesModel.AttributeName" class="form-control textForm" required/>
             <span asp-validation-for="_formAttributesModel.AttributeName" class="text-danger"></span>
         </div>
         <div class="col-12 form-group">
-            <label asp-for="_formAttributesModel.AttributeValue" class="control-label"></label>
+            <label asp-for="_formAttributesModel.AttributeValue" class="control-label">Value</label>
             <input asp-for="_formAttributesModel.AttributeValue" class="form-control textForm" required/>
             <span asp-validation-for="_formAttributesModel.AttributeValue" class="text-danger"></span>
         </div>
         <div class="col-6 form-group">
-            <label asp-for="_formAttributesModel.Typology" class="control-label"></label>
+            <label asp-for="_formAttributesModel.Typology" class="control-label">Typologies</label>
             <select asp-for="_formAttributesModel.Typology" class="form-select selectForm" multiple size="7">
                 @{
                     foreach(var i in Model.TypologyAvailable)

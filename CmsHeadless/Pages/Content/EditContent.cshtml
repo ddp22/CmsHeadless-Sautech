@@ -27,13 +27,13 @@
                 <span asp-validation-for="_formEditContentModel.Text" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="_formEditContentModel.PubblicationDate" class="control-label"></label>
+                <label asp-for="_formEditContentModel.PubblicationDate" class="control-label">Pubblication Date</label>
                 <input asp-for="_formEditContentModel.PubblicationDate" class="form-control dateForm" value="@Model.PubblicationDateString"/>
                 <span asp-validation-for="_formEditContentModel.PubblicationDate" class="text-danger"></span>
             </div>
         </div>
         <div class="col-12 col-xl-2 form-group">
-            <label asp-for="_formEditContentModel.ContentAttributes" class="control-label"></label>
+            <label asp-for="_formEditContentModel.ContentAttributes" class="control-label">Attributes</label>
             <select asp-for="_formEditContentModel.ContentAttributes" class="form-select selectForm" multiple size="15">
                 @{
                     foreach(var i in Model.AttributesAvailable)
@@ -52,7 +52,7 @@
             <span asp-validation-for="_formEditContentModel.ContentAttributes" class="text-danger"></span>
         </div>
         <div class="col-12 col-xl-2 form-group">
-            <label asp-for="_formEditContentModel.ContentCategory" class="control-label"></label>
+            <label asp-for="_formEditContentModel.ContentCategory" class="control-label">Categories</label>
             <select asp-for="_formEditContentModel.ContentCategory" class="form-select selectForm" multiple size="15">
                 @{
                     foreach(var i in Model.CategoryAvailable)
@@ -71,7 +71,7 @@
             <span asp-validation-for="_formEditContentModel.ContentCategory" class="text-danger"></span>
         </div>
         <div class="col-12 col-xl-2 form-group">
-            <label asp-for="_formEditContentModel.ContentTag" class="control-label"></label>
+            <label asp-for="_formEditContentModel.ContentTag" class="control-label">Tags</label>
             <select asp-for="_formEditContentModel.ContentTag" class="form-select selectForm" multiple size="15">
                 @{
                     foreach(var i in Model.TagAvailable)
@@ -91,14 +91,14 @@
         </div>
         <div class="col-12 col-xl-6">
             <div class="form-group">
-                <label asp-for="_formEditContentModel.InsertionDate" class="control-label"></label>
+                <label asp-for="_formEditContentModel.InsertionDate" class="control-label">Insertion Date</label>
                 <input asp-for="_formEditContentModel.InsertionDate" class="form-control dateForm" value="@Model.InsertionDateString" readonly/>
                 <span asp-validation-for="_formEditContentModel.InsertionDate" class="text-danger"></span>
             </div>
             @if (@Model.content.LastEdit!=null)
             {
                 <div class="form-group">
-                    <label asp-for="_formEditContentModel.lastEdit" class="control-label"></label>
+                    <label asp-for="_formEditContentModel.lastEdit" class="control-label">Last Edit</label>
                     <input asp-for="_formEditContentModel.lastEdit" class="form-control dateForm" value="@Model.lastEditString" readonly/>
                     <span asp-validation-for="_formEditContentModel.lastEdit" class="text-danger"></span>
                 </div>
@@ -106,7 +106,7 @@
         </div>
         <div class="col-12 row">
             <div class="col-12 col-xl-3 form-group">
-                <label asp-for="_formEditContentModel.NationAdd" class="control-label"></label>
+                <label asp-for="_formEditContentModel.NationAdd" class="control-label">Nation</label>
            
                 <select id="NationSelectContentAdd" asp-for="_formEditContentModel.NationAdd" class="form-select selectForm">
                     <option value="-1">Select Nation</option>
@@ -124,7 +124,7 @@
             </div>
 
             <div class="col-12 col-xl-3 form-group">
-                <label asp-for="_formEditContentModel.RegionAdd" class="control-label"></label>
+                <label asp-for="_formEditContentModel.RegionAdd" class="control-label">Region</label>
                 <select id="RegionSelectContentAdd" asp-for="_formEditContentModel.RegionAdd" class="form-select selectForm" disabled="disabled">
                 
                 </select>
@@ -132,7 +132,7 @@
             </div>
 
             <div class="col-12 col-xl-3 form-group">
-                <label asp-for="_formEditContentModel.ProvinceAdd" class="control-label"></label>
+                <label asp-for="_formEditContentModel.ProvinceAdd" class="control-label">Province</label>
                 <select id="ProvinceSelectContentAdd" asp-for="_formEditContentModel.ProvinceAdd" class="form-select selectForm" disabled="disabled">
                 
                 </select>
@@ -140,7 +140,7 @@
             </div>
 
             <div class="col-12  col-xl-3 form-group">
-                <label asp-for="_formEditContentModel.CityAdd" class="control-label"></label>
+                <label asp-for="_formEditContentModel.CityAdd" class="control-label">City</label>
                 <input id="CitySelectContentAdd" asp-for="_formEditContentModel.CityAdd" class="form-control textForm" disabled="disabled"/>
                 <span asp-validation-for="_formEditContentModel.CityAdd" class="text-danger"></span>
             </div>
@@ -172,7 +172,7 @@
     <form method="post"  class="row custom-form" enctype="multipart/form-data">
         <h5>Seleziona i luoghi da eliminare</h5>
         <div class="col-12 col-xl-6 form-group">
-            <label asp-for="_formDeleteContentModel.LocationDelete" class="control-label"></label>
+            <label asp-for="_formDeleteContentModel.LocationDelete" class="control-label">Locations</label>
             <select asp-for="_formDeleteContentModel.LocationDelete" class="form-select selectForm" multiple >
                 @{
                     foreach(var i in Model.LocationsOfContentAvailable)
