@@ -1,4 +1,4 @@
-﻿namespace CmsHeadless.Pages.Content
+﻿/*namespace CmsHeadless.Pages.Content
 {
     public class LocationsOfContent
     {
@@ -31,3 +31,4 @@
 
     }
 }
+*/

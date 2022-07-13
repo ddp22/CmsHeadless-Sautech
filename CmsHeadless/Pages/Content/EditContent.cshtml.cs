@@ -50,9 +50,7 @@ namespace CmsHeadless.Pages.Content
         public List<Models.Location> LocationsOfContent { get; set; }
 
         public List<string> stringLocation { get; set; }
-        /*da eliminare*/
-        //public List<LocationsOfContent> LocationsOfContentAvailable { get; set; }
-        /* *** */
+        
         
 
         public EditContentModel(CmsHeadlessDbContext context)
@@ -96,44 +94,6 @@ namespace CmsHeadless.Pages.Content
         public async Task<IActionResult> OnGetAsync(int? id, string? searchString)
         {
             LocationsOfContent = ContentLocationAvailable.Where(c => c.ContentId == id).Select(c=>c.Location).ToList();
-            /*foreach (var location in LocationsOfContent)
-            {
-                /*var tempNation = NationAvailable.Find(c => c.NationId == location.NationId);
-                string nation = tempNation!=null? tempNation.NationName : null;
-                string region = null;
-                string province = null;
-                string city = location.City;
-                if (nation != null)
-                {
-                    var tempRegion = RegionAvailable.Find(c => c.RegionId == location.RegionId);
-                    region = tempRegion != null ? tempRegion.RegionName : null;
-                    if(region != null)
-                    {
-                        var tempProvince = ProvinceAvailable.Find(c => c.ProvinceId == location.ProvinceId);
-                        province = tempProvince != null ? tempProvince.ProvinceName : null;
-                    }
-                }
-                LocationsOfContentAvailable.Add(new LocationsOfContent(location.LocationId, nation, region, province, city));
-                if (location.Nation != null)
-                {
-                    string tempString = location.Nation.NationName;
-                    if (location.Region != null)
-                    {
-                        tempString+=", "+ location.Region.RegionName;
-                        if (location.Province != null)
-                        {
-                            tempString += ", " + location.Province.ProvinceName;
-                        }
-                        if (location.City != null)
-                        {
-                            tempString += ", " + location.City;
-                        }
-                    }
-                    stringLocation.Add(tempString);
-                }
-            }*/
-
-            
 
             selectContentQueryOrder = from Content in _context.Content select Content;
             selectContentQuery = selectContentQueryOrder.OrderByDescending(c => c.ContentId);

@@ -1,4 +1,4 @@
-﻿namespace CmsHeadlessApi.ModelsController
+﻿/*namespace CmsHeadlessApi.ModelsController
 {
     public class LocationsOfContentModel
     {
@@ -31,3 +31,4 @@
 
     }
 }
+*/

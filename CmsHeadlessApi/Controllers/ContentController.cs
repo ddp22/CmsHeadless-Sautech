@@ -46,11 +46,23 @@ namespace CmsHeadlessApi.Controllers
             List<Content> c = new List<Content>();
             if (id == null)
             {
-                c = _contextDb.Content.Include(ca=>ca.ContentAttributes).ThenInclude(a=>a.Attributes).Include(ct=>ct.ContentCategory).ThenInclude(c=>c.Category).Include(ctag=>ctag.ContentTag).ThenInclude(t=>t.Tag).Include(cl=>cl.ContentLocation).ThenInclude(c=>c.Location).ToList();
+                c = _contextDb.Content.Include(ca=>ca.ContentAttributes).ThenInclude(a=>a.Attributes)
+                    .Include(ct=>ct.ContentCategory).ThenInclude(c=>c.Category)
+                    .Include(ctag=>ctag.ContentTag).ThenInclude(t=>t.Tag)
+                    .Include(cl => cl.ContentLocation).ThenInclude(c => c.Location).ThenInclude(c => c.Nation)
+                    .Include(cl => cl.ContentLocation).ThenInclude(c => c.Location).ThenInclude(c => c.Province)
+                    .Include(cl => cl.ContentLocation).ThenInclude(c => c.Location).ThenInclude(c => c.Region)
+                    .ToList();
             }
             else
             {
-                c = _contextDb.Content.Where(c=>c.ContentId==id).Include(ca => ca.ContentAttributes).ThenInclude(a => a.Attributes).Include(ct => ct.ContentCategory).ThenInclude(c => c.Category).Include(ctag => ctag.ContentTag).ThenInclude(t => t.Tag).Include(cl => cl.ContentLocation).ThenInclude(c => c.Location).ToList();
+                c = _contextDb.Content.Where(c=>c.ContentId==id).Include(ca => ca.ContentAttributes).ThenInclude(a => a.Attributes)
+                    .Include(ct => ct.ContentCategory).ThenInclude(c => c.Category)
+                    .Include(ctag => ctag.ContentTag).ThenInclude(t => t.Tag)
+                    .Include(cl => cl.ContentLocation).ThenInclude(c => c.Location).ThenInclude(c=>c.Nation)
+                    .Include(cl => cl.ContentLocation).ThenInclude(c => c.Location).ThenInclude(c => c.Province)
+                    .Include(cl => cl.ContentLocation).ThenInclude(c => c.Location).ThenInclude(c => c.Region)
+                    .ToList();
             }
             List<User> user = _contextDb.User.ToList();
             List<ContentAttributes> contentAttributes = (from Attributes in _contextDb.Attributes join ContentAttributes in _contextDb.ContentAttributes on Attributes.AttributesId equals ContentAttributes.AttributesId select ContentAttributes).ToList();
@@ -58,11 +70,11 @@ namespace CmsHeadlessApi.Controllers
             List<ContentCategory> contentCategory = (from Category in _contextDb.Category join ContentCategory in _contextDb.ContentCategory on Category.CategoryId equals ContentCategory.CategoryId select ContentCategory).ToList();
             List<ContentLocation> contentLocation = (from ContentLocation in _contextDb.ContentLocation 
                                                      join Location in _contextDb.Location on ContentLocation.LocationId equals Location.LocationId
-                                                     select ContentLocation).ToList();
+                                                     select ContentLocation).Include(c=>c.Location).ToList();
             
-            List<Nation> NationAvailable=(from Nation in _contextDb.Nation select Nation).ToList();
+            /*List<Nation> NationAvailable=(from Nation in _contextDb.Nation select Nation).ToList();
             List<Region> RegionAvailable=(from Region in _contextDb.Region select Region).ToList();
-            List<Province> ProvinceAvailable=(from Province in _contextDb.Province select Province).ToList();
+            List<Province> ProvinceAvailable=(from Province in _contextDb.Province select Province).ToList();*/
             foreach (var item in c)
             {
                 var email = user.Where(u=>u.Id==item.UserId).First().Email;
@@ -73,25 +85,27 @@ namespace CmsHeadlessApi.Controllers
                 List<string> LocationsOfContentAvailable = new List<string>();
                 List<Location> LocationsOfContent = contentLocation.Where(c => c.ContentId == item.ContentId).Select(c => c.Location).ToList();
 
-                foreach (var location in LocationsOfContent)
-                {
-                    
-                    var tempNation = NationAvailable.Find(c => c.NationId == location.NationId);
-                    string nation = tempNation != null ? tempNation.NationName : null;
-                    string region = null;
-                    string province = null;
-                    string city = location.City;
-                    if (nation != null)
+                 foreach (var location in LocationsOfContent)
+                 {
+
+                    string tempString = null;
+                    if (location.Nation != null)
                     {
-                        var tempRegion = RegionAvailable.Find(c => c.RegionId == location.RegionId);
-                        region = tempRegion != null ? tempRegion.RegionName : null;
-                        if (region != null)
+                        tempString = location.Nation.NationName;
+                        if (location.Region != null)
                         {
-                            var tempProvince = ProvinceAvailable.Find(c => c.ProvinceId == location.ProvinceId);
-                            province = tempProvince != null ? tempProvince.ProvinceName : null;
+                            tempString += ", " + location.Region.RegionName;
+                            if (location.Province != null)
+                            {
+                                tempString += ", " + location.Province.ProvinceName;
+                            }
+                            if (location.City != null)
+                            {
+                                tempString += ", " + location.City;
+                            }
                         }
                     }
-                    LocationsOfContentAvailable.Add(new LocationsOfContentModel(location.LocationId, nation, region, province, city).LocationString);
+                    LocationsOfContentAvailable.Add(tempString);
                 }
 
                 model.Add(new ContentControllerModel(item, pathMedia, email, attributes, tag, category, LocationsOfContentAvailable));
