@@ -4,6 +4,7 @@ using CmsHeadless.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CmsHeadless.Migrations.CmsHeadlessDb
 {
     [DbContext(typeof(CmsHeadlessDbContext))]
-    partial class CmsHeadlessDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220713080202_Add_ForeignKey_In_Location")]
+    partial class Add_ForeignKey_In_Location
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -275,6 +277,9 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NationId"), 1L, 1);
 
+                    b.Property<bool?>("IsNone")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("NationIsActive")
                         .HasColumnType("bit");
 
@@ -294,6 +299,9 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProvinceId"), 1L, 1);
+
+                    b.Property<bool?>("IsNone")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("ProvinceIsActive")
                         .HasColumnType("bit");
@@ -319,6 +327,9 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RegionId"), 1L, 1);
+
+                    b.Property<bool?>("IsNone")
+                        .HasColumnType("bit");
 
                     b.Property<int>("NationId")
                         .HasColumnType("int");

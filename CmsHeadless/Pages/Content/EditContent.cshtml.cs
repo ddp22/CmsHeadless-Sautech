@@ -48,8 +48,10 @@ namespace CmsHeadless.Pages.Content
         public List<Models.Location> LocationAvailable { get; set; }
         public List<Models.ContentLocation> ContentLocationAvailable { get; set; }
         public List<Models.Location> LocationsOfContent { get; set; }
+
+        public List<string> stringLocation { get; set; }
         /*da eliminare*/
-        public List<LocationsOfContent> LocationsOfContentAvailable { get; set; }
+        //public List<LocationsOfContent> LocationsOfContentAvailable { get; set; }
         /* *** */
         
 
@@ -57,8 +59,9 @@ namespace CmsHeadless.Pages.Content
         {
             _context = context;
             ContentAvailable= new List<Models.Content>();
+            stringLocation = new List<string>();
 
-            LocationsOfContentAvailable = new List<LocationsOfContent>();
+            //LocationsOfContentAvailable = new List<LocationsOfContent>();
 
             IQueryable<Models.Attributes> selectAttributesQuery = from Attributes in _context.Attributes select Attributes;
             AttributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
@@ -93,9 +96,9 @@ namespace CmsHeadless.Pages.Content
         public async Task<IActionResult> OnGetAsync(int? id, string? searchString)
         {
             LocationsOfContent = ContentLocationAvailable.Where(c => c.ContentId == id).Select(c=>c.Location).ToList();
-            foreach (var location in LocationsOfContent)
+            /*foreach (var location in LocationsOfContent)
             {
-                var tempNation = NationAvailable.Find(c => c.NationId == location.NationId);
+                /*var tempNation = NationAvailable.Find(c => c.NationId == location.NationId);
                 string nation = tempNation!=null? tempNation.NationName : null;
                 string region = null;
                 string province = null;
@@ -111,7 +114,24 @@ namespace CmsHeadless.Pages.Content
                     }
                 }
                 LocationsOfContentAvailable.Add(new LocationsOfContent(location.LocationId, nation, region, province, city));
-            }
+                if (location.Nation != null)
+                {
+                    string tempString = location.Nation.NationName;
+                    if (location.Region != null)
+                    {
+                        tempString+=", "+ location.Region.RegionName;
+                        if (location.Province != null)
+                        {
+                            tempString += ", " + location.Province.ProvinceName;
+                        }
+                        if (location.City != null)
+                        {
+                            tempString += ", " + location.City;
+                        }
+                    }
+                    stringLocation.Add(tempString);
+                }
+            }*/
 
             
 

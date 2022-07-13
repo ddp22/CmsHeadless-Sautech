@@ -21,6 +21,9 @@ namespace CmsHeadless.Pages.Content
         public static int lastDelete = 0;
         public static bool callDelete = false;
         public string pathMedia = "/img/content/";
+        public int idRegionNone { get; set; }
+        public int idNationNone { get; set; }
+        public int idProvinceNone { get; set; }
 
         public static int ContentId = 0;
 
@@ -66,6 +69,8 @@ namespace CmsHeadless.Pages.Content
 
             IQueryable<Models.User> selectUsersQuery = from User in _context.User select User;
             Users = selectUsersQuery.ToList<Models.User>();
+
+
         }
 
         public ContentList<Models.Content> ContentList { get; set; }

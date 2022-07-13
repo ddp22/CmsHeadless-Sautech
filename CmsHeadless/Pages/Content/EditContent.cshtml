@@ -175,9 +175,26 @@
             <label asp-for="_formDeleteContentModel.LocationDelete" class="control-label">Locations</label>
             <select asp-for="_formDeleteContentModel.LocationDelete" class="form-select selectForm" multiple >
                 @{
-                    foreach(var i in Model.LocationsOfContentAvailable)
+                    foreach(var location in Model.LocationsOfContent)
                     {
-                            <option value="@i.LocationId" id="@i.LocationId">@i.LocationString</option>
+                        string tempString=null;
+                        if (location.Nation != null)
+                        {
+                            tempString = location.Nation.NationName;
+                            if (location.Region != null)
+                            {
+                                tempString+=", "+ location.Region.RegionName;
+                                if (location.Province != null)
+                                {
+                                    tempString += ", " + location.Province.ProvinceName;
+                                }
+                                if (location.City != null)
+                                {
+                                    tempString += ", " + location.City;
+                                }
+                            }
+                        }
+                            <option value="@location.LocationId" id="@location.LocationId">@tempString</option>
                     }
                 }
             </select>
