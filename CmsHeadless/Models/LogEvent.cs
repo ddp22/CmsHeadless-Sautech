@@ -5,10 +5,15 @@ namespace CmsHeadless.Models
 {
     public class LogEvent{
         [Key]
+        [Required]
         public int Log_eventID { get; set; }
         public string? Log_eventDescription { get; set; }
         public int Log_eventCode { get; set; }
+        [ForeignKey("Log_typeID")]
+        [Required]
         public int Log_typeID { get; set; }
+        public LogType LogType { get; set; } = null!;
+        public ICollection<Log> Logs { get; set; }
         public LogEvent()
         {
 
