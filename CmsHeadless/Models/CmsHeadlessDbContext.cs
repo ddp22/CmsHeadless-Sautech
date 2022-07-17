@@ -19,7 +19,7 @@ namespace CmsHeadless.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<IdentityUser>().ToTable("User");
+                        modelBuilder.Entity<IdentityUser>().ToTable("User");
         }
         public DbSet<Attributes> Attributes { get; set; }
         public DbSet<Category> Category { get; set; }
