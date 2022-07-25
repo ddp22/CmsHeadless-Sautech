@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CmsHeadless.Models;
+using CmsHeadless.Controllers;
 using CmsHeadless.ViewModels.Content;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNet.Identity;
@@ -14,6 +15,7 @@ namespace CmsHeadless.Pages.Content
     {
         private readonly CmsHeadlessDbContext _context;
         private readonly IConfiguration Configuration;
+        private readonly LogListController _logController;
         public const int numberPage = 5;
         [BindProperty]
         public ContentViewModel _formContentModel { get; set; }
@@ -40,10 +42,11 @@ namespace CmsHeadless.Pages.Content
         public List<Models.Province> ProvinceAvailable { get; set; }
         public List<Models.Location> LocationAvailable { get; set; }
         public List<Models.User> Users { get; set; }
-        public IndexModel(CmsHeadlessDbContext context, IConfiguration configuration)
+        public IndexModel(CmsHeadlessDbContext context, IConfiguration configuration, LogListController logController)
         {
             _context = context;
             Configuration = configuration;
+            _logController = logController;
             ContentAvailable = new List<Models.Content>();
 
             IQueryable<Models.Attributes> selectAttributesQuery = from Attributes in _context.Attributes select Attributes;
@@ -69,8 +72,6 @@ namespace CmsHeadless.Pages.Content
 
             IQueryable<Models.User> selectUsersQuery = from User in _context.User select User;
             Users = selectUsersQuery.ToList<Models.User>();
-
-
         }
 
         public ContentList<Models.Content> ContentList { get; set; }
@@ -148,6 +149,7 @@ namespace CmsHeadless.Pages.Content
             if (is_exsist > 0)
             {
                 ModelState.AddModelError("Make", "Non è stato possibile inserire il content perchè già esiste");
+                _logController.SaveLog(User.Identity.Name, LogListController.ContentsCreatedWarningCode, "L'utente " + User.Identity.Name + " ha creato un contenuto.", "Warning - Content Already Created", HttpContext);
                 selectContentQueryOrder = from Content in _context.Content select Content;
                 selectContentQuery = selectContentQueryOrder.OrderByDescending(c => c.ContentId);
                 ContentAvailable = selectContentQuery.ToList<Models.Content>();
@@ -201,6 +203,7 @@ namespace CmsHeadless.Pages.Content
             if (lastCreate <= 0)
             {
                 ModelState.AddModelError("Make", "Errore nell'inserimento");
+                _logController.SaveLog(User.Identity.Name, LogListController.ContentsCreatedWarningCode, "L'utente " + User.Identity.Name + " ha creato un contenuto.", "Warning - Saving Changes Error", HttpContext);
                 return Page();
             }
 
@@ -226,6 +229,7 @@ namespace CmsHeadless.Pages.Content
                     if (k <= 0)
                     {
                         ModelState.AddModelError("Make", "Errore nell'inserimento");
+                        _logController.SaveLog(User.Identity.Name, LogListController.ContentsCreatedWarningCode, "L'utente " + User.Identity.Name + " ha creato un contenuto.", "Warning - Saving Changes Error", HttpContext);
                         return Page();
                     }
                 }
@@ -249,6 +253,7 @@ namespace CmsHeadless.Pages.Content
                     if (k <= 0)
                     {
                         ModelState.AddModelError("Make", "Errore nell'inserimento");
+                        _logController.SaveLog(User.Identity.Name, LogListController.ContentsCreatedWarningCode, "L'utente " + User.Identity.Name + " ha creato un contenuto.", "Warning - Saving Changes Error", HttpContext);
                         return Page();
                     }
                 }
@@ -272,6 +277,7 @@ namespace CmsHeadless.Pages.Content
                     if (k <= 0)
                     {
                         ModelState.AddModelError("Make", "Errore nell'inserimento");
+                        _logController.SaveLog(User.Identity.Name, LogListController.ContentsCreatedWarningCode, "L'utente " + User.Identity.Name + " ha creato un contenuto.", "Warning - Saving Changes Error", HttpContext);
                         return Page();
                     }
                 }
@@ -303,6 +309,7 @@ namespace CmsHeadless.Pages.Content
                     if (l <= 0)
                     {
                         ModelState.AddModelError("Make", "Errore nell'inserimento");
+                        _logController.SaveLog(User.Identity.Name, LogListController.ContentsCreatedWarningCode, "L'utente " + User.Identity.Name + " ha creato un contenuto.", "Warning - Saving Changes Error", HttpContext);
                         return Page();
                     }
                     id = (from Location in _context.Location
@@ -323,6 +330,7 @@ namespace CmsHeadless.Pages.Content
                 if (j <= 0)
                 {
                     ModelState.AddModelError("Make", "Errore nell'inserimento");
+                    _logController.SaveLog(User.Identity.Name, LogListController.ContentsCreatedWarningCode, "L'utente " + User.Identity.Name + " ha creato un contenuto.", "Warning - Saving Changes Error", HttpContext);
                     return Page();
                 }
 
@@ -338,7 +346,7 @@ namespace CmsHeadless.Pages.Content
             }
             pageSize = Configuration.GetValue("PageSize", numberPage);
             ContentList = await ContentList<Models.Content>.CreateAsync(selectContentQuery.AsNoTracking(), pageIndex ?? 1, pageSize);
-
+            _logController.SaveLog(User.Identity.Name, LogListController.ContentsCreatedCode, "L'utente " + User.Identity.Name + " ha creato un contenuto.", "Content Created", HttpContext);
             return RedirectToPage("./Index");
         }
 
@@ -374,6 +382,7 @@ namespace CmsHeadless.Pages.Content
             if (lastDelete <= 0)
             {
                 ModelState.AddModelError("Make", "Errore nell'eliminazione");
+                _logController.SaveLog(User.Identity.Name, LogListController.ContentsDeletedWarningCode, "L'utente " + User.Identity.Name + " ha creato un contenuto.", "Warning - No Last Deleted Content(s)", HttpContext);
                 return Page();
             }
             selectContentQueryOrder = from Content in _context.Content select Content;
@@ -385,6 +394,7 @@ namespace CmsHeadless.Pages.Content
             }
             var pageSize = Configuration.GetValue("PageSize", numberPage);
             ContentList = await ContentList<Models.Content>.CreateAsync(selectContentQuery.AsNoTracking(), pageIndex ?? 1, pageSize);
+            _logController.SaveLog(User.Identity.Name, LogListController.ContentsDeletedCode, "L'utente " + User.Identity.Name + " ha eliminato un contenuto.", "Content(s) Deleted", HttpContext);
             return RedirectToPage("./Index");
         }
 

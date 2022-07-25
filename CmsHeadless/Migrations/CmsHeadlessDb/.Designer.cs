@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CmsHeadless.Migrations.CmsHeadlessDb
 {
     [DbContext(typeof(CmsHeadlessDbContext))]
-    [Migration("20220713081342_20220710145726_Remove_IsNone")]
-    partial class _20220710145726_Remove_IsNone
+    [Migration("20220722131231_Add_Identity_User_Claim_Role")]
+    partial class Add_Identity_User_Claim_Role
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -269,6 +269,100 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.ToTable("Location");
                 });
 
+            modelBuilder.Entity("CmsHeadless.Models.Log", b =>
+                {
+                    b.Property<int>("LogID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LogID"), 1L, 1);
+
+                    b.Property<string>("LogBrowser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LogBrowserVersion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LogDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LogDetails")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LogEventLog_eventID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LogIPAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LogNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LogOS")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LogOSVersion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LogID");
+
+                    b.HasIndex("LogEventLog_eventID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Log");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.LogEvent", b =>
+                {
+                    b.Property<int>("Log_eventID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Log_eventID"), 1L, 1);
+
+                    b.Property<int>("LogTypeLog_typeID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Log_eventCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Log_eventDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Log_eventID");
+
+                    b.HasIndex("LogTypeLog_typeID");
+
+                    b.ToTable("LogEvent");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.LogType", b =>
+                {
+                    b.Property<int>("Log_typeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Log_typeID"), 1L, 1);
+
+                    b.Property<string>("Log_typeCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Log_typeDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Log_typeID");
+
+                    b.ToTable("LogType");
+                });
+
             modelBuilder.Entity("CmsHeadless.Models.Nation", b =>
                 {
                     b.Property<int>("NationId")
@@ -403,6 +497,25 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.ToTable("UserTypology");
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IdentityRole");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
@@ -459,6 +572,39 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.ToTable("User", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IdentityUserClaim");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("IdentityUserRole");
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.User", b =>
@@ -615,6 +761,36 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.Navigation("Province");
 
                     b.Navigation("Region");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.Log", b =>
+                {
+                    b.HasOne("CmsHeadless.Models.LogEvent", "LogEvent")
+                        .WithMany()
+                        .HasForeignKey("LogEventLog_eventID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CmsHeadless.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LogEvent");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.LogEvent", b =>
+                {
+                    b.HasOne("CmsHeadless.Models.LogType", "LogType")
+                        .WithMany()
+                        .HasForeignKey("LogTypeLog_typeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LogType");
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Province", b =>

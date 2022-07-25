@@ -47,19 +47,19 @@ body {
     padding:20px;
 }
 
-.dropDownMenuCategory, .dropDownMenuContent, .dropDownMenuTag, .dropDownMenuAttributes, .dropDownMenuTypology {
+.dropDownMenuCategory, .dropDownMenuContent, .dropDownMenuTag, .dropDownMenuAttributes, .dropDownMenuTypology, .dropDownMenuLog, .userArea {
     background-color: white;
     color: black;
     font-size: large;
     margin-right: 1.5rem;
 }
 
-    .dropDownMenuCategory:hover, .dropDownMenuContent:hover, .dropDownMenuTag:hover, .dropDownMenuAttributes:hover, .dropDownMenuTypology:hover {
-        background-color: lightgrey;
-        color: black;
-    }
+.dropDownMenuCategory:hover, .dropDownMenuContent:hover, .dropDownMenuTag:hover, .dropDownMenuAttributes:hover, .dropDownMenuTypology:hover, .dropDownMenuLog:hover, .userArea:hover {
+    background-color: lightgrey;
+    color: black;
+}
 
-.dropDownMenuItemCategory, .dropDownMenuItemContent, .dropDownMenuItemTag, .dropDownMenuItemAttributes, .dropDownMenuItemTypology {
+.dropDownMenuItemCategory, .dropDownMenuItemContent, .dropDownMenuItemTag, .dropDownMenuItemAttributes, .dropDownMenuItemTypology, .dropDownMenuItemLog {
     color: black !important;
 }
 /*

@@ -25,6 +25,5 @@ namespace CmsHeadless.Models
         public virtual ICollection<Content>? Content { get; set; }
         public virtual ICollection<UserTypology>? UserTypology { get; set; }
         public virtual Location? Location { get; set; }
-        public virtual Log? Log { get; set; }
     }
 }

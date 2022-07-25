@@ -1,0 +1,112 @@
+﻿@page
+@model CmsHeadless.Pages.LogList.IndexModel
+@{
+}
+
+<table class="table table-striped table-bordered" id="logList">
+  <div class="col-4">
+    <form>
+        <p>
+            Search: <input type="text" name="searchString" value="@Model.searchString"/>
+                <span class="form-group">
+                    <input type="submit" value="Search" class="btn btn-primary"/>
+                </span>
+        </p>
+    </form>
+  </div>
+  <thead >
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Date and Time</th>
+      <th scope="col">Details</th>
+      <th scope="col">User</th>
+      <th scope="col">Event</th>
+      <th scope="col">Event Code</th>
+      <th scope="col">Type</th>
+      <th scope="col">Type Code</th>
+      <th scope="col">Notes</th>
+      <th scope="col">Browser</th>
+      <th scope="col">Browser Version</th>
+      <th scope="col">IP Address</th>
+      <th scope="col">OS</th>
+      <th scope="col">OS Version</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+        @{
+            if(Model.LogList!=null){
+            int k=1+(Model.LogList.PageIndex-1)*IndexModel.numberPage ;
+                    @foreach (var item in Model.LogList)
+                {
+                    <tr>
+                        <th scope="row">
+                            @k
+                        </th>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LogDateTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LogDetails)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.User.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LogEvent.Log_eventDescription)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LogEvent.Log_eventCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LogEvent.LogType.Log_typeDescription)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LogEvent.LogType.Log_typeCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LogNotes)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LogBrowser)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LogBrowserVersion)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LogIPAddress)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LogOS)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LogOSVersion)
+                        </td>
+                    </tr>
+                    k++;
+                }
+            }
+       }
+
+  </tbody>
+</table>
+
+@{
+    
+    var prevDisabled = !Model.LogList.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.LogList.HasNextPage ? "disabled" : "";
+}
+
+<a href="/LogList/Index?pageIndex=@(Model.LogList.PageIndex - 1)&searchString=@Model.searchString"
+class="btn btn-default @prevDisabled">
+        Previous
+</a>
+
+<a href="/LogList/Index?pageIndex=@(Model.LogList.PageIndex + 1)&searchString=@Model.searchString"
+class="btn btn-default @nextDisabled">
+        Next
+</a>
+
+
+@{
+    Model.searchString = null;
+}

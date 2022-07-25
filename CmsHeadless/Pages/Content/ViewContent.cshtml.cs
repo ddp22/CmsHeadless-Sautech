@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CmsHeadless.Models;
+using CmsHeadless.Controllers;
 using CmsHeadless.ViewModels;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ namespace CmsHeadless.Pages.Content
         public const int numberPage = 5;
         private readonly CmsHeadlessDbContext _context;
         private readonly IConfiguration Configuration;
+        private readonly LogListController _logController;
         public static int lastDelete = 0;
         public static string searchString { get; set; }
         public Models.Content ContentNew { get; set; }
@@ -23,12 +25,12 @@ namespace CmsHeadless.Pages.Content
         public List<Models.Content> ContentAvailable { get; set; }
         public List<Models.User> Users { get; set; }
 
-        public ViewContentModel(CmsHeadlessDbContext context, IConfiguration configuration)
+        public ViewContentModel(CmsHeadlessDbContext context, IConfiguration configuration, LogListController logController)
         {
             _context = context;
             Configuration = configuration;
             ContentAvailable = new List<Models.Content>();
-
+            _logController = logController;
             IQueryable<Models.User> selectUsersQuery = from User in _context.User select User;
             Users = selectUsersQuery.ToList<Models.User>();
         }
@@ -114,6 +116,7 @@ namespace CmsHeadless.Pages.Content
             if (lastDelete <= 0)
             {
                 ModelState.AddModelError("Make", "Errore nell'inserimento");
+                _logController.SaveLog(User.Identity.Name, LogListController.ContentsCreatedCode, "L'utente " + User.Identity.Name + " ha eliminato un contenuto.", "Warning - No Last Deleted Content(s)", HttpContext);
                 return Page();
             }
             selectContentQueryOrder = from Content in _context.Content select Content;
@@ -125,6 +128,7 @@ namespace CmsHeadless.Pages.Content
             }
             var pageSize = Configuration.GetValue("PageSize", numberPage);
             ContentList = await ContentList<Models.Content>.CreateAsync(selectContentQuery.AsNoTracking(), pageIndex ?? 1, pageSize);
+            _logController.SaveLog(User.Identity.Name, LogListController.ContentsCreatedCode, "L'utente " + User.Identity.Name + " ha eliminato un contenuto.", "Content(s) Deleted", HttpContext);
             return RedirectToPage("./ViewContent");
         }
 

@@ -1,5 +1,6 @@
 using CmsHeadless.Models;
 using CmsHeadless.ViewModels.Content;
+using CmsHeadless.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -10,6 +11,7 @@ namespace CmsHeadless.Pages.Content
     {
         IQueryable<Models.Content> selectContentQuery;
         IQueryable<Models.Content> selectContentQueryOrder;
+        private readonly LogListController _logController;
         public static int EditContentId=0;
         public static int lastEdit = 0;
         public static int lastEditAttributes = 0;
@@ -53,9 +55,10 @@ namespace CmsHeadless.Pages.Content
         
         
 
-        public EditContentModel(CmsHeadlessDbContext context)
+        public EditContentModel(CmsHeadlessDbContext context, LogListController logController)
         {
             _context = context;
+            _logController = logController;
             ContentAvailable= new List<Models.Content>();
             stringLocation = new List<string>();
 
@@ -310,6 +313,7 @@ namespace CmsHeadless.Pages.Content
                     if (lastEditAttributes <= 0)
                     {
                         ModelState.AddModelError("Make", "Errore nella modifica");
+                        _logController.SaveLog(User.Identity.Name, LogListController.ContentsModifiedWarningCode, "L'utente " + User.Identity.Name + " ha modificato un contenuto.", "Warning - No Last Edited Attribute(s)", HttpContext);
                         return Page();
                     }
                 }
@@ -351,6 +355,7 @@ namespace CmsHeadless.Pages.Content
                     if (lastEditTag <= 0)
                     {
                         ModelState.AddModelError("Make", "Errore nella modifica");
+                        _logController.SaveLog(User.Identity.Name, LogListController.ContentsModifiedWarningCode, "L'utente " + User.Identity.Name + " ha modificato un contenuto.", "Warning - No Last Edited Tag(s)", HttpContext);
                         return Page();
                     }
                 }
@@ -390,6 +395,7 @@ namespace CmsHeadless.Pages.Content
                     if (lastEditCategory <= 0)
                     {
                         ModelState.AddModelError("Make", "Errore nella modifica");
+                        _logController.SaveLog(User.Identity.Name, LogListController.ContentsModifiedWarningCode, "L'utente " + User.Identity.Name + " ha modificato un contenuto.", "Warning - No Last Edited Category(ies)", HttpContext);
                         return Page();
                     }
                 }
@@ -452,6 +458,7 @@ namespace CmsHeadless.Pages.Content
                         if (j <= 0)
                         {
                             ModelState.AddModelError("Make", "Errore nella modifica");
+                            _logController.SaveLog(User.Identity.Name, LogListController.ContentsModifiedWarningCode, "L'utente " + User.Identity.Name + " ha modificato un contenuto.", "Warning - Saving Change(s) Error", HttpContext);
                             return Page();
                         }
                         locationId = (from Location in _context.Location
@@ -471,6 +478,7 @@ namespace CmsHeadless.Pages.Content
                     if (lastEditLocation <= 0)
                     {
                         ModelState.AddModelError("Make", "Errore nell'inserimento");
+                        _logController.SaveLog(User.Identity.Name, LogListController.ContentsDeletedWarningCode, "L'utente " + User.Identity.Name + " ha eliminato un contenuto.", "Warning - No Last Deleted Location(s)", HttpContext);
                         return Page();
                     }
                 }
@@ -512,6 +520,7 @@ namespace CmsHeadless.Pages.Content
                 DateTime tempDate = (DateTime)content.LastEdit;
                 lastEditString = tempDate.ToString("yyyy-MM-dd");
             }
+            _logController.SaveLog(User.Identity.Name, LogListController.ContentsModifiedCode, "L'utente " + User.Identity.Name + " ha modificato un contenuto.", "Content(s) Modified", HttpContext);
             return RedirectToPage("./EditContent" , new { id=contentId });
         }
 
@@ -538,6 +547,7 @@ namespace CmsHeadless.Pages.Content
                     if (lastDeleteLocation <= 0)
                     {
                         ModelState.AddModelError("Make", "Errore nell'inserimento");
+                        _logController.SaveLog(User.Identity.Name, LogListController.ContentsDeletedWarningCode, "L'utente " + User.Identity.Name + " ha eliminato un contenuto.", "Warning - No Last Deleted Location(s)", HttpContext);
                         return Page();
                     }
                 }
@@ -577,6 +587,7 @@ namespace CmsHeadless.Pages.Content
                 DateTime tempDate = (DateTime)content.LastEdit;
                 lastEditString = tempDate.ToString("yyyy-MM-dd");
             }
+            _logController.SaveLog(User.Identity.Name, LogListController.ContentsDeletedCode, "L'utente " + User.Identity.Name + " ha eliminato un contenuto.", "Content Deleted", HttpContext);
             return RedirectToPage("./EditContent", new { id = contentId });
         }
     }

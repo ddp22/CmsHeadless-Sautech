@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CmsHeadless.Data;
 
-public class CmsHeadlessContext :IdentityDbContext<IdentityUser, IdentityRole, string>
+public class CmsHeadlessContext :IdentityDbContext<IdentityUser>
 {
 
 
@@ -22,6 +22,4 @@ public class CmsHeadlessContext :IdentityDbContext<IdentityUser, IdentityRole, s
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
     }
-
-    
 }

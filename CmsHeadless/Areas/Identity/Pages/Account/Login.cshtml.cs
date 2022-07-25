@@ -13,7 +13,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
+using CmsHeadless.Controllers;
+using Microsoft.AspNet.Identity;
+using CmsHeadless.Models;
+using System.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace CmsHeadless.Areas.Identity.Pages.Account
 {
@@ -21,13 +25,16 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly LogListController _logController;
+        private readonly CmsHeadlessDbContext _contextDb;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, LogListController logController, CmsHeadlessDbContext contextDb)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _logController = logController;
+            _contextDb = contextDb;
         }
-
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -111,10 +118,13 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                string psw = _contextDb.User.Where(c => c.Email == Input.Email).Select(c => c.PasswordHash).ToString();
+
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    _logController.SaveLog(Input.Email, LogListController.LoginSuccessfulCode, "L'utente " + Input.Email + " si sta loggando ", "Login successful", HttpContext);
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -124,15 +134,25 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
+                    _logController.SaveLog(User.Identity.Name, LogListController.UnclassifiedWarningCode, "L'utente " + Input.Email + " si sta loggando ", "Locked out", HttpContext);
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return Page();
+                    if (Input.Password.CompareTo(psw) != 0)
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid email or password.");
+                        _logController.SaveLog(User.Identity.Name, LogListController.LoginWrongEmailPasswordWarningCode, "L'utente " + Input.Email + " si sta loggando ", "Invalid email or password", HttpContext);
+                        return Page();
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                        _logController.SaveLog(User.Identity.Name, LogListController.UnclassifiedWarningCode, "L'utente " + Input.Email + " si sta loggando ", "Invalid login attempt", HttpContext);
+                        return Page();
+                    }
                 }
             }
-
             // If we got this far, something failed, redisplay form
             return Page();
         }

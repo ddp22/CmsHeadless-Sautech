@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CmsHeadless.Migrations.CmsHeadlessDb
 {
     [DbContext(typeof(CmsHeadlessDbContext))]
-    [Migration("20220713073959_Add_IsNone_In_Location")]
-    partial class Add_IsNone_In_Location
+    [Migration("20220716075106_LogModel")]
+    partial class LogModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -249,9 +249,6 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsNone")
-                        .HasColumnType("bit");
-
                     b.Property<int?>("NationId")
                         .HasColumnType("int");
 
@@ -263,7 +260,111 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasKey("LocationId");
 
+                    b.HasIndex("NationId");
+
+                    b.HasIndex("ProvinceId");
+
+                    b.HasIndex("RegionId");
+
                     b.ToTable("Location");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.Log", b =>
+                {
+                    b.Property<int>("LogID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LogID"), 1L, 1);
+
+                    b.Property<string>("LogBrowser")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("LogBrowserVersion")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<DateTime>("LogDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LogDetails")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("LogEventLog_eventID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LogIPAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LogNotes")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("LogOS")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("LogOSVersion")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LogID");
+
+                    b.HasIndex("LogEventLog_eventID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Log");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.LogEvent", b =>
+                {
+                    b.Property<int>("Log_eventID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Log_eventID"), 1L, 1);
+
+                    b.Property<int>("LogTypeLog_typeID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Log_eventCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Log_eventDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Log_eventID");
+
+                    b.HasIndex("LogTypeLog_typeID");
+
+                    b.ToTable("LogEvent");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.LogType", b =>
+                {
+                    b.Property<int>("Log_typeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Log_typeID"), 1L, 1);
+
+                    b.Property<int>("Log_typeCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Log_typeDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Log_typeID");
+
+                    b.ToTable("LogType");
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Nation", b =>
@@ -591,6 +692,57 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.Navigation("Content");
 
                     b.Navigation("Tag");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.Location", b =>
+                {
+                    b.HasOne("CmsHeadless.Models.Nation", "Nation")
+                        .WithMany()
+                        .HasForeignKey("NationId");
+
+                    b.HasOne("CmsHeadless.Models.Province", "Province")
+                        .WithMany()
+                        .HasForeignKey("ProvinceId");
+
+                    b.HasOne("CmsHeadless.Models.Region", "Region")
+                        .WithMany()
+                        .HasForeignKey("RegionId");
+
+                    b.Navigation("Nation");
+
+                    b.Navigation("Province");
+
+                    b.Navigation("Region");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.Log", b =>
+                {
+                    b.HasOne("CmsHeadless.Models.LogEvent", "LogEvent")
+                        .WithMany()
+                        .HasForeignKey("LogEventLog_eventID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CmsHeadless.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LogEvent");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.LogEvent", b =>
+                {
+                    b.HasOne("CmsHeadless.Models.LogType", "LogType")
+                        .WithMany()
+                        .HasForeignKey("LogTypeLog_typeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LogType");
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Province", b =>
