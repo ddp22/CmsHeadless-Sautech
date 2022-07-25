@@ -9,22 +9,34 @@ using CmsHeadlessApi.ModelsController;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
+using ReverseGeocoding;
+using System;
+using System.IO;
+using ReverseGeocoding.Interface;
+using NUnit.Framework;
+using System.Net;
+using CmsHeadlessApi.Controllers.SupportClassContent;
+using System.Text.Json;
 
 namespace CmsHeadlessApi.Controllers
 {
+    
     public class ContentController : Controller
     {
+        public static string key = "Av8pgMuhmukQRjXA8xa--AppJlojmG57snu33XELOXLcIf4gCm-iOFCe41QC7Tlb";
         private readonly ILogger<ContentController> _logger;
         private readonly CmsHeadlessDbContext _contextDb;
         //public string pathMedia = AppDomain.CurrentDomain.BaseDirectory;
         public string pathMedia;
         private readonly IServer _server;
+        static HttpClient client = new HttpClient();
+        //private static string itDbPath => Path.Combine(TestContext.CurrentContext.TestDirectory, itDb);
         public ContentController(ILogger<ContentController> logger, CmsHeadlessDbContext contextDb, IServer server)
         {
             _logger = logger;
             _contextDb = contextDb;
             _server= server;
-            pathMedia = server.Features.Get<IServerAddressesFeature>().Addresses.ToList().FirstOrDefault();
+            //var geocoder = new ReverseGeocoder("wwwroot\\lib\\IT.txt");
         }
 
 
@@ -39,16 +51,64 @@ namespace CmsHeadlessApi.Controllers
             return Json(temp);
         }
 
+        
+        static async Task<SupportClassContent.Root> GetLocationAsync(double latitude, double longitude)
+        {
+            Root root = null;
+            string path = "http://dev.virtualearth.net/REST/v1/Locations/"+latitude.ToString().Replace(",", ".")+","+longitude.ToString().Replace(",", ".") + "?key="+key;
+            HttpResponseMessage response = await client.GetAsync(path);
+            if (response.IsSuccessStatusCode)
+            {
+                root = await response.Content.ReadFromJsonAsync<Root>();
+            }
+            return root;
+        }
+
         [HttpGet]
-        public JsonResult getContentByIdDetails(int? id)
+        public JsonResult GetContentWithLocation(double latitude, double longitude)
+        {
+            
+            string jsonString = JsonSerializer.Serialize(GetLocationAsync(latitude, longitude).Result);
+            Root myDeserializedClass = JsonSerializer.Deserialize<Root>(jsonString);
+            List<ResourceSet> resourceSets = myDeserializedClass.resourceSets;
+            List<Resource> resources= resourceSets.First().resources;
+            List<LocationString> locationStrings=new List<LocationString>();
+            foreach (Resource resource in resources)
+            {
+                LocationString temp = new LocationString();
+                Address address = resource.address;
+                temp.Nation = address.countryRegion;
+                temp.Region = address.adminDistrict;
+                temp.Province = address.adminDistrict2;
+                temp.City = address.locality;
+                locationStrings.Add(temp);
+            }
+            return Json(locationStrings);
+        }
+
+        [HttpGet]
+        public JsonResult getContent(int? id, double? latitude, double? longitude)
         {
             List<ContentControllerModel> model = new List<ContentControllerModel>();
             List<Content> c = new List<Content>();
+
+            List<User> user = _contextDb.User.ToList();
+            List<ContentAttributes> contentAttributes = (from Attributes in _contextDb.Attributes join ContentAttributes in _contextDb.ContentAttributes on Attributes.AttributesId equals ContentAttributes.AttributesId select ContentAttributes).ToList();
+            List<ContentTag> contentTag = (from Tag in _contextDb.Tag join ContentTag in _contextDb.ContentTag on Tag.TagId equals ContentTag.TagId select ContentTag).ToList();
+            List<ContentCategory> contentCategory = (from Category in _contextDb.Category join ContentCategory in _contextDb.ContentCategory on Category.CategoryId equals ContentCategory.CategoryId select ContentCategory).ToList();
+            List<ContentLocation> contentLocation = (from ContentLocation in _contextDb.ContentLocation
+                                                     join Location in _contextDb.Location on ContentLocation.LocationId equals Location.LocationId
+                                                     select ContentLocation).Include(c => c.Location).ToList();
+            List<Location> locations = (from Location in _contextDb.Location select Location).ToList();
+            List<Nation> nations = (from Nation in _contextDb.Nation select Nation).ToList();
+            List<Region> regions = (from Region in _contextDb.Region select Region).ToList();
+            List<Province> provinces = (from Province in _contextDb.Province select Province).ToList();
+
             if (id == null)
             {
-                c = _contextDb.Content.Include(ca=>ca.ContentAttributes).ThenInclude(a=>a.Attributes)
-                    .Include(ct=>ct.ContentCategory).ThenInclude(c=>c.Category)
-                    .Include(ctag=>ctag.ContentTag).ThenInclude(t=>t.Tag)
+                c = _contextDb.Content.Include(ca => ca.ContentAttributes).ThenInclude(a => a.Attributes)
+                    .Include(ct => ct.ContentCategory).ThenInclude(c => c.Category)
+                    .Include(ctag => ctag.ContentTag).ThenInclude(t => t.Tag)
                     .Include(cl => cl.ContentLocation).ThenInclude(c => c.Location).ThenInclude(c => c.Nation)
                     .Include(cl => cl.ContentLocation).ThenInclude(c => c.Location).ThenInclude(c => c.Province)
                     .Include(cl => cl.ContentLocation).ThenInclude(c => c.Location).ThenInclude(c => c.Region)
@@ -56,25 +116,51 @@ namespace CmsHeadlessApi.Controllers
             }
             else
             {
-                c = _contextDb.Content.Where(c=>c.ContentId==id).Include(ca => ca.ContentAttributes).ThenInclude(a => a.Attributes)
+                c = _contextDb.Content.Where(c => c.ContentId == id).Include(ca => ca.ContentAttributes).ThenInclude(a => a.Attributes)
                     .Include(ct => ct.ContentCategory).ThenInclude(c => c.Category)
                     .Include(ctag => ctag.ContentTag).ThenInclude(t => t.Tag)
-                    .Include(cl => cl.ContentLocation).ThenInclude(c => c.Location).ThenInclude(c=>c.Nation)
+                    .Include(cl => cl.ContentLocation).ThenInclude(c => c.Location).ThenInclude(c => c.Nation)
                     .Include(cl => cl.ContentLocation).ThenInclude(c => c.Location).ThenInclude(c => c.Province)
                     .Include(cl => cl.ContentLocation).ThenInclude(c => c.Location).ThenInclude(c => c.Region)
                     .ToList();
             }
-            List<User> user = _contextDb.User.ToList();
-            List<ContentAttributes> contentAttributes = (from Attributes in _contextDb.Attributes join ContentAttributes in _contextDb.ContentAttributes on Attributes.AttributesId equals ContentAttributes.AttributesId select ContentAttributes).ToList();
-            List<ContentTag> contentTag = (from Tag in _contextDb.Tag join ContentTag in _contextDb.ContentTag on Tag.TagId equals ContentTag.TagId select ContentTag).ToList();
-            List<ContentCategory> contentCategory = (from Category in _contextDb.Category join ContentCategory in _contextDb.ContentCategory on Category.CategoryId equals ContentCategory.CategoryId select ContentCategory).ToList();
-            List<ContentLocation> contentLocation = (from ContentLocation in _contextDb.ContentLocation 
-                                                     join Location in _contextDb.Location on ContentLocation.LocationId equals Location.LocationId
-                                                     select ContentLocation).Include(c=>c.Location).ToList();
+
+            if (latitude!=null && longitude!=null)
+            {
+                List<int> intLocations = new List<int>();
+                string jsonString = JsonSerializer.Serialize(GetLocationAsync((double)latitude, (double)longitude).Result);
+                Root myDeserializedClass = JsonSerializer.Deserialize<Root>(jsonString);
+                if (myDeserializedClass == null || myDeserializedClass.resourceSets==null)
+                {
+                    return Json(null);
+                }
+                List<ResourceSet> resourceSets = myDeserializedClass.resourceSets;
+                List<Resource> resources = resourceSets.First().resources;
+                LocationString locationStrings = new LocationString();
+                if (resources == null)
+                {
+                    return Json(null);
+                }
+                Address address = resources.First().address;
+                locationStrings.Nation = address.countryRegion;
+                locationStrings.Region = address.adminDistrict;
+                locationStrings.Province = address.adminDistrict2;
+                locationStrings.City = address.locality;
+                int intNation = nations.Where(c => c.NationName == locationStrings.Nation).Select(c=>c.NationId).ToList().First();
+                int intRegion = regions.Where(c => c.RegionName == locationStrings.Region).Select(c => c.RegionId).ToList().First();
+                int intProvince = provinces.Where(c => c.ProvinceName == locationStrings.Province).Select(c => c.ProvinceId).ToList().First();
+                intLocations = locations.Where(c => c.NationId == intNation
+                && (c.RegionId== intRegion || c.Region ==null)
+                && (c.ProvinceId == intProvince || c.Province == null)
+                && (c.City == locationStrings.City || c.City == null))
+                .Select(c => c.LocationId).ToList();
+                List<int> listContent=contentLocation.Where(c => intLocations.Contains(c.LocationId)).Select(c=>c.ContentId).ToList();
+                c = c.Where(c => listContent.Contains(c.ContentId)).ToList();
+            }
+        
             
-            /*List<Nation> NationAvailable=(from Nation in _contextDb.Nation select Nation).ToList();
-            List<Region> RegionAvailable=(from Region in _contextDb.Region select Region).ToList();
-            List<Province> ProvinceAvailable=(from Province in _contextDb.Province select Province).ToList();*/
+            
+            
             foreach (var item in c)
             {
                 var email = user.Where(u=>u.Id==item.UserId).First().Email;
