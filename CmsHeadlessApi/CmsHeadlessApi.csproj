@@ -7,11 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="3.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CmsHeadless\CmsHeadless.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Overviews\" />
   </ItemGroup>
 
 </Project>
