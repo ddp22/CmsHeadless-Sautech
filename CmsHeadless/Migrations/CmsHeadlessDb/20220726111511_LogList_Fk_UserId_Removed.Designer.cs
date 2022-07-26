@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CmsHeadless.Migrations.CmsHeadlessDb
 {
     [DbContext(typeof(CmsHeadlessDbContext))]
-    [Migration("20220709171809_Delete_Foreign_Keys_In_Location")]
-    partial class Delete_Foreign_Keys_In_Location
+    [Migration("20220726111511_LogList_Fk_UserId_Removed")]
+    partial class LogList_Fk_UserId_Removed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,12 +42,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<int?>("LocationId")
-                        .HasColumnType("int");
-
                     b.HasKey("AttributesId");
-
-                    b.HasIndex("LocationId");
 
                     b.ToTable("Attributes");
                 });
@@ -274,6 +269,99 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.ToTable("Location");
                 });
 
+            modelBuilder.Entity("CmsHeadless.Models.Log", b =>
+                {
+                    b.Property<int>("LogID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LogID"), 1L, 1);
+
+                    b.Property<string>("LogBrowser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LogBrowserVersion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LogDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LogDetails")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LogEventLog_eventID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LogIPAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LogNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LogOS")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LogOSVersion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LogID");
+
+                    b.HasIndex("LogEventLog_eventID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Log");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.LogEvent", b =>
+                {
+                    b.Property<int>("Log_eventID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Log_eventID"), 1L, 1);
+
+                    b.Property<int>("LogTypeLog_typeID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Log_eventCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Log_eventDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Log_eventID");
+
+                    b.HasIndex("LogTypeLog_typeID");
+
+                    b.ToTable("LogEvent");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.LogType", b =>
+                {
+                    b.Property<int>("Log_typeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Log_typeID"), 1L, 1);
+
+                    b.Property<string>("Log_typeCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Log_typeDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Log_typeID");
+
+                    b.ToTable("LogType");
+                });
+
             modelBuilder.Entity("CmsHeadless.Models.Nation", b =>
                 {
                     b.Property<int>("NationId")
@@ -384,31 +472,7 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.ToTable("Typology");
                 });
 
-            modelBuilder.Entity("CmsHeadless.Models.UserTypology", b =>
-                {
-                    b.Property<int>("UserTypologyId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserTypologyId"), 1L, 1);
-
-                    b.Property<int>("TypologyId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserTypologyId");
-
-                    b.HasIndex("TypologyId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserTypology");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+            modelBuilder.Entity("CmsHeadless.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -419,9 +483,8 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -429,11 +492,28 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("LatitudeUser")
+                        .HasColumnType("float");
+
+                    b.Property<int?>("LocationId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<double>("LongitudeUser")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Nickname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("nvarchar(max)");
@@ -461,47 +541,33 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("User", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
-                });
-
-            modelBuilder.Entity("CmsHeadless.Models.User", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("LatitudeUser")
-                        .HasColumnType("float");
-
-                    b.Property<int?>("LocationId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("LongitudeUser")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Nickname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasIndex("LocationId");
 
-                    b.HasDiscriminator().HasValue("User");
+                    b.ToTable("User");
                 });
 
-            modelBuilder.Entity("CmsHeadless.Models.Attributes", b =>
+            modelBuilder.Entity("CmsHeadless.Models.UserTypology", b =>
                 {
-                    b.HasOne("CmsHeadless.Models.Location", "Location")
-                        .WithMany("Attributes")
-                        .HasForeignKey("LocationId");
+                    b.Property<int>("UserTypologyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Navigation("Location");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserTypologyId"), 1L, 1);
+
+                    b.Property<int>("TypologyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserTypologyId");
+
+                    b.HasIndex("TypologyId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserTypology");
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.AttributesTypology", b =>
@@ -631,6 +697,34 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.Navigation("Region");
                 });
 
+            modelBuilder.Entity("CmsHeadless.Models.Log", b =>
+                {
+                    b.HasOne("CmsHeadless.Models.LogEvent", "LogEvent")
+                        .WithMany()
+                        .HasForeignKey("LogEventLog_eventID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CmsHeadless.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("LogEvent");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CmsHeadless.Models.LogEvent", b =>
+                {
+                    b.HasOne("CmsHeadless.Models.LogType", "LogType")
+                        .WithMany()
+                        .HasForeignKey("LogTypeLog_typeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LogType");
+                });
+
             modelBuilder.Entity("CmsHeadless.Models.Province", b =>
                 {
                     b.HasOne("CmsHeadless.Models.Region", "Region")
@@ -653,6 +747,15 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.Navigation("Nation");
                 });
 
+            modelBuilder.Entity("CmsHeadless.Models.User", b =>
+                {
+                    b.HasOne("CmsHeadless.Models.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId");
+
+                    b.Navigation("Location");
+                });
+
             modelBuilder.Entity("CmsHeadless.Models.UserTypology", b =>
                 {
                     b.HasOne("CmsHeadless.Models.Typology", "Typology")
@@ -670,15 +773,6 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
                     b.Navigation("Typology");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CmsHeadless.Models.User", b =>
-                {
-                    b.HasOne("CmsHeadless.Models.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId");
-
-                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("CmsHeadless.Models.Attributes", b =>
@@ -706,8 +800,6 @@ namespace CmsHeadless.Migrations.CmsHeadlessDb
 
             modelBuilder.Entity("CmsHeadless.Models.Location", b =>
                 {
-                    b.Navigation("Attributes");
-
                     b.Navigation("ContentLocation");
                 });
 

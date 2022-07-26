@@ -9,9 +9,7 @@ namespace CmsHeadless.Models{
         public int LogID { get; set; }
         public DateTime LogDateTime { get; set; }
         public string? LogDetails { get; set; }
-        [ForeignKey("Id")]
-        [Required]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         [ForeignKey("Log_eventID")]
         [Required]
         public int LogEventLog_eventID { get; set; }
@@ -22,7 +20,7 @@ namespace CmsHeadless.Models{
         public string? LogOS { get; set; }
         public string? LogOSVersion { get; set; }
         public LogEvent LogEvent { get; set; } = null!;
-        public User User { get; set; }
+        public User? User { get; set; }
         public Log()
         {
 

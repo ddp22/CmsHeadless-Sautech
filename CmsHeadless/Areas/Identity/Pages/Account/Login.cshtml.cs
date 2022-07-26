@@ -134,23 +134,14 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
-                    _logController.SaveLog(User.Identity.Name, LogListController.UnclassifiedWarningCode, "L'utente " + Input.Email + " si sta loggando ", "Locked out", HttpContext);
+                    _logController.SaveLog(Input.Email, LogListController.UnclassifiedWarningCode, "L'utente " + Input.Email + " si sta loggando ", "Locked out", HttpContext);
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    if (Input.Password.CompareTo(psw) != 0)
-                    {
-                        ModelState.AddModelError(string.Empty, "Invalid email or password.");
-                        _logController.SaveLog(User.Identity.Name, LogListController.LoginWrongEmailPasswordWarningCode, "L'utente " + Input.Email + " si sta loggando ", "Invalid email or password", HttpContext);
-                        return Page();
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                        _logController.SaveLog(User.Identity.Name, LogListController.UnclassifiedWarningCode, "L'utente " + Input.Email + " si sta loggando ", "Invalid login attempt", HttpContext);
-                        return Page();
-                    }
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    _logController.SaveLog(Input.Email, LogListController.LoginWrongEmailPasswordWarningCode, "L'utente " + Input.Email + " si sta loggando ", "Invalid email or password", HttpContext);
+                    return Page();
                 }
             }
             // If we got this far, something failed, redisplay form
