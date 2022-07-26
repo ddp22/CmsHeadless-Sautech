@@ -139,7 +139,7 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt. - Email o password errata");
                     _logController.SaveLog(Input.Email, LogListController.LoginWrongEmailPasswordWarningCode, "L'utente " + Input.Email + " si sta loggando ", "Invalid email or password", HttpContext);
                     return Page();
                 }
