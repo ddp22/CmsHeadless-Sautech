@@ -17,12 +17,12 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
 {
     public class LogoutModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<CmsUser> _signInManager;
         private readonly ILogger<LogoutModel> _logger;
         private readonly LogListController _logController;
         private readonly CmsHeadlessDbContext _contextDb;
         private readonly CmsUser _user;
-        public LogoutModel(SignInManager<IdentityUser> signInManager, ILogger<LogoutModel> logger, LogListController logController, CmsHeadlessDbContext contextDb)
+        public LogoutModel(SignInManager<CmsUser> signInManager, ILogger<LogoutModel> logger, LogListController logController, CmsHeadlessDbContext contextDb)
         {
             _signInManager = signInManager;
             _logger = logger;
