@@ -130,7 +130,7 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
+                user.UserName = Input.Username;
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
                 _userManager.Options.SignIn.RequireConfirmedAccount = true;
