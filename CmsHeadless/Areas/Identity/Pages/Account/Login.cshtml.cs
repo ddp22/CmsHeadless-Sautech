@@ -144,8 +144,16 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt. - Email o password errata");
-                    _logController.SaveLog(Input.Email, LogListController.LoginWrongEmailPasswordWarningCode, "L'utente " + Input.Email + " si sta loggando ", "Invalid email or password", HttpContext);
+                    if (username == "")
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt - Email errata");
+                        _logController.SaveLog(Input.Email, LogListController.LoginWrongUsernameWarningCode, "L'utente " + Input.Email + " si sta loggando ", "Invalid email address", HttpContext);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt - Password errata");
+                        _logController.SaveLog(Input.Email, LogListController.LoginWrongPasswordWarningCode, "L'utente " + Input.Email + " si sta loggando ", "Invalid password", HttpContext);
+                    }
                     return Page();
                 }
             }
