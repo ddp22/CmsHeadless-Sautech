@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using CmsHeadless.Controllers;
 using CmsHeadless.Models;
-using CmsHeadless.Data;
 using System.ComponentModel.DataAnnotations;
 
 namespace CmsHeadless.Areas.Identity.Pages.Account
@@ -22,7 +21,7 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
         private readonly ILogger<LogoutModel> _logger;
         private readonly LogListController _logController;
         private readonly CmsHeadlessDbContext _contextDb;
-        private readonly User _user;
+        private readonly CmsUser _user;
         public LogoutModel(SignInManager<IdentityUser> signInManager, ILogger<LogoutModel> logger, LogListController logController, CmsHeadlessDbContext contextDb)
         {
             _signInManager = signInManager;

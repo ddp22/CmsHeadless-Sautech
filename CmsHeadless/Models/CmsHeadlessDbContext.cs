@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,19 +8,27 @@ using System.Threading.Tasks;
 
 namespace CmsHeadless.Models
 {
-    public class CmsHeadlessDbContext : DbContext
+    public class CmsHeadlessDbContext : IdentityDbContext<CmsUser>
     {
         public CmsHeadlessDbContext()
         {
         }
-        public CmsHeadlessDbContext(DbContextOptions options)
+        public CmsHeadlessDbContext(DbContextOptions<CmsHeadlessDbContext> options)
             : base(options)
         {
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=FABRIZIO\\\\SQLEXPRESS;Database=CmsHeadless2;Trusted_Connection=True;MultipleActiveResultSets=true");
+            }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
         }
+        //partial void OnModelCreating(ModelBuilder modelBuilder);
         public DbSet<Attributes> Attributes { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<Content> Content { get; set; }
@@ -27,7 +36,7 @@ namespace CmsHeadless.Models
         public DbSet<ContentAttributes> ContentAttributes { get; set; }
         public DbSet<ContentTag> ContentTag { get; set; }
         public DbSet<ContentCategory> ContentCategory { get; set; }
-        public DbSet<User> User { get; set; }
+        public virtual DbSet<CmsUser> CmsUser { get; set; }
         public DbSet<Location> Location { get; set; }
         public DbSet<Province> Province { get; set; }
         public DbSet<Region> Region { get; set; }

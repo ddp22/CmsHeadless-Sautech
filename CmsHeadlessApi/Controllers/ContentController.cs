@@ -92,7 +92,7 @@ namespace CmsHeadlessApi.Controllers
             List<ContentControllerModel> model = new List<ContentControllerModel>();
             List<Content> c = new List<Content>();
 
-            List<User> user = _contextDb.User.ToList();
+            List<CmsUser> user = _contextDb.CmsUser.ToList();
             List<ContentAttributes> contentAttributes = (from Attributes in _contextDb.Attributes join ContentAttributes in _contextDb.ContentAttributes on Attributes.AttributesId equals ContentAttributes.AttributesId select ContentAttributes).ToList();
             List<ContentTag> contentTag = (from Tag in _contextDb.Tag join ContentTag in _contextDb.ContentTag on Tag.TagId equals ContentTag.TagId select ContentTag).ToList();
             List<ContentCategory> contentCategory = (from Category in _contextDb.Category join ContentCategory in _contextDb.ContentCategory on Category.CategoryId equals ContentCategory.CategoryId select ContentCategory).ToList();

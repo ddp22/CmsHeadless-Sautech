@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using CmsHeadless.Data;
 using CmsHeadless.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using CmsHeadless.Controllers;
@@ -9,12 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("CmsHeadlessContextConnection") ?? throw new InvalidOperationException("Connection string 'CmsHeadlessContextConnection' not found.");
 
-builder.Services.AddDbContext<CmsHeadlessContext>(options =>options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<CmsHeadlessDbContext>(options =>options.UseSqlServer(connectionString));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<CmsHeadlessContext>()
+builder.Services.AddIdentity<CmsUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoleManager<RoleManager<IdentityRole>>()
     .AddDefaultTokenProviders()
-    .AddDefaultUI(); 
+    .AddDefaultUI()
+    .AddEntityFrameworkStores<CmsHeadlessDbContext>();
 
 
 builder.Services.AddDbContext<CmsHeadlessDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("CmsHeadlessContextConnection")));

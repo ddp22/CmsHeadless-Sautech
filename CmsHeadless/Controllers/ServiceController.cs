@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CmsHeadless.Data;
 using CmsHeadless.Models;
 using CmsHeadless.ViewModels;
 using System;
@@ -55,7 +54,7 @@ namespace CmsHeadless.Controllers
             {
                 _response.result = true;
                 _response.details = "Login effettuato correttamente";
-                _response.User = (from User in _contextDb.User select User).Where(c => c.Email == username).ToList().First();
+                _response.User = (from User in _contextDb.CmsUser select User).Where(c => c.Email == username).ToList().First();
 
             }
 

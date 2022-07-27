@@ -45,7 +45,7 @@ namespace CmsHeadless.Controllers
                 browser = httpContext.Request.Browser().Type.ToString();
             }
 
-            var temp = _contextDb.User.Where(c => c.Email == username).Select(c => c.Id).ToList();
+            var temp = _contextDb.CmsUser.Where(c => c.Email == username).Select(c => c.Id).ToList();
             string userId;
 
             if (temp.Count > 0)

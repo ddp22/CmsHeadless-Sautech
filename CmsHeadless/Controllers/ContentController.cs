@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CmsHeadless.Data;
 using CmsHeadless.Models;
 using CmsHeadless.ViewModels;
 using System;

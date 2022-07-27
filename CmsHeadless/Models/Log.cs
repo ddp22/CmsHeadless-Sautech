@@ -20,7 +20,7 @@ namespace CmsHeadless.Models{
         public string? LogOS { get; set; }
         public string? LogOSVersion { get; set; }
         public LogEvent LogEvent { get; set; } = null!;
-        public User? User { get; set; }
+        public CmsUser? User { get; set; }
         public Log()
         {
 

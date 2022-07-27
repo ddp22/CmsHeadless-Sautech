@@ -23,12 +23,12 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<CmsUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly LogListController _logController;
         private readonly CmsHeadlessDbContext _contextDb;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, LogListController logController, CmsHeadlessDbContext contextDb)
+        public LoginModel(SignInManager<CmsUser> signInManager, ILogger<LoginModel> logger, LogListController logController, CmsHeadlessDbContext contextDb)
         {
             _signInManager = signInManager;
             _logger = logger;
@@ -100,10 +100,10 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
 
             returnUrl ??= Url.Content("~/");
 
-            // Clear the existing external cookie to ensure a clean login process
+            //Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            //ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             ReturnUrl = returnUrl;
         }
@@ -118,7 +118,7 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                string psw = _contextDb.User.Where(c => c.Email == Input.Email).Select(c => c.PasswordHash).ToString();
+                string psw = _contextDb.CmsUser.Where(c => c.Email == Input.Email).Select(c => c.PasswordHash).ToString();
 
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)

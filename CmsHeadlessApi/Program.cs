@@ -4,7 +4,6 @@ using CmsHeadlessApi.Controllers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using CmsHeadless.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,10 +17,10 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
-builder.Services.AddDbContext<CmsHeadlessContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<CmsHeadlessDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<CmsHeadlessContext>()
+    .AddEntityFrameworkStores<CmsHeadlessDbContext>()
     .AddDefaultTokenProviders()
     .AddDefaultUI();
 

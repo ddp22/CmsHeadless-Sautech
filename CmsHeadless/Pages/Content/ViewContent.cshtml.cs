@@ -23,7 +23,7 @@ namespace CmsHeadless.Pages.Content
         public Models.Content ContentNew { get; set; }
 
         public List<Models.Content> ContentAvailable { get; set; }
-        public List<Models.User> Users { get; set; }
+        public List<Models.CmsUser> Users { get; set; }
 
         public ViewContentModel(CmsHeadlessDbContext context, IConfiguration configuration, LogListController logController)
         {
@@ -31,8 +31,8 @@ namespace CmsHeadless.Pages.Content
             Configuration = configuration;
             ContentAvailable = new List<Models.Content>();
             _logController = logController;
-            IQueryable<Models.User> selectUsersQuery = from User in _context.User select User;
-            Users = selectUsersQuery.ToList<Models.User>();
+            IQueryable<Models.CmsUser> selectUsersQuery = from User in _context.CmsUser select User;
+            Users = selectUsersQuery.ToList<Models.CmsUser>();
         }
 
 

@@ -41,7 +41,7 @@ namespace CmsHeadless.Pages.Content
         public List<Models.Region> RegionAvailable { get; set; }
         public List<Models.Province> ProvinceAvailable { get; set; }
         public List<Models.Location> LocationAvailable { get; set; }
-        public List<Models.User> Users { get; set; }
+        public List<Models.CmsUser> Users { get; set; }
         public IndexModel(CmsHeadlessDbContext context, IConfiguration configuration, LogListController logController)
         {
             _context = context;
@@ -70,8 +70,8 @@ namespace CmsHeadless.Pages.Content
             IQueryable<Models.Location> selectLocationQuery = from Location in _context.Location select Location;
             LocationAvailable = selectLocationQuery.ToList<Models.Location>();
 
-            IQueryable<Models.User> selectUsersQuery = from User in _context.User select User;
-            Users = selectUsersQuery.ToList<Models.User>();
+            IQueryable<Models.CmsUser> selectUsersQuery = from User in _context.CmsUser select User;
+            Users = selectUsersQuery.ToList<Models.CmsUser>();
         }
 
         public ContentList<Models.Content> ContentList { get; set; }

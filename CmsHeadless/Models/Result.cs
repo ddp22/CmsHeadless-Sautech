@@ -9,7 +9,7 @@ namespace CmsHeadless.Models
         }
         public bool result { get; set; }
         public string details { get; set; } = null!;
-        public User User { get; set; }
+        public CmsUser User { get; set; }
 
 
     }
