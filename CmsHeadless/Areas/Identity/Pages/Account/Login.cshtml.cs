@@ -119,8 +119,13 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 //string psw = _contextDb.CmsUser.Where(c => c.Email == Input.Email).Select(c => c.PasswordHash).ToString();
-
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var tempUsername = _contextDb.CmsUser.Where(c => c.Email == Input.Email).Select(c => c.UserName).ToList();
+                string username = "";
+                if(tempUsername.Count > 0)
+                {
+                    username = tempUsername.First();
+                }
+                var result = await _signInManager.PasswordSignInAsync(username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
