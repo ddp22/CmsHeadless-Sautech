@@ -17,10 +17,10 @@ namespace CmsHeadless.Controllers
         private readonly CmsHeadlessDbContext _contextDb;
         public List<Region> RegionAvailable;
         public List<Province> ProvinceAvailable;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<CmsUser> _signInManager;
         private readonly ResponseApi _response;
 
-        public ServiceController(ILogger<ContentController> logger, CmsHeadlessDbContext contextDb, SignInManager<IdentityUser> signInManager, ResponseApi response)
+        public ServiceController(ILogger<ContentController> logger, CmsHeadlessDbContext contextDb, SignInManager<CmsUser> signInManager, ResponseApi response)
         {
             _logger = logger;
             _contextDb = contextDb;
@@ -33,9 +33,9 @@ namespace CmsHeadless.Controllers
             ProvinceAvailable = selectProvinceQuery.ToList<Models.Province>();
         }
 
-        public async Task<JsonResult> GetUserAsync(string? username, string? password)
+        public async Task<JsonResult> GetUserAsync(string? mail, string? password)
         {
-            if (username == null )
+            if (mail == null )
             {
                 _response.result = false;
                 _response.details = "Email field is empty";
@@ -47,14 +47,19 @@ namespace CmsHeadless.Controllers
                 _response.details = "Password field is empty";
                 return Json(_response);
             }
-
+            var tempUsername = _contextDb.CmsUser.Where(c => c.Email == mail).Select(c => c.UserName).ToList();
+            string username = "";
+            if (tempUsername.Count > 0)
+            {
+                username = tempUsername.First();
+            }
             var login = await _signInManager.PasswordSignInAsync(username, password, false, lockoutOnFailure: false);
 
             if (login.Succeeded)
             {
                 _response.result = true;
                 _response.details = "Login effettuato correttamente";
-                _response.User = (from User in _contextDb.CmsUser select User).Where(c => c.Email == username).ToList().First();
+                _response.User = (from User in _contextDb.CmsUser select User).Where(c => c.Email == mail).ToList().First();
 
             }
 

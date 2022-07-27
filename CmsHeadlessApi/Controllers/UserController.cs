@@ -10,9 +10,9 @@ namespace CmsHeadlessApi.Controllers
     {
         private readonly CmsHeadlessDbContext _contextDb;
         private readonly ILogger<ContentController> _logger;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<CmsUser> _signInManager;
         private readonly ServiceController _serviceController;
-        public UserController(CmsHeadlessDbContext contextDb, ILogger<ContentController> logger, ServiceController serviceController, SignInManager<IdentityUser> signInManager)
+        public UserController(CmsHeadlessDbContext contextDb, ILogger<ContentController> logger, ServiceController serviceController, SignInManager<CmsUser> signInManager)
         {
             _contextDb = contextDb;
             _logger = logger;
