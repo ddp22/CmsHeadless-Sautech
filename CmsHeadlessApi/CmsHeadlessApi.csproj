@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Overviews\**" />
+    <Content Remove="Overviews\**" />
+    <EmbeddedResource Remove="Overviews\**" />
+    <None Remove="Overviews\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="3.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.6" />
     <PackageReference Include="NUnit" Version="3.13.3" />
@@ -14,10 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CmsHeadless\CmsHeadless.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Overviews\" />
   </ItemGroup>
 
 </Project>
