@@ -137,11 +137,12 @@ namespace CmsHeadlessApi.Controllers
                 List<ResourceSet> resourceSets = myDeserializedClass.resourceSets;
                 List<Resource> resources = resourceSets.First().resources;
                 LocationString locationStrings = new LocationString();
-                if (resources == null)
+                if (resources == null || resources.Count()<=0)
                 {
                     return Json(null);
                 }
-                Address address = resources.First().address;
+                var t = resources.First();
+                Address address = t.address;
                 locationStrings.Nation = address.countryRegion;
                 locationStrings.Region = address.adminDistrict;
                 locationStrings.Province = address.adminDistrict2;
