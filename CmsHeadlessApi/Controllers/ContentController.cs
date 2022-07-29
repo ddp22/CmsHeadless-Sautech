@@ -27,7 +27,7 @@ namespace CmsHeadlessApi.Controllers
         private readonly ILogger<ContentController> _logger;
         private readonly CmsHeadlessDbContext _contextDb;
         //public string pathMedia = AppDomain.CurrentDomain.BaseDirectory;
-        public string pathMedia;
+        public string pathMedia= "https://localhost:7233";
         private readonly IServer _server;
         static HttpClient client = new HttpClient();
         //private static string itDbPath => Path.Combine(TestContext.CurrentContext.TestDirectory, itDb);
