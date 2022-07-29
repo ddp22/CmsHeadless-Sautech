@@ -5,11 +5,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using CmsHeadless.Controllers;
 using CmsHeadless.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -26,6 +28,7 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<CmsUser> _signInManager;
         private readonly UserManager<CmsUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IUserStore<CmsUser> _userStore;
         private readonly IUserEmailStore<CmsUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
@@ -36,7 +39,7 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
             IUserStore<CmsUser> userStore,
             SignInManager<CmsUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +47,7 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -115,7 +119,6 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
-
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
@@ -129,6 +132,7 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+                //IdentityRole role = new IdentityRole();
 
                 user.UserName = Input.Username;
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -141,6 +145,28 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    //for(int i = 0; i < 3; i++)
+                    //{
+                    //    role = CreateRole();
+                    //    if (i == 0)
+                    //    {
+                    //        role.Name = "Admin";
+                    //        role.NormalizedName = role.Name.ToUpper();
+                    //    }
+                    //    else if(i == 1)
+                    //    {
+                    //        role.Name = "Creator";
+                    //        role.NormalizedName = role.Name.ToUpper();
+                    //    }
+                    //    else
+                    //    {
+                    //        role.Name = "User";
+                    //        role.NormalizedName = role.Name.ToUpper();
+                    //    }
+                    //    var roleResult = await _roleManager.CreateAsync(role);
+                    //    Debug.Assert(roleResult.Succeeded);
+                    //}
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
@@ -151,6 +177,10 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
                         pageHandler: null,
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
+
+                    IdentityRole roleToSet = await _roleManager.FindByIdAsync("e5591dc8-4b1b-4eff-90f5-c10e6e0d6faf");
+                    var res = await _userManager.AddToRoleAsync(user, roleToSet.Name);
+                    Debug.Assert(res.Succeeded);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
@@ -185,6 +215,20 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
             {
                 throw new InvalidOperationException($"Can't create an instance of '{nameof(CmsUser)}'. " +
                     $"Ensure that '{nameof(CmsUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                    $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
+            }
+        }
+
+        private IdentityRole CreateRole()
+        {
+            try
+            {
+                return Activator.CreateInstance<IdentityRole>();
+            }
+            catch
+            {
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityRole)}'. " +
+                    $"Ensure that '{nameof(IdentityRole)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }

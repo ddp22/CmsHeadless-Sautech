@@ -1,5 +1,6 @@
 using CmsHeadless.Controllers;
 using CmsHeadless.Models;
+using CmsHeadless.AuthenticationJWT;
 using CmsHeadlessApi.Controllers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -8,8 +9,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using CmsHeadlessApi.Classes.UserRepository;
-using CmsHeadlessApi.Classes.TokenService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,13 +35,15 @@ builder.Services.AddTransient<ServiceController>();
 
 builder.Services.AddTransient<ResponseApi>();
 
-builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<UserModel>();
 
-builder.Services.AddTransient<ITokenService, TokenService>();
+builder.Services.AddTransient<CmsHeadless.AuthenticationJWT.IUserRepository, CmsHeadless.AuthenticationJWT.UserRepository>();
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddTransient<CmsHeadless.AuthenticationJWT.ITokenService, CmsHeadless.AuthenticationJWT.TokenService>();
 
-builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<CmsHeadless.AuthenticationJWT.IUserRepository, CmsHeadless.AuthenticationJWT.UserRepository>();
+
+builder.Services.AddScoped<CmsHeadless.AuthenticationJWT.ITokenService, CmsHeadless.AuthenticationJWT.TokenService>();
 
 builder.Services.AddDistributedMemoryCache();
 

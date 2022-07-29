@@ -17,6 +17,8 @@ using NUnit.Framework;
 using System.Net;
 using CmsHeadlessApi.Controllers.SupportClassContent;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace CmsHeadlessApi.Controllers
 {

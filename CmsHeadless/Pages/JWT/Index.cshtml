@@ -1,6 +1,10 @@
-﻿@model CmsHeadlessApi.Models.UserModel
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Diagnostics;
+
+@model CmsHeadless.AuthenticationJWT.UserModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "IndexJWT";
 }
 
 <hr />
@@ -27,3 +31,4 @@
 </div>
 
 @section Scripts {@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}}
+

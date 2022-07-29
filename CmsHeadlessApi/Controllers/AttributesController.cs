@@ -22,8 +22,18 @@ namespace CmsHeadlessApi.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetAllAttributes(int? idAttributes, string? NameAttributes)
+        public JsonResult GetAllAttributes(int? idAttributes, string? NameAttributes, string token)
         {
+
+            if (token == null) {
+                return Json("false"); 
+            }
+
+            if (token != "123")
+            {
+                return Json("false");
+            }
+
             List<AttributesControllerModel> model = new List<AttributesControllerModel>();
             List<Attributes> a=new List<Attributes>();
             if (idAttributes == null && NameAttributes == null) {

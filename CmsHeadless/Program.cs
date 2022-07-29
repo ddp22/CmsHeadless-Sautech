@@ -3,6 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using CmsHeadless.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using CmsHeadless.Controllers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using CmsHeadless.AuthenticationJWT;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +27,16 @@ builder.Services.AddTransient<LogListController>();
 
 builder.Services.AddTransient<ResponseApi>();
 
+builder.Services.AddControllers();
+
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+
+builder.Services.AddTransient<ITokenService, TokenService>();
+
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Default Lockout settings.
@@ -42,6 +56,19 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1;
 });
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -64,6 +91,13 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AuthorizePage("/Identity/Account/Manage");
 }).AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -73,7 +107,20 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+else
+{
+    app.UseDeveloperExceptionPage();
+}
+app.UseSession();
+app.Use(async (context, next) =>
+{
+    var token = context.Session.GetString("Token");
+    if (!string.IsNullOrEmpty(token))
+    {
+        context.Request.Headers.Add("Authorization", "Bearer " + token);
+    }
+    await next();
+});
 
 app.UseHttpsRedirection();
 
@@ -81,7 +128,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication();;
+app.UseAuthentication();
 
 app.UseAuthorization();
 

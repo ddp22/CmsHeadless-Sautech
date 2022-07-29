@@ -1,22 +1,22 @@
-﻿using CmsHeadlessApi.Models;
+﻿using CmsHeadless.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace CmsHeadlessApi.Classes.TokenService
+namespace CmsHeadless.AuthenticationJWT
 {
     public class TokenService : ITokenService
     {
         private const double EXPIRY_DURATION_MINUTES = 30;
-        public string BuildToken(string key, string issuer, UserDTO user)
+        public string BuildToken(string key, string issuer, CmsUser user, IdentityRole role)
         {
             var claims = new[] {
             new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Role, user.Role),
+            new Claim(ClaimTypes.Role, role.Name),
             new Claim(ClaimTypes.NameIdentifier,
-            Guid.NewGuid().ToString())
-        };
+            Guid.NewGuid().ToString())};
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
@@ -48,10 +48,10 @@ namespace CmsHeadlessApi.Classes.TokenService
             }
             return true;
         }
+
         public bool ValidateToken(string key, string issuer, string audience, string token)
         {
             throw new NotImplementedException();
         }
     }
-
 }
