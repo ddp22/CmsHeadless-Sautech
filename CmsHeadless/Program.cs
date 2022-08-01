@@ -21,7 +21,7 @@ builder.Services.AddIdentity<CmsUser, IdentityRole>(options => options.SignIn.Re
     .AddEntityFrameworkStores<CmsHeadlessDbContext>();
 
 
-builder.Services.AddDbContext<CmsHeadlessDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("CmsHeadlessContextConnection")));
+builder.Services.AddDbContext<CmsHeadlessDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("CmsHeadlessDbContextConnection")));
 
 builder.Services.AddTransient<LogListController>();
 
@@ -43,6 +43,11 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.AllowedForNewUsers = true;
+});
+
+builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+{
+    options.TokenLifespan = TimeSpan.FromHours(5);
 });
 
 builder.Services.Configure<IdentityOptions>(options =>

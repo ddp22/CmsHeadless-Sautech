@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,8 @@ builder.Services.AddTransient<ServiceController>();
 builder.Services.AddTransient<ResponseApi>();
 
 builder.Services.AddTransient<UserModel>();
+
+builder.Services.AddTransient<AuthenticationToken>();
 
 builder.Services.AddTransient<CmsHeadless.AuthenticationJWT.IUserRepository, CmsHeadless.AuthenticationJWT.UserRepository>();
 

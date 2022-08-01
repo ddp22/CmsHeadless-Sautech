@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Identity;
 using CmsHeadless.AuthenticationJWT;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication;
+using System.Diagnostics;
 
 namespace CmsHeadless.Controllers
 {
@@ -27,7 +29,8 @@ namespace CmsHeadless.Controllers
         private readonly ITokenService _tokenService;
         private string generatedToken = null;
 
-        public ServiceController(ILogger<ContentController> logger, CmsHeadlessDbContext contextDb, SignInManager<CmsUser> signInManager, ResponseApi response, IConfiguration config, ITokenService tokenService, IUserRepository userRepository)
+        public ServiceController(ILogger<ContentController> logger, CmsHeadlessDbContext contextDb, SignInManager<CmsUser> signInManager,
+            ResponseApi response, IConfiguration config, ITokenService tokenService, IUserRepository userRepository)
         {
             _logger = logger;
             _contextDb = contextDb;
@@ -36,18 +39,11 @@ namespace CmsHeadless.Controllers
             _config = config;
             _tokenService = tokenService;
             _userRepository = userRepository;
-            
+
             IQueryable<Region> selectRegionQuery = from Region in _contextDb.Region select Region;
             RegionAvailable = selectRegionQuery.ToList<Region>();
             IQueryable<Models.Province> selectProvinceQuery = from Province in _contextDb.Province select Province;
             ProvinceAvailable = selectProvinceQuery.ToList<Models.Province>();
-        }
-        
-        [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<JsonResult> TestJwt()
-        { 
-            return Json("ciao");
         }
 
         [HttpGet]
@@ -83,13 +79,24 @@ namespace CmsHeadless.Controllers
                 _response.User = (from User in _contextDb.CmsUser select User).Where(c => c.Email == mail).ToList().First();
                 var role = (from UserRoles in _contextDb.UserRoles select UserRoles).Where(r => r.UserId.Equals(_response.User.Id)).ToList();
                 _response.role = (from Roles in _contextDb.Roles select Roles).Where(x => x.Id.Equals(role.First().RoleId)).ToList().First().Name;
-
                 generatedToken = _tokenService.BuildToken(_config["Jwt:Key"].ToString(), _config["Jwt:Issuer"].ToString(), _response.User, (from Roles in _contextDb.Roles select Roles).Where(x => x.Id.Equals(role.First().RoleId)).ToList().First());
                 if (generatedToken != null)
                 {
-                    httpContext.Session.SetString("Token", generatedToken);
                     _response.token = generatedToken;
-                    
+                    AuthTokens token = new AuthTokens();
+                    token.UserId = _response.User.Id;
+                    token.Token = _response.token;
+                    token.CreatedDate = DateTime.Now;
+                    if ((from AuthTokens in _contextDb.AuthTokens select AuthTokens).Where(i => i.UserId.Equals(_response.User.Id)).ToList().Count!=0)
+                    {
+                        string innerToken = (from AuthTokens in _contextDb.AuthTokens select AuthTokens.Token).ToString();
+                        innerToken = token.Token;
+                    }
+                    else
+                    {
+                        _contextDb.AuthTokens.Add(token);
+                    }
+                    _contextDb.SaveChanges();
                 }
                 else
                 {
@@ -104,6 +111,18 @@ namespace CmsHeadless.Controllers
             }
 
             return Json(_response);
+        }
+
+        public bool tokenValidation(string mail, string token)
+        {
+            Debug.Assert(mail != null && token != null);
+            _response.User = (from User in _contextDb.CmsUser select User).Where(c => c.Email == mail).ToList().First();
+            var tok = ((from AuthTokens in _contextDb.AuthTokens select AuthTokens).Where(i => i.UserId == _response.User.Id && i.CreatedDate.CompareTo(DateTime.Now.AddDays(-5))>=0)).ToList();
+            if(tok.Count>0 && tok.First().Token.Equals(token))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
