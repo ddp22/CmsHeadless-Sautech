@@ -25,12 +25,12 @@ namespace CmsHeadless.Controllers
         private readonly SignInManager<CmsUser> _signInManager;
         private readonly ResponseApi _response;
         private readonly IConfiguration _config;
-        private readonly IUserRepository _userRepository;
+        //private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
         private string generatedToken = null;
 
         public ServiceController(ILogger<ContentController> logger, CmsHeadlessDbContext contextDb, SignInManager<CmsUser> signInManager,
-            ResponseApi response, IConfiguration config, ITokenService tokenService, IUserRepository userRepository)
+            ResponseApi response, IConfiguration config, ITokenService tokenService)
         {
             _logger = logger;
             _contextDb = contextDb;
@@ -38,7 +38,6 @@ namespace CmsHeadless.Controllers
             _response = response;
             _config = config;
             _tokenService = tokenService;
-            _userRepository = userRepository;
 
             IQueryable<Region> selectRegionQuery = from Region in _contextDb.Region select Region;
             RegionAvailable = selectRegionQuery.ToList<Region>();
@@ -91,6 +90,7 @@ namespace CmsHeadless.Controllers
                     {
                         string innerToken = (from AuthTokens in _contextDb.AuthTokens select AuthTokens.Token).ToString();
                         innerToken = token.Token;
+                        _contextDb.AuthTokens.Update(token);
                     }
                     else
                     {

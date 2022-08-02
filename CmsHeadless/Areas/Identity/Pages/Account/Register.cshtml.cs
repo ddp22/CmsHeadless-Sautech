@@ -145,7 +145,7 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    //for(int i = 0; i < 3; i++)
+                    //for (int i = 0; i < 3; i++)
                     //{
                     //    role = CreateRole();
                     //    if (i == 0)
@@ -153,7 +153,7 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
                     //        role.Name = "Admin";
                     //        role.NormalizedName = role.Name.ToUpper();
                     //    }
-                    //    else if(i == 1)
+                    //    else if (i == 1)
                     //    {
                     //        role.Name = "Creator";
                     //        role.NormalizedName = role.Name.ToUpper();
