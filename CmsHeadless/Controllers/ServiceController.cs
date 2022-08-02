@@ -86,17 +86,18 @@ namespace CmsHeadless.Controllers
                     token.UserId = _response.User.Id;
                     token.Token = _response.token;
                     token.CreatedDate = DateTime.Now;
-                    if ((from AuthTokens in _contextDb.AuthTokens select AuthTokens).Where(i => i.UserId.Equals(_response.User.Id)).ToList().Count!=0)
+                    var oldToken = (from AuthTokens in _contextDb.AuthTokens select AuthTokens).Where(i => i.UserId.Equals(_response.User.Id)).ToList();
+                    if (oldToken.Count!=0)
                     {
-                        string innerToken = (from AuthTokens in _contextDb.AuthTokens select AuthTokens.Token).ToString();
-                        innerToken = token.Token;
-                        _contextDb.AuthTokens.Update(token);
+                        AuthTokens old = oldToken.First();
+                        old.Token = token.Token;
+                        
                     }
                     else
                     {
                         _contextDb.AuthTokens.Add(token);
                     }
-                    _contextDb.SaveChanges();
+                    await _contextDb.SaveChangesAsync();
                 }
                 else
                 {

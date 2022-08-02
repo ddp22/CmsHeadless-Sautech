@@ -20,6 +20,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using CmsHeadless.Controllers;
+using CmsHeadless.AuthenticationJWT;
 
 namespace CmsHeadlessApi.Controllers
 {
@@ -34,6 +35,10 @@ namespace CmsHeadlessApi.Controllers
         public string pathMedia= "https://localhost:7233";
         private readonly IServer _server;
         static HttpClient client = new HttpClient();
+        private readonly IConfiguration _config;
+        private readonly ITokenService _tokenService;
+        private readonly ResponseApi _response;
+
         //private static string itDbPath => Path.Combine(TestContext.CurrentContext.TestDirectory, itDb);
         public ContentController(ILogger<ContentController> logger, CmsHeadlessDbContext contextDb, IServer server, ServiceController serviceController)
         {
