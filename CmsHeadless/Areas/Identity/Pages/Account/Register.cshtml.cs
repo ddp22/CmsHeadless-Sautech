@@ -145,7 +145,7 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    //for(int i = 0; i < 3; i++)
+                    //for (int i = 0; i < 3; i++)
                     //{
                     //    role = CreateRole();
                     //    if (i == 0)
@@ -153,7 +153,7 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
                     //        role.Name = "Admin";
                     //        role.NormalizedName = role.Name.ToUpper();
                     //    }
-                    //    else if(i == 1)
+                    //    else if (i == 1)
                     //    {
                     //        role.Name = "Creator";
                     //        role.NormalizedName = role.Name.ToUpper();
@@ -178,7 +178,7 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    IdentityRole roleToSet = await _roleManager.FindByIdAsync("e5591dc8-4b1b-4eff-90f5-c10e6e0d6faf");
+                    IdentityRole roleToSet = await _roleManager.FindByIdAsync("80168b2b-2461-4c20-bd97-a941c7985948");
                     var res = await _userManager.AddToRoleAsync(user, roleToSet.Name);
                     Debug.Assert(res.Succeeded);
 

@@ -9,21 +9,21 @@ namespace CmsHeadless.Controllers
     {
 
         //Constant Event Codes
-        public const int ApplicationErrorCode = 16;
-        public const int DbErrorCode = 17;
-        public const int UnclassifiedErrorCode = 18;
-        public const int LoginWrongUsernameWarningCode = 19;
-        public const int LoginWrongPasswordWarningCode = 20;        
-        public const int UnclassifiedWarningCode = 21;
-        public const int LoginSuccessfulCode = 22;
-        public const int LogoutSuccessfulCode = 23;
-        public const int UnclassifiedInfo = 24;
-        public const int ContentsModifiedCode = 25;
-        public const int ContentsDeletedCode = 26;
-        public const int ContentsModifiedWarningCode = 27;
-        public const int ContentsDeletedWarningCode = 28;
-        public const int ContentsCreatedCode = 29;
-        public const int ContentsCreatedWarningCode = 30;
+        public const int ApplicationErrorCode = 1;
+        public const int DbErrorCode = 2;
+        public const int UnclassifiedErrorCode = 3;
+        public const int LoginWrongUsernameWarningCode = 4;
+        public const int LoginWrongPasswordWarningCode = 5;        
+        public const int UnclassifiedWarningCode = 6;
+        public const int LoginSuccessfulCode = 7;
+        public const int LogoutSuccessfulCode = 8;
+        public const int UnclassifiedInfo = 9;
+        public const int ContentsModifiedCode = 10;
+        public const int ContentsDeletedCode = 11;
+        public const int ContentsModifiedWarningCode = 12;
+        public const int ContentsDeletedWarningCode = 13;
+        public const int ContentsCreatedCode = 14;
+        public const int ContentsCreatedWarningCode = 15;
 
         private readonly CmsHeadlessDbContext _contextDb;
         public LogListController(CmsHeadlessDbContext contextDb)

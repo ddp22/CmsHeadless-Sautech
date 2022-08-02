@@ -21,7 +21,7 @@ namespace CmsHeadless.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=FABRIZIO\\\\SQLEXPRESS;Database=CmsHeadless2;Trusted_Connection=True;MultipleActiveResultSets=true");
+                optionsBuilder.UseSqlServer("Server=LAPTOP-QJT3PA9C\\\\SQLEXPRESS;Database=CmsHeadless;Trusted_Connection=True;MultipleActiveResultSets=true");
             }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
