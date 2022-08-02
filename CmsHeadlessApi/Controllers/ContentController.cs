@@ -20,6 +20,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using CmsHeadless.Controllers;
+using CmsHeadless.AuthenticationJWT;
 
 namespace CmsHeadlessApi.Controllers
 {
