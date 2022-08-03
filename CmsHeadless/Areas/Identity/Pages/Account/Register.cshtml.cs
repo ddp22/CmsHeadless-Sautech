@@ -177,8 +177,9 @@ namespace CmsHeadless.Areas.Identity.Pages.Account
                         pageHandler: null,
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
-
-                    IdentityRole roleToSet = await _roleManager.FindByIdAsync("80168b2b-2461-4c20-bd97-a941c7985948");
+                    
+                    IdentityRole roleToSet = await _roleManager.FindByIdAsync("ac74ef26-49df-44f8-b6b6-0a56ce855113");
+                    //IdentityRole roleToSet = await _roleManager.FindByIdAsync("80168b2b-2461-4c20-bd97-a941c7985948");
                     var res = await _userManager.AddToRoleAsync(user, roleToSet.Name);
                     Debug.Assert(res.Succeeded);
 
