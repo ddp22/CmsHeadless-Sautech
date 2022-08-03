@@ -40,11 +40,11 @@
                     {
                         if (@Model.AttributesSelected!=null && @Model.AttributesSelected.Contains(i.AttributesId))
                         {
-                                        <option selected value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>
+                                        <option selected value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName - @i.AttributeValue</option>
                         }
                         else
                         {
-                                        <option value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>                            
+                                        <option value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName - @i.AttributeValue</option>                            
                         }
                     }
                 }

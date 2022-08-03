@@ -144,8 +144,15 @@ namespace CmsHeadless.Pages.Category
                 ModelState.AddModelError("Make", "Errore nell'inserimento");
                 return Page();
             }
+            
 
             selectCategoryQueryOrder = from Category in _context.Category select Category;
+            if (_formCategoryModel.CategoryParentId == null)
+            {
+                var categoryWithout=selectCategoryQueryOrder.First();
+                categoryWithout.CategoryParentId = categoryWithout.CategoryId;
+                await _context.SaveChangesAsync();
+            }
             selectCategoryQuery = selectCategoryQueryOrder.OrderByDescending(x => x.CategoryId);
             CategoryAvailable = selectCategoryQuery.ToList<Models.Category>();
             if (pageIndex == null){

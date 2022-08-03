@@ -32,6 +32,9 @@ namespace CmsHeadless.Pages.Attributes
 
             IQueryable<Models.Typology> selectTypologyQuery = from Typology in _context.Typology select Typology;
             TypologyAvailable = selectTypologyQuery.ToList<Models.Typology>();
+
+            IQueryable<Models.Content> ContentQuery = from Content in _context.Content select Content;
+            //ContentAvailable = ContentQuery.ToList<Models.Content>();
         }
 
         public AttributesList<Models.Attributes> AttributesList { get; set; }
@@ -70,7 +73,22 @@ namespace CmsHeadless.Pages.Attributes
 
             var pageSize = 5;
 
-            int is_exsist = _context.Attributes.Where(c => c.AttributeName == _formAttributesModel.AttributeName).Count();
+            if (_formAttributesModel.AttributeName == "POI")
+            {
+                ModelState.AddModelError("Make", "L'attributo non può avere come nome POI. Inserirne un altro");
+                selectAttributesQueryOrder = from Attributes in _context.Attributes select Attributes;
+                selectAttributesQuery = selectAttributesQueryOrder.OrderByDescending(c => c.AttributesId);
+                AttributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
+                if (pageIndex == null)
+                {
+                    pageIndex = 1;
+                }
+                pageSize = Configuration.GetValue("PageSize", numberPage);
+                AttributesList = await AttributesList<Models.Attributes>.CreateAsync(selectAttributesQuery.AsNoTracking(), pageIndex ?? 1, pageSize);
+                return Page();
+            }
+
+            int is_exsist = _context.Attributes.Where(c => c.AttributeName == _formAttributesModel.AttributeName && c.AttributeValue==_formAttributesModel.AttributeValue).Count();
 
             if (is_exsist > 0)
             {
@@ -99,7 +117,7 @@ namespace CmsHeadless.Pages.Attributes
                 return Page();
             }
 
-            selectAttributesQuery = from Attributes in _context.Attributes where Attributes.AttributeName == temp.AttributeName select Attributes;
+            selectAttributesQuery = from Attributes in _context.Attributes where Attributes.AttributeName == temp.AttributeName && Attributes.AttributeValue == temp.AttributeValue select Attributes;
             Models.Attributes tempAttributes = selectAttributesQuery.ToList<Models.Attributes>().First<Models.Attributes>();
             int attributesId = tempAttributes.AttributesId;
             /*AttributesTypology*/

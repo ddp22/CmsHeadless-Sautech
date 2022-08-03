@@ -509,6 +509,26 @@ namespace CmsHeadless.Migrations
                     b.ToTable("Province");
                 });
 
+            modelBuilder.Entity("CmsHeadless.Models.QrCode", b =>
+                {
+                    b.Property<int>("QrCodeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QrCodeId"), 1L, 1);
+
+                    b.Property<int>("ContentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("QrCodeLabel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("QrCodeId");
+
+                    b.ToTable("QrCode");
+                });
+
             modelBuilder.Entity("CmsHeadless.Models.Region", b =>
                 {
                     b.Property<int>("RegionId")

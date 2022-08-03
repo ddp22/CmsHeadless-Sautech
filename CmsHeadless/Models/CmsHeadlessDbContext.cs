@@ -49,6 +49,7 @@ namespace CmsHeadless.Models
         public DbSet<LogEvent> LogEvent { get; set; }
         public DbSet<Log> Log { get; set; }
         public DbSet<AuthTokens> AuthTokens { get; set; }
+        public DbSet<QrCode> QrCode { get; set; }
 
     }
     

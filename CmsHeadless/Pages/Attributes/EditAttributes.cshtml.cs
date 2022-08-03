@@ -24,6 +24,7 @@ namespace CmsHeadless.Pages.Attributes
         public List<int> TypologySelected { get; set; }
         public List<AttributesTypology> AttributesTypologySelected { get; set; }
         public List<AttributesTypology> AttributesTypology { get; set; }
+        public List<Models.Content> ContentAvailable { get; set; }
         public EditAttributesModel(CmsHeadlessDbContext context)
         {
             _context = context;
@@ -39,6 +40,10 @@ namespace CmsHeadless.Pages.Attributes
 
             IQueryable<Models.AttributesTypology> AttributesTypologyQuery = from AttributesTypology in _context.AttributesTypology select AttributesTypology;
             AttributesTypology = AttributesTypologyQuery.ToList<Models.AttributesTypology>();
+
+            IQueryable<Models.Content> ContentQuery = from Content in _context.Content select Content;
+            ContentAvailable = ContentQuery.ToList<Models.Content>();
+
         }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -90,10 +95,20 @@ namespace CmsHeadless.Pages.Attributes
                 return NotFound();
             }
 
-            if (attributesToUpdate.AttributeName != _formEditAttributesModel.AttributeName)
+            if (_formEditAttributesModel.AttributeName == "POI")
+            {
+                ModelState.AddModelError("Make", "L'attributo non può avere come nome POI. Inserirne un altro");
+                selectAttributesQueryOrder = from Attributes in _context.Attributes select Attributes;
+                selectAttributesQuery = selectAttributesQueryOrder.OrderByDescending(c => c.AttributesId);
+                AttributesAvailable = selectAttributesQuery.ToList<Models.Attributes>();
+                attributes = await _context.Attributes.FindAsync(attributesId);
+
+                return Page();
+            }
+            if (attributesToUpdate.AttributeName != _formEditAttributesModel.AttributeName || attributesToUpdate.AttributeValue != _formEditAttributesModel.AttributeValue)
             {
                 var attributesToSearch = from Attributes in _context.Attributes
-                                  where Attributes.AttributeName == _formEditAttributesModel.AttributeName
+                                  where Attributes.AttributeName == _formEditAttributesModel.AttributeName && Attributes.AttributeValue==_formEditAttributesModel.AttributeValue
                                   select Attributes;
                 if (attributesToSearch.Count<Models.Attributes>() != 0)
                 {

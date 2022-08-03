@@ -42,7 +42,7 @@
                 @{
                     foreach(var i in Model.AttributesAvailable)
                     {
-                         <option value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName</option>
+                         <option value="@i.AttributesId" id="@i.AttributesId">@i.AttributeName - @i.AttributeValue</option>
                     }
                 }
             </select>

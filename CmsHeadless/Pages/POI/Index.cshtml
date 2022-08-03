@@ -1,0 +1,165 @@
+﻿@page
+@model CmsHeadless.Pages.POI.IndexModel
+
+@{
+    
+}
+
+<div class=" col-12 col-xl-4 custom-form-border">
+    <form method="post"  class="custom-form" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        
+        <div class="col-6 form-group">
+            <label asp-for="_formPOIModel.AttributeValue" class="control-label">Contents</label>
+            <select asp-for="_formPOIModel.AttributeValue" class="form-select selectForm" size="7">
+                @{
+                    foreach(var i in Model.ContentAvailable)
+                    {
+                         <option value="@i.ContentId.ToString()" id="@i.ContentId">@i.Title</option>
+                    }
+                }
+            </select>
+            <span asp-validation-for="_formPOIModel.AttributeValue" class="text-danger"></span>
+        </div>
+        <div class="col-6 form-group">
+            <label asp-for="_formPOIModel.Typology" class="control-label">Typologies</label>
+            <select asp-for="_formPOIModel.Typology" class="form-select selectForm" multiple size="7">
+                @{
+                    foreach(var i in Model.TypologyAvailable)
+                    {
+                         <option value="@i.Id" id="@i.Id">@i.Name</option>
+                    }
+                }
+            </select>
+            <span asp-validation-for="_formPOIModel.Typology" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" asp-page-handler="Create" value="Create" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+        @{
+    if(IndexModel.lastCreate>0 && ModelState.ErrorCount == 0)
+    {
+        <div class="alert alert-success" role="alert">
+            <p>Attributo inserito con successo</p>
+        </div>
+    }
+}
+@if(ModelState.ErrorCount > 0)
+{
+    <div class="alert alert-danger" role="alert">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger font-weight-bold" })
+    </div>
+}
+
+
+<div class="row justify-content-between">
+    <div class="col-4">
+        <h1>Lista Attributes</h1>
+    </div>
+    <div class="col-4">
+        <form>
+            <p>
+                Search: <input type="text" name="searchString" />
+                <span class="form-group">
+                    <input type="submit" value="Search" class="btn btn-primary" />
+                </span>
+            </p>
+        </form>
+    </div>
+</div>
+<table class="table table-striped table-bordered" id="attributesList">
+  <thead >
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Value</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+        @{
+            if(Model.POIList!=null){
+            int k=1+(Model.POIList.PageIndex-1)*IndexModel.numberPage ;
+                    @foreach (var item in Model.POIList)
+                {
+                    <tr>
+                        <th scope="row">
+                            @k
+                        </th>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AttributeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AttributeValue)
+                        </td>
+                        <td>
+                            <a asp-page="./EditPOI" asp-route-id="@item.AttributesId" asp-route-value="@item.AttributeValue">Edit</a> |
+                                                         
+                            <a asp-page="index" asp-page-handler="Delete" asp-route-attributesId="@item.AttributesId">Delete</a>
+                        </td>
+                    </tr>
+                    k++;
+                }
+            }
+            else
+            {
+                <h1>C'è stato un problema relativo al database. Ricaricare la pagina</h1>
+                return;
+            }
+       }
+
+  </tbody>
+</table>
+
+@if(IndexModel.callDelete==true && IndexModel.lastDelete>0 && ModelState.ErrorCount == 0)
+{
+    <div class="alert alert-success" role="alert">
+        <p>POI eliminato con successo</p>
+    </div>
+}
+else if(IndexModel.callDelete==true && IndexModel.lastDelete==0 && ModelState.ErrorCount != 0)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>Errore nell'eliminazione'</p>
+    </div>
+}
+
+@{
+    
+    var prevDisabled = !Model.POIList.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.POIList.HasNextPage ? "disabled" : "";
+}
+
+    <!--/*<a asp-action="../Attributes/Index"
+   asp-route-pageIndex="@(Model.POIList.PageIndex - 1)"
+   asp-route-searchString="@IndexModel.searchString"
+   class="btn btn-default @prevDisabled">
+            Previous
+    </a>*/-->
+
+    <a href="/POI/Index?pageIndex=@(Model.POIList.PageIndex - 1)&searchString=@IndexModel.searchString"
+   class="btn btn-default @prevDisabled">
+            Previous
+    </a>
+
+    <a href="/POI/Index?pageIndex=@(Model.POIList.PageIndex + 1)&searchString=@IndexModel.searchString"
+   class="btn btn-default @nextDisabled">
+            Next
+    </a>
+    <!--/*<a asp-action="./Attributes/Index"
+   asp-route-pageIndex="@(Model.POIList.PageIndex + 1)"
+   asp-route-searchString="@IndexModel.searchString"
+   class="btn btn-default @nextDisabled">
+            Next
+    </a>*/-->
+
+
+@{
+    IndexModel.lastCreate = 0;
+    IndexModel.lastDelete = 0;
+    IndexModel.searchString = null;
+    IndexModel.callDelete = false;
+}
