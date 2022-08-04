@@ -18,6 +18,7 @@ namespace CmsHeadless.Pages.Content
         public static int lastEditTag = 0;
         public static int lastEditCategory = 0;
         public static int lastEditLocation = 0;
+        public static int lastEditQrCode = 0;
         public static int lastDeleteLocation = 0;
         public static bool callDelete = false;
         public string pathName = "/img/content/";
@@ -52,8 +53,7 @@ namespace CmsHeadless.Pages.Content
         public List<Models.Location> LocationsOfContent { get; set; }
 
         public List<string> stringLocation { get; set; }
-        
-        
+        public QrCode QrCode { get; set; }
 
         public EditContentModel(CmsHeadlessDbContext context, LogListController logController)
         {
@@ -97,6 +97,11 @@ namespace CmsHeadless.Pages.Content
         public async Task<IActionResult> OnGetAsync(int? id, string? searchString)
         {
             LocationsOfContent = ContentLocationAvailable.Where(c => c.ContentId == id).Select(c=>c.Location).ToList();
+            var tempQrCode = _context.QrCode.Where(c => c.ContentId == id).ToList();
+            if (tempQrCode.Count() > 0)
+            {
+                QrCode = tempQrCode.FirstOrDefault();
+            }
 
             selectContentQueryOrder = from Content in _context.Content select Content;
             selectContentQuery = selectContentQueryOrder.OrderByDescending(c => c.ContentId);
@@ -201,6 +206,7 @@ namespace CmsHeadless.Pages.Content
             lastEditCategory = 0;
             lastEditLocation = 0;
             lastDeleteLocation = 0;
+            lastEditQrCode = 0;
             callDelete = false;
             var ContentToUpdate = await _context.Content.FindAsync(contentId);
 
@@ -289,6 +295,60 @@ namespace CmsHeadless.Pages.Content
             if (DateTime.Now.Date > tempPubblicationDate.Date)
             {
                 ContentToUpdate.PubblicationDate = null;
+            }
+
+            var tempQrCode = _context.QrCode.Where(c => c.ContentId == contentId).ToList();
+            if (tempQrCode.Count() > 0)
+            {
+                QrCode = tempQrCode.FirstOrDefault();
+            }
+
+            /* QrCode */
+            if (_formEditContentModel.QrCode != null)
+            { 
+                if (QrCode != null)
+                {
+                    if (_formEditContentModel.QrCode != QrCode.QrCodeLabel)
+                    {
+                        var QrCodeToUpdate = await _context.QrCode.FindAsync(QrCode.QrCodeId);
+                        QrCodeToUpdate.QrCodeLabel = _formEditContentModel.QrCode;
+                        lastEditQrCode = await _context.SaveChangesAsync();
+                        if (lastEditQrCode <= 0)
+                        {
+                            ModelState.AddModelError("Make", "Errore nella modifica del QrCode");
+                            return Page();
+                        }
+                    }
+                    
+                }
+                else
+                {
+                    var tempQrCodeAdd = new QrCode();
+                    tempQrCodeAdd.QrCodeLabel = _formEditContentModel.QrCode;
+                    tempQrCodeAdd.ContentId = contentId;
+                    var entryQrCode = _context.Add(new QrCode());
+                    entryQrCode.CurrentValues.SetValues(tempQrCodeAdd);
+                    lastEditQrCode = await _context.SaveChangesAsync();
+                    if (lastEditQrCode <= 0)
+                    {
+                        ModelState.AddModelError("Make", "Errore nell'inserimento del QrCode");
+                        return Page();
+                    }
+                }
+                
+            }
+            else
+            {
+                if (QrCode != null)
+                {
+                    _context.QrCode.Remove(QrCode);
+                    lastEditQrCode = await _context.SaveChangesAsync();
+                    if (lastEditQrCode <= 0)
+                    {
+                        ModelState.AddModelError("Make", "Errore nell'inserimento del QrCode");
+                        return Page();
+                    }
+                }
             }
 
             /*ContentAttributes*/

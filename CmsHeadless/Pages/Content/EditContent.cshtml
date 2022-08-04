@@ -89,6 +89,19 @@
             </select>
             <span asp-validation-for="_formEditContentModel.ContentTag" class="text-danger"></span>
         </div>
+        <div class="col-12 col-xl-6 form-group">
+            <label asp-for="_formEditContentModel.QrCode" class="control-label">QrCode</label>
+            @if(Model.QrCode!=null)
+            {
+                <input asp-for="_formEditContentModel.QrCode" class="form-control textForm" value="@Model.QrCode.QrCodeLabel"/>
+            }
+            else
+            {
+                <input asp-for="_formEditContentModel.QrCode" class="form-control textForm"/>
+            }
+            
+            <span asp-validation-for="_formEditContentModel.QrCode" class="text-danger"></span>
+        </div>
         <div class="col-12 col-xl-6">
             <div class="form-group">
                 <label asp-for="_formEditContentModel.InsertionDate" class="control-label">Insertion Date</label>
@@ -151,7 +164,7 @@
         <p> </p>
         
 
-        @if((EditContentModel.lastEdit>0 || EditContentModel.lastEditAttributes>0 || EditContentModel.lastEditCategory>0 || EditContentModel.lastEditTag>0 || EditContentModel.lastEditLocation>0) && ModelState.ErrorCount == 0 && EditContentModel.callDelete==false)
+        @if((EditContentModel.lastEditQrCode>0 || EditContentModel.lastEdit>0 || EditContentModel.lastEditAttributes>0 || EditContentModel.lastEditCategory>0 || EditContentModel.lastEditTag>0 || EditContentModel.lastEditLocation>0) && ModelState.ErrorCount == 0 && EditContentModel.callDelete==false)
             {
                 <div class="alert alert-success" role="alert">
                     <p>Contenuto modificato con successo</p>
@@ -310,12 +323,13 @@ $(document).ready(function(){
 }
 
 
-@{
+    @{
     EditContentModel.lastEdit = 0;
     EditContentModel.lastEditAttributes = 0;
     EditContentModel.lastEditCategory = 0;
     EditContentModel.lastEditTag = 0;
     EditContentModel.lastEditLocation = 0;
     EditContentModel.lastDeleteLocation = 0;
+    EditContentModel.lastEditQrCode = 0;
     EditContentModel.callDelete = false;
 }

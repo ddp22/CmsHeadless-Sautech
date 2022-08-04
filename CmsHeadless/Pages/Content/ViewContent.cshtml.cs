@@ -119,6 +119,18 @@ namespace CmsHeadless.Pages.Content
                 _logController.SaveLog(User.Identity.Name, LogListController.ContentsCreatedCode, "L'utente " + User.Identity.Name + " ha eliminato un contenuto.", "Warning - No Last Deleted Content(s)", HttpContext);
                 return Page();
             }
+
+            List<QrCode> tempQrCode = _context.QrCode.Where(c => c.ContentId == contentId).ToList();
+            foreach (QrCode code in tempQrCode)
+            {
+                _context.QrCode.Remove(code);
+            }
+            int k = await _context.SaveChangesAsync();
+            if (k <= 0)
+            {
+                ModelState.AddModelError("Make", "Errore nell'eliminazione del QrCode");
+            }
+
             selectContentQueryOrder = from Content in _context.Content select Content;
             selectContentQuery = selectContentQueryOrder.OrderByDescending(c => c.ContentId);
             ContentAvailable = selectContentQuery.ToList<Models.Content>();

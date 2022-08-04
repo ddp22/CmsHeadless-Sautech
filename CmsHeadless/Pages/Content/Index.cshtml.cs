@@ -131,7 +131,6 @@ namespace CmsHeadless.Pages.Content
 
         public async Task<IActionResult> OnPostSearchAsync()
         {
-
             return RedirectToPage("./Index");
         }
 
@@ -211,6 +210,22 @@ namespace CmsHeadless.Pages.Content
             Models.Content tempContent = selectContentQuery.ToList<Models.Content>().First<Models.Content>();
             ContentId = tempContent.ContentId;
 
+            /* QrCode */
+            if(_formContentModel.QrCode!=null)
+            {
+                var tempQrCode = new QrCode();
+                tempQrCode.QrCodeLabel = _formContentModel.QrCode;
+                tempQrCode.ContentId = ContentId;
+                var entryQrCode = _context.Add(new QrCode());
+                entryQrCode.CurrentValues.SetValues(tempQrCode);
+                int k = await _context.SaveChangesAsync();
+                if (k <= 0)
+                {
+                    ModelState.AddModelError("Make", "Errore nell'inserimento del QrCode");
+                    return Page();
+                }
+            }
+
             /* ContentAttributes */
             if (_formContentModel.ContentAttributes != null)
             {
@@ -229,7 +244,6 @@ namespace CmsHeadless.Pages.Content
                     if (k <= 0)
                     {
                         ModelState.AddModelError("Make", "Errore nell'inserimento");
-                        _logController.SaveLog(User.Identity.Name, LogListController.ContentsCreatedWarningCode, "L'utente " + User.Identity.Name + " ha creato un contenuto.", "Warning - Saving Changes Error", HttpContext);
                         return Page();
                     }
                 }
@@ -384,6 +398,17 @@ namespace CmsHeadless.Pages.Content
                 ModelState.AddModelError("Make", "Errore nell'eliminazione");
                 _logController.SaveLog(User.Identity.Name, LogListController.ContentsDeletedWarningCode, "L'utente " + User.Identity.Name + " ha creato un contenuto.", "Warning - No Last Deleted Content(s)", HttpContext);
                 return Page();
+            }
+            
+            List<QrCode> tempQrCode = _context.QrCode.Where(c=>c.ContentId==contentId).ToList();
+            foreach(QrCode code in tempQrCode)
+            {
+                _context.QrCode.Remove(code);
+            }
+            int k=await _context.SaveChangesAsync();
+            if (k <= 0)
+            {
+                ModelState.AddModelError("Make", "Errore nell'eliminazione del QrCode");
             }
             selectContentQueryOrder = from Content in _context.Content select Content;
             selectContentQuery = selectContentQueryOrder.OrderByDescending(c => c.ContentId);

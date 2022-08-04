@@ -21,5 +21,6 @@ namespace CmsHeadless.ViewModels.Content
         public int? Region { get; set; }
         public int? Province { get; set; }
         public string? City { get; set; }
+        public string? QrCode { get; set; }
     }
 }
