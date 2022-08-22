@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ValidateExecutableReferencesMatchSelfContained>false</ValidateExecutableReferencesMatchSelfContained>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,4 +24,5 @@
     <ProjectReference Include="..\CmsHeadless\CmsHeadless.csproj" />
   </ItemGroup>
 
+  
 </Project>

@@ -43,6 +43,10 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\img\content\" />
+    <Content Remove="appsettings.json" />
+    <None Include="appsettings.json" />
+    <Content Remove="appsettings.Development.json" />
+    <None Include="appsettings.Development.json" />
   </ItemGroup>
 
 </Project>
