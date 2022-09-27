@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CmsHeadless</title>
+    <title>@ViewData["Title"] - CMSautech</title>
+    <link rel="icon" type="image/x-icon" href="~/img/icons/sautech_logo_crop.png">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CmsHeadless.styles.css" asp-append-version="true" />
@@ -13,7 +14,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index"><img src="~/img/icons/cms.png" class="logoHeader"/></a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index"><img src="~/img/icons/sautech.png" class="logoHeader"/></a>
                 @if (User.Identity.IsAuthenticated)
                 {
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -79,16 +80,6 @@
                             </li>
                             <li>
                                 <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle dropDownMenuLog" type="button" id="dropdownMenuButtonLog" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Log
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonLog">
-                                        <li><a class="dropdown-item dropDownMenuItemLog" href="/LogList">Visualizza registro Log</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="dropdown">
                                     <button class="btn btn-secondary dropdown-toggle dropDownMenuAttributes" type="button" id="dropdownMenuButtonAttributes" data-bs-toggle="dropdown" aria-expanded="false">
                                         POI
                                     </button>
@@ -99,8 +90,14 @@
                                 </div>
                             </li>
                             <li>
-                                <div >
-                                    <a class="navbar-brand" href="/Identity/Account/Manage/">Area Utente</a>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle dropDownMenuAttributes" type="button" id="dropdownMenuButtonAttributes" data-bs-toggle="dropdown" aria-expanded="false">
+                                        User
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonLog">
+                                        <li><a class="dropdown-item dropDownMenuItemLog" href="/Identity/Account/Manage/">Visualizza area Utente</a></li>
+                                        <li><a class="dropdown-item dropDownMenuItemLog" href="/LogList">Visualizza registro Log</a></li>
+                                    </ul>
                                 </div>
                             </li>
                         </ul>
@@ -122,8 +119,8 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - CmsHeadless - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        <div class="rightsContainer">
+            &copy; 2022 - Sautech Group, Cava de' Tirreni (SA), Italy. All rights are reserved. <a class="privacyPolicy" asp-area="" asp-page="/Privacy">Privacy Policy</a>
         </div>
     </footer>
 

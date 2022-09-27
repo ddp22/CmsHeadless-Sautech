@@ -1,6 +1,7 @@
 ﻿@page
 @model CmsHeadless.Pages.Tag.IndexModel
 @{
+    ViewData["Title"] = "Tags";
 }
 
 <div class="col-12 col-xl-4 custom-form-border">
@@ -40,7 +41,7 @@
 
 <div class="row justify-content-between">
     <div class="col-4">
-        <h1>Lista tag</h1>
+        <h1>Tags</h1>
     </div>
     <div class="col-4">
         <form>
@@ -58,7 +59,7 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">Name</th>
-      <th scope="col">Url</th>
+      <th scope="col">URL</th>
     </tr>
   </thead>
   <tbody class="table-group-divider">
@@ -79,7 +80,7 @@
                         </td>
                         <td>
                             <a asp-page="./EditTag" asp-route-id="@item.TagId">Edit</a> |
-                                                         
+
                             <a asp-page="index" asp-page-handler="Delete" asp-route-tagId="@item.TagId">Delete</a>
                         </td>
                     </tr>

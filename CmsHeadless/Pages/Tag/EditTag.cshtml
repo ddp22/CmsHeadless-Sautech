@@ -1,6 +1,7 @@
 ﻿@page
 @model CmsHeadless.Pages.Tag.EditTagModel
 @{
+    ViewData["Title"] = "Edit Tag";
 }
 
 <div class="col-12 col-xl-4 custom-form-border">
@@ -34,7 +35,7 @@
     </form>
 </div>
 
-<a href="../Tag/">Return to tag pages</a>
+<a href="../Tag/" style="text-decoration: none; color: black;">Return to tag pages</a>
 
 @{
     EditTagModel.lastEdit = 0;

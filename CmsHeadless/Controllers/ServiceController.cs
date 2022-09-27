@@ -91,7 +91,7 @@ namespace CmsHeadless.Controllers
                     {
                         AuthTokens old = oldToken.First();
                         old.Token = token.Token;
-                        
+                        old.CreatedDate = token.CreatedDate;
                     }
                     else
                     {

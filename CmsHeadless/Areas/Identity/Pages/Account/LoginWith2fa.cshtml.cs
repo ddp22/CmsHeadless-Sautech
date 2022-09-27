@@ -13,18 +13,19 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using CmsHeadless.Models;
 
 namespace CmsHeadless.Areas.Identity.Pages.Account
 {
     public class LoginWith2faModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<CmsUser> _signInManager;
+        private readonly UserManager<CmsUser> _userManager;
         private readonly ILogger<LoginWith2faModel> _logger;
 
         public LoginWith2faModel(
-            SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager,
+            SignInManager<CmsUser> signInManager,
+            UserManager<CmsUser> userManager,
             ILogger<LoginWith2faModel> logger)
         {
             _signInManager = signInManager;

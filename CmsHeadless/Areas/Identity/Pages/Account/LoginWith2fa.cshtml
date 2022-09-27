@@ -6,8 +6,8 @@
 
 <h1>@ViewData["Title"]</h1>
 <hr />
-<p>Your login is protected with an authenticator app. Enter your authenticator code below.</p>
-<div class="row">
+<p class="twofactortoptext">Your login is protected with an authenticator app.<br/>Enter your authenticator code below.</p>
+<div class="twofactor">
     <div class="col-md-4">
         <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
             <input asp-for="RememberMe" type="hidden" />
@@ -31,8 +31,8 @@
         </form>
     </div>
 </div>
-<p>
-    Don't have access to your authenticator device? You can
+<p class="twofactorbottomtext">
+    Don't have access to your authenticator device? <br/>You can
     <a id="recovery-code-login" asp-page="./LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl">log in with a recovery code</a>.
 </p>
 

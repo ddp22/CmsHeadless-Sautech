@@ -51,7 +51,8 @@ body {
     background-color: white;
     color: black;
     font-size: large;
-    margin-right: 1.5rem;
+    margin-right: 1rem;
+    border: none;
 }
 
 .dropDownMenuCategory:hover, .dropDownMenuContent:hover, .dropDownMenuTag:hover, .dropDownMenuAttributes:hover, .dropDownMenuTypology:hover, .dropDownMenuLog:hover, .userArea:hover {
@@ -62,6 +63,7 @@ body {
 .dropDownMenuItemCategory, .dropDownMenuItemContent, .dropDownMenuItemTag, .dropDownMenuItemAttributes, .dropDownMenuItemTypology, .dropDownMenuItemLog {
     color: black !important;
 }
+
 /*
 .fileForm {
     border: 1px solid lightgrey;
@@ -79,10 +81,171 @@ label + .fileForm {
     border-radius: 10px;
 }*/
 
+a.privacyPolicy{
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    margin-left: 55%
+}
+
+a.privacyPolicy:hover {
+    color: grey;
+}
+
+div.rightsContainer{
+    margin-left: 1%
+}
+
+div.checkbox{
+    left: 0%;
+}
+
+a.goToPage1, a.goToPage2, a.goToPage3, a.goToPage4, a.goToPage5, a.goToPage6{
+    text-decoration: none;
+    font-weight: normal;
+    color: black;
+}
+
+a.goToPage1:hover, a.goToPage2:hover, a.goToPage3:hover, a.goToPage4:hover, a.goToPage5:hover, a.goToPage6:hover {
+    color: black;
+    text-decoration: underline;
+}
+
+/*td, h5.card-header{
+    font-weight: bold;
+}*/
+
+a#register-user {
+    text-decoration: none;
+    color: black;
+    position: relative;
+    margin-right: 5%;
+    margin-left: 1%;
+}
+
+a#resend-confirmation {
+    text-decoration: none;
+    color: black;
+    position: relative;
+}
+
+a#forgot-password {
+    margin-left: 21%;
+    text-decoration: none;
+    color: black;
+}
+
+a#forgot-password:hover, a#register-user:hover, a#resend-confirmation:hover{
+    font-weight: bold;
+    transform: scale(0.9);
+}
+
+button#login-submit{
+    background-color: black;
+    border-color: black;
+}
+
+button#login-submit:hover {
+    background-color: white;
+    border-color: white;
+    color: black;
+    opacity: 1;
+    transition: 0.3s;
+}
+
+input#btn.btn-primary{
+    background-color: white;
+}
+
 .logo {
-    width:100px;
+    width: 100px;
 }
 
 .logoHeader {
     width: 40px;
+}
+
+#profile, #email, #change-password, #external-login, #two-factor, #personal-data{
+    color: black;
+    font-weight: normal;
+    text-decoration: none;
+}
+
+a#profile.nav-link.active, a#email.nav-link.active, a#change-password.nav-link.active, a#external-login.nav-link.active, a#two-factor.nav-link.active, a#personal-data.nav-link.active{
+    background-color: black;
+    color: white;
+}
+
+div.col-md-9{
+    padding-left: 300px;
+    padding-right: 0px;
+}
+
+#update-profile-button, #change-email-button, #enable-authenticator, button.btn.btn-primary{
+    color: white;
+    background-color: black;
+    border-color: transparent;
+    margin-top: 5%;
+}
+
+#enable-authenticator{
+    margin-left: 13%;
+}
+
+#update-profile-button:hover, #change-email-button:hover, #enable-authenticator:hover, button.btn.btn-primary:hover{
+    color: black;
+    background-color: white;
+    border-color: black;
+}
+
+a#delete.btn.btn-danger {
+    color: white;
+    background-color: black;
+    border-color: transparent;
+    margin-left: 80%;
+    margin-top: -20%;
+}
+
+a#delete.btn.btn-danger:hover{
+    color: black;
+    background-color: white;
+    border-color: black;
+}
+
+input.btn.btn-primary {
+    color: white;
+    background-color: black;
+    border-color: transparent;
+}
+
+input.btn.btn-primary:hover {
+    color: black;
+    background-color: white;
+    border-color: black;
+    text-decoration: none;
+}
+
+div.col-md-4, p.twofactortoptext, p.twofactorbottomtext{
+    margin-left: 30%;
+}
+
+a#recovery-code-login{
+    text-decoration: none;
+    color: black;
+}
+
+a#recovery-code-login:hover {
+    text-decoration: underline;
+    color: black;
+}
+
+a.btn.btn-primary{
+    background-color: black;
+    border-color: transparent;
+}
+
+a.btn.btn-primary:hover {
+    background-color: white;
+    border-color: black;
+    color: black;
 }

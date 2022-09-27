@@ -21,7 +21,7 @@ namespace CmsHeadless.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=192.168.10.73;Database=CmsHeadless;User ID=guest1;Password=Guest2022!");
+                optionsBuilder.UseSqlServer("Server=192.168.10.73;Database=CmsHeadless;User ID=guest1;Password=Sautech15*");
                 /*"Server=FABRIZIO\\SQLEXPRESS;Database=CmsHeadless2;Trusted_Connection=True;MultipleActiveResultSets=true"*/
             }
         }

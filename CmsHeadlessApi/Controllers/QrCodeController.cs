@@ -48,6 +48,7 @@ namespace CmsHeadlessApi.Controllers
                     if (is_exists_Content.Count() > 0)
                     {
                         Content content = is_exists_Content.FirstOrDefault();
+                        content.PubblicationDate = is_exists_Content.FirstOrDefault().PubblicationDate;
                         var is_exists_ContentAttributes = _contextDb.ContentAttributes.Where(c => c.ContentId == contentId);
                         if(is_exists_ContentAttributes.Count() > 0)
                         {
@@ -78,7 +79,7 @@ namespace CmsHeadlessApi.Controllers
                     return Json(null);
                 }
             }
-            return Json("Token error - please login again here: https://localhost:7274/User/LoginUser");
+            return Json("Token error - please login again here: https://localhost:7274/User/LoginUser?mail=&password=");
         }
     }
 }
